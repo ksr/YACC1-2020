@@ -31,10 +31,11 @@ extern "C" {
 #define        TBR      05
 #define        TBRON    06
 #define        TBROFF   07
+#define        TBRZ     0x08
 #define        LDT	0D
 #define        LDA	0E
-#define        MVI	10
-#define        MVI	18
+#define        MVIB	10
+#define        MVIW	18
 #define        MVRLA	20
 #define        MVRHA	28
 #define        MVARL	30

@@ -1,2 +1,4 @@
 .DS_Store
 *~
+/Software/Sequencer Card/uCode-Generator/build/
+/Software/Sequencer Card/uCode-Generator/dist/

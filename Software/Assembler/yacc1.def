@@ -14,9 +14,9 @@ LDT \B
 0D \1
 LDA \B
 0E \1
-MVI \{regs},\B
+MVIB \{regs},\B
 10|1 \2
-MVI \{regs},\W
+MVIW \{regs},\W
 18|1  hi(2) lo(2)
 MVRLA \{regs} 
 20|1

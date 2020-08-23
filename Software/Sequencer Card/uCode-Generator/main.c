@@ -32,6 +32,7 @@
 #define INVERT 1
 #define NOINVERT 0
 
+#define PC 0 //program counter is currently locked to reg 0
 //#define DEBUG 1
 
 /*
@@ -158,7 +159,7 @@ void setLdId(int reg) {
 }
 
 void setAlu(int aluBits) {
-    printf("setALU %d\n",aluBits);
+    printf("setALU %d\n", aluBits);
     setRegBit("ALU0", aluBits & 0x0001);
     setRegBit("ALU1", aluBits & 0x0002);
     setRegBit("ALU2", aluBits & 0x0004);
@@ -208,7 +209,7 @@ void branch(int mode, int invert) {
     clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
     //writeCurrentLine(); reg up is rising edge
     setSignal("-REG-FUNC-RD");
-    setRdId(0);
+    setRdId(PC);
     setSignal("-REG-UP");
     writeCurrentLine();
     clearSignal("-REG-UP");
@@ -297,78 +298,120 @@ int main(int argc, char** argv) {
     showCntlMemory(HALT);
 
     // Branch
-    startInstruction(TBR);
+    startInstruction(TBR); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
     branch(ALUBR, NOINVERT);
     endInstruction();
     showCntlMemory(TBR);
 
-    startInstruction(TBRON);
+    startInstruction(TBRON); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
     branch(ALUBRIN, NOINVERT);
     endInstruction();
     showCntlMemory(TBRON);
 
-    startInstruction(TBROFF);
+    startInstruction(TBROFF); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
     branch(ALUBRIN, INVERT);
     endInstruction();
     showCntlMemory(TBROFF);
-    
-#ifdef NOTYET
 
-    startInstruction(BR);
+    startInstruction(TBRZ); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
-
-    loadBranchRegister();
-    initCurrentLine();
-    setSignal("-BRANCH-RD-LO"); //output branch register
-    setSignal("-BRANCH-RD-HI");
-    setSignal("-REG-FUNC-LD");
-    writeCurrentLine();
-
-    setAlu(ALUBR);
-    setSignal("BR-TEST");
-
-    setSignal("-REG-LD-LO"); //load branch register
-    setSignal("-REG-LD-HI"); //FIX on new card ???
-    writeCurrentLine();
-    clearSignal("-REG-LD-LO");
-    clearSignal("-REG-LD-HI"); //Fix on new card  ???
-    writeCurrentLine();
-
+    branch(ALUBRZ, INVERT);
     endInstruction();
-    showCntlMemory(BR);
+    showCntlMemory(TBRZ);
 
     //load register low immediate 8 bit
     for (reg = 0; reg < 8; reg++) {
-        ins = MVI | (reg & 0x07);
+        ins = MVIB | (reg & 0x07);
         startInstruction(ins);
         loadNextInstruction();
         initCurrentLine();
 
-        setSignal("ADDR-REG-FUNC-RD"); //sp/pc sel on old card try without
-        setSignal("ADDR-REG-ADDR-RD"); // output pc address onto address bus
-        setSignal("REG-FUNC-LD"); //enable register card for loading, 
-        setSignal("1-BYTE-OPERAND-SEL");
-        setSignal("-MEM-RD"); //output memory (location for address bus) to data bus
-        setLdId(reg); //set the ID bits for the register
+        putMemAtRegOnBus(PC);
+
+        setSignal("-REG-FUNC-LD");
+        setRdId(reg);
+
         writeCurrentLine();
-        setSignal("REG-LD-LO"); //load register
+        setSignal("REG-LD-LO"); //load branch register
         writeCurrentLine();
         clearSignal("REG-LD-LO");
-        setSignal("ADDR-REG-UP"); //increment pc
-        writeCurrentLine();
-        clearSignal("ADDR-REG-UP");
         writeCurrentLine();
 
         endInstruction();
         showCntlMemory(ins);
     }
+
+    //Increment Register
+    for (reg = 0; reg < 8; reg++) {
+        ins = INCR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+
+        writeCurrentLine();
+        setSignal("-REG-UP"); //load branch register
+        writeCurrentLine();
+        clearSignal("-REG-UP");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Decrement Register
+    for (reg = 0; reg < 8; reg++) {
+        ins = DECR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+
+        writeCurrentLine();
+        setSignal("-REG-DN"); //load branch register
+        writeCurrentLine();
+        clearSignal("-REG-DN");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Decrement Register
+    for (reg = 0; reg < 8; reg++) {
+        ins = MVRLA | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+        setSignal("-REG-RD-LO");
+        setSignal("-ALU-FUNC");
+        writeCurrentLine();
+        setSignal("-AC-LD");
+        writeCurrentLine();
+        clearSignal("-AC-LD");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+#ifdef NOTYET
     // Branch
     startInstruction(BRANCH);
     loadNextInstruction();
