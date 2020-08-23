@@ -1,0 +1,417 @@
+1805 -> Native
+CLASS ports
+1=1,2=2,3=3,4=4,5=5,6=6,7=7
+CLASS regs
+R0=0,R1=1,R2=2,R3=3,R4=4,R5=5,R6=6,R7=7,R8=8,R9=9,RA=10,RB=11,RC=12,RD=13,RE=14,RF=15
+*
+ADD
+F4
+ADC
+74
+ADCI	\B
+7C \1
+ADCI	\W.0
+7C lo(1)
+ADCI	\W.1
+7C hi(1)
+ADI     LOW \W
+FC lo(1)
+ADI	\B
+FC \1
+ADI	\W
+FC lo(1)
+ADI	\W.0
+FC lo(1)
+ADI	\W.1
+FC hi(1)
+AND
+F2
+ANI	\B
+FA \1
+ANI	\W.0
+FA lo(1)
+ANI	\W.1
+FA hi(1)
+B1	\B
+34 \1
+B1	\W.0
+34 lo(1)
+B1	\W.1
+34 hi(1)
+B2	\W
+35 lo(1)
+B2	\B
+35 \1
+B2	\W.0
+35 lo(1)
+B2	\W.1
+35 hi(1)
+B3	\B
+36 \1
+B3	\W.0
+36 lo(1)
+B3	\W.1
+36 hi(1)
+B4	\B
+37 \1
+B4	\W
+37 lo(1)
+B4	\W.0
+37 lo(1)
+B4	\W.1
+37 hi(1)
+BCI	\B
+68 3F \1
+BDF	\B
+33 \1
+BDF	\W
+33 lo(1)
+BDF	\W.0
+33 lo(1)
+BDF	\W.1
+33 hi(1)
+BN1     \W
+3C lo(1)
+BN1	\B
+3C \1
+BN1	\W.0
+3C lo(1)
+BN1	\W.1
+3C hi(1)
+BN2     \W
+3D lo(1)
+BN2	\B
+3D \1
+BN2	\W.0
+3D lo(1)
+BN2	\W.1
+3D hi(1)
+BN3     \W
+3E lo(1)
+BN3	\B
+3E \1
+BN3	\W.0
+3E lo(1)
+BN3	\W.1
+3E hi(1)
+BN4	\B
+3F \1
+BN4	\W
+3F lo(1)
+BN4	\W.0
+3F lo(1)
+BN4	\W.1
+3F hi(1)
+BNF	\B
+3B \1
+BNF	\W
+3B lo(1)
+BNF	\W.0
+3B lo(1)
+BNF	\W.1
+3B hi(1)
+BNQ     \W
+39 lo(1)
+BNQ	\B
+39 \1
+BNQ	\W.0
+39 lo(1)
+BNQ	\W.1
+39 hi(1)
+BNZ	\B
+3A \1
+BNZ	\W
+3A lo(1)
+BNZ	\W.0
+3A lo(1)
+BNZ	\W.1
+3A hi(1)
+BQ	\B
+31 \1
+BQ	\W.0
+31 lo(1)
+BQ	\W.1
+31 hi(1)
+BR	\B
+30 \1
+BR	\W
+30 lo(1)
+BR	\W.0
+30 lo(1)
+BR	\W.1
+30 hi(1)
+BXI	\B
+68 3F \1
+BZ	\B
+32 \1
+BZ	\W
+32 lo(1)
+BZ	\W.0
+32 lo(1)
+BZ	\W.1
+32 hi(1)
+CID
+68 0D
+CIE
+68 0C
+DACI	\B
+68 7C \1
+DADD
+68 F4
+DADC
+68 74
+DADI	\B
+68 FC \1
+DBNZ	\N
+68 2\1
+DEC	\{regs}
+\12%
+DEC	\N
+2\1
+DIS
+71
+DSAV
+68 76
+DSBI	\B
+68 7F \1
+DSM
+68 F7
+DSMB
+68 77
+DSMI	\B
+68 FF \1
+DTC
+68 01
+ETQ
+68 09
+GEC
+68 08
+GHI	\{regs}
+\19%
+GHI	\N
+9\1
+GLO	\{regs}
+\18%
+GLO	\N
+8\1
+IDL
+00
+INC	\{regs}
+\11%
+INC	\N
+1\1
+INP	\{ports}
+68|1
+IRX
+60
+LBDF	\W
+C3 hi(1) lo(1)
+LBNF	\W
+CB hi(1) lo(1)
+LBNQ	\W
+C9 hi(1) lo(1)
+LBNZ	\W
+CA hi(1) lo(1)
+LBQ	\W
+C1 hi(1) lo(1)
+LBR	\W
+C0 hi(1) lo(1)
+LBZ	\W
+C2 hi(1) lo(1)
+LDA	\{regs}
+\14%
+LDA	\N
+4\1
+LDC
+68 06
+LDI     HIGH \W
+F8 hi(1)
+LDI     LOW \W
+F8 lo(1)
+LDI	\B
+F8 \1
+LDI     \W
+F8 lo(1)
+LDN	\{regs}
+\10%
+LDN	\N
+0\1
+LDX
+F0
+LDXA
+72
+LSDF
+CF
+LSIE
+CC
+LSKP
+C8
+LSNF
+C7
+LSNQ
+C5
+LSNZ
+C6
+LSQ
+CD
+LSZ
+CE
+MARK
+79
+NBR
+38 00
+NLBR
+C8 00 00
+NOP
+C4
+OR
+F1
+ORI	\B
+F9 \1
+ORI	\W.0
+F9 lo(1)
+ORI	\W.1
+F9 hi(1)
+OUT	\{ports}
+60|1
+PHI	\{regs}
+\1B%
+PHI	\N
+B\1
+PLO	\{regs}
+\1A%
+PLO	\N
+A\1
+REQ
+7A
+RET
+70
+RLDI	\N
+68 C\1
+RLXA	\N
+68 6\1
+RNX	\N
+68 B\1
+RSXD	\N
+68 A\1
+SAV
+78
+SCAL	\N
+68 8\1
+SCM1
+68 05
+SCM2
+68 03
+SD
+F5
+SDB
+75
+SDBI	\B
+7D \1
+SDBI	\W.0
+7D lo(1)
+SDBI	\W.1
+7D hi(1)
+SDI	\B
+FD \1
+SDI	\W.0
+FD lo(1)
+SDI	\W.1
+FD hi(1)
+SEP	\{regs}
+\1D%
+SEP	\N
+D\1
+SEQ
+7B
+SEX	\{regs}
+\1E%
+SEX	\N
+E\1
+SHL
+FE
+SHLC
+7E
+SHR
+F6
+SHRC
+76
+SKP
+38
+SM
+F7
+SMB
+77
+SMBI	\B
+7F \1
+SMBI	\W.0
+7F lo(1)
+SMBI	\W.1
+7F hi(1)
+SMI     LOW \W
+FF lo(1)
+SMI	\B
+FF \1
+SMI	\W.0
+FF lo(1)
+SMI	\W.1
+FF hi(1)
+SPM1
+68 04
+SPM2
+68 02
+SRET	\N
+68 9\1
+STM
+68 07
+STPC
+68 00
+STR	\{regs}
+\15%
+STR	\N
+5\1
+STXD
+73
+XID
+68 0B
+XIE
+68 0A
+XOR
+F3
+XRI     HIGH \W
+FB hi(1)
+XRI	\B
+FB \1
+XRI	\W.0
+FB lo(1)
+XRI	\W.1
+FB hi(1)
+ORG     \W
+\O1
+END     \W
+\S1
+DB      HIGH \W
+hi(1)
+DB      \L
+\1
+DW      \W
+hi(1) lo(1)
+DW      \M
+\1
+DS      \W
+\B1
+EQU     \{regs}
+\E1
+EQU     \W
+\E1
+PUBLIC
+\P
+LIB PROC
+\R
+LIB ENDP
+\Q
+PUBLIC EQU
+\P\E1
+EXTERN
+\X
+*

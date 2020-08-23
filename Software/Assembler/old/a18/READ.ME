@@ -1,0 +1,90 @@
+/*	(extracted from CUG149 READ.ME by Herb Johnson Jan 26 2010)
+
+	HEADER:		CUG149;
+	TITLE:		Cross-Assemblers (Portable);
+	FILENAME:	READ.ME;
+	VERSION:	1.0;
+	DATE:		09/25/1985;
+
+	DESCRIPTION:	"This is the specific introduction file for the portable
+			versions of the 1805A and 1802 cross-assemblers.
+			Each assembler is explained in detail in its header
+			files.";
+
+	SEE-ALSO:	1805A Cross-Assembler (Portable),
+			6801 Cross-Assembler (Portable),
+			6805 Cross-Assembler (Portable);
+
+	AUTHORS:	William C. Colley III;
+	REVISION:	Herbert R. Johnson
+*/
+
+     What's in this ZIP file?  It goes like this:
+
+	READ.ME		This notice.
+
+	A18.DOC		The manual for the 1805A cross-assembler.
+
+	A18.H		The source files for the 1805A cross-assembler.  The
+	A18.C		file A18.H also contains compile, assemble, and link
+	A18EVAL.C	instructions for all compilers that I have used with
+	A18UTIL.C	the package or that users have told me how to use with
+			the package.
+
+	TEST18.ASM	The entire instruction set of the 1805A processor to
+			use in testing the 1805A cross-assembler.
+
+
+     I not only wrote these pieces of software originally and rewrote them in
+"portable" C for all of you UNIX and IBM-PC users out there, but I am also the
+librarian for the disk, and as such, I am responsible for maintaining the
+packages.  I can only do this with YOUR help.  During the re-write, I noticed a
+few bugs in the BDS C versions.  These were never reported to me by any of you
+users, so I never knew to fix them.  PLEASE report bugs to me promptly so that
+I can get them fixed.  I am only a letter or a phone call away.
+
+     The lists of compile, assemble, and link instructions for the packages are
+limited by my personal experience if YOU do not contribute.  In particular, I
+have no access to a real UNIX system nor to an IBM-PC of any kind with any of
+its dozen or so C compilers.  I need YOU to tell me how to use the package with
+these systems and others.
+
+     Once the first cross-assembler (the 6801 package) is written, adapting it
+to other 8-bit or 4-bit processors (like the 1805A) is easy.  In fact, I once
+adapted one of the BDS C versions to a 12-bit processor (the PIC1650).  It only
+takes a couple of evenings for me to do it. What processors should be next, if
+any?  Get your votes in, either to me or to the Users' Group.  Otherwise, the
+selection of cross-assemblers will reflect only my needs, not yours.
+
+     Having the author double as the librarian allows this disk to be a living,
+growing entity, but its growth will be stunted by my lack of resources if YOU
+do not contribute your share.  Speak up, for everybody's sake!
+
+						William C. Colley, III
+
+Additional by Herb Johnson: 
+
+in 2010 I made edits to the C syntax, to compile under the Windows
+version of "lcc", a freely available C compiler. I also made additions to the
+assembler syntax to include features common in other assemblers. Few changes were
+needed to actual code otherwise, but I added some features
+
+(Additional: in March 2010 someone contacted me to change the listing output from 
+hexidecimal to octal. Read the note "A18octal.txt" to see how that can be done.)
+
+Additional files:
+
+	1802reg.asm - EQUates for typical register names
+	a18sum.txt	- cheat sheet for the assembler
+	a18_win.exe	- executable for Windows, 32-bit MS-DOS (command line only)
+	a18_dos.exe - executable for old 16-bit MS-DOS with Turbo C
+	a18_2014.doc - updated manual for A18
+
+Note: Occasionally I've had a virus-checker "flag" A18.exe (windows version) as
+a potential (not actual) virus. That's mostly because it's not a popular program.
+I recompiled it in 2014 (it's been unchanged since 2010) and removed the "debugging"
+information. Maybe that will make a difference. If you are unhappy, you can recompile
+the C program yourself. 
+
+Herb Johnson Dec 2014
+

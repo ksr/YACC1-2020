@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+sed "s/^RESET/-RESET/g" |\
+sed "s/^ALU-FUNC/-ALU-FUNC/g" |\
+sed "s/^RD-AC/-AC-RD/g" |\
+sed "s/^LD-AC/-AC-LD/g" |\
+sed "s/^WDATA/WR-DATABUS/g" |\
+sed "s/^RDATAL/RD-DATABUS-L/g" |\
+sed "s/RDATAH/RD-DATABUS-H/g" |\
+sed "s/RDATA/RD-DATABUS/g" |\
+sed "s/BUS-RD/DATABUS-RD-MODE/g" |\
+sed "s/BUS-WR/DATABUS-WR-MODE/g" 

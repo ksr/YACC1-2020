@@ -1,0 +1,95 @@
+chip8 -> Native
+CLASS ports
+1=1,2=2,3=3,4=4,5=5,6=6,7=7
+CLASS c8regs
+V0=0,V1=1,V2=2,V3=3,V4=4,V5=5,V6=6,V7=7,V8=8,V9=9,VA=10,VB=11,VC=12,VD=13,VE=14,VF=15
+CLASS regs
+R0=0,R1=1,R2=2,R3=3,R4=4,R5=5,R6=6,R7=7,R8=8,R9=9,RA=10,RB=11,RC=12,RD=13,RE=14,RF=15
+*
+\{c8regs}:\{c8regs}=mi
+90|1 0|2
+\{c8regs}=key
+10|1
+\{c8regs}=rnd
+20|1
+\{c8regs}+\w
+30|1
+\{c8regs}=\{c8regs}
+40|1 0|2
+i=i+\{c8regs}
+50|1
+ADD	\{c8regs},\{c8regs}
+80|1 04|2<4
+ADD	I,\{c8regs} 
+F0|1 1E 
+ADD	\{c8regs},\B
+70|1 \2
+AND	\{c8regs},\{c8regs}
+80|1 02|2<4
+CALL	\W
+hi(1)|2<4 lo(1)
+CLS
+00 E0 
+DRW	\{c8regs},\{c8regs},\N
+D0|1 0|2<4|3
+JP	\{c8regs},\W
+hi(2)B% lo(2)
+JP	\W
+hi(1)1% lo(1)
+LD	B,\{c8regs}
+F0|1 33 
+LD	DT,\{c8regs}
+F0|1 15 
+LD	F,\{c8regs}
+F0|1 29 
+LD	LF,\{c8regs}
+F0|1 29 
+LD	ST,\{c8regs}
+F0|1 18 
+LD	\{c8regs},DT
+F0|1 07 
+LD	\{c8regs},K
+F0|1 0A 
+LD	\{c8regs},\{c8regs}
+80|1 0|2<4
+LD	\{c8regs},[I]
+F0|1 65 
+LD	[I],\{c8regs}
+F0|1 55 
+LD	\{c8regs},\B
+60|1 \2
+LD	I,\W
+hi(1)A% lo(1)
+OR	\{c8regs},\{c8regs}
+80|1 01|2<4
+RET
+00 EE 
+RND	\{c8regs},\B
+C0|1 \2
+SE	\{c8regs},\{c8regs}
+50|1 0|2<4
+SE	\{c8regs},\B
+30|1 \2
+SHL	\{c8regs},\{c8regs}
+80|1 E|2<4
+SHR	\{c8regs},\{c8regs}
+80|1 6|2<4
+SKP	\{c8regs}
+E0|1 9E 
+SKNP	\{c8regs}
+E0|1 A1 
+SNE	\{c8regs},\{c8regs}
+90|1 00|2<4
+SNE	\{c8regs},\B
+40|1 \2
+SUB	\{c8regs},\{c8regs}
+80|1 05|2<4
+SUBN	\{c8regs},\{c8regs}
+80|1 07|2<4
+SYS	\W
+hi(1)0% lo(1)
+XOR	\{c8regs},\{c8regs}
+80|1 03|2<4
+ORG     \W
+\O1     
+*
