@@ -7,7 +7,7 @@
 #include <Wire.h> //I2C library
 #include "Adafruit_MCP23017.h"
 //#include "YACC_Common_headera.h"
-
+ 
 /*
    Format ":AIXXXXXXXX....XXXXX"
    ":"  Start charachter
@@ -45,7 +45,7 @@ int verbose = 0;
 #define BYTES_PER_LINE 8         // total bytes/row (mem chips) should be 8
 #define INSTRUCTION_SIZE  BYTES_PER_LINE*LINES_PER_INSTRUCTION
 
-#define WORKING_INSTRUCTION_SET  16  // FIX shoud be 256
+#define WORKING_INSTRUCTION_SET  256  // FIX shoud be 256
 #define ALL_INSTRUCTIONS 256
 
 #define NUMBER_OF_CONTROLERS 5

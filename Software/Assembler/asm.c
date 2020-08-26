@@ -216,6 +216,7 @@ void Read_Def_File(char *FileName)
 }
 
 void readOptions(char *buffer) {
+    //printf("ken1 %s\n",buffer);
   if (buffer[0]!='-') strcpy(workfile,buffer);
   if (strcmp(buffer,"-h")==0) emucode='H';
   if (strcmp(buffer,"-l")==0) showlist='*';
@@ -232,6 +233,7 @@ void readOptions(char *buffer) {
   if (strncmp(buffer,"-d",2)==0) {
     strcpy(DefName,&buffer[3]);
     strcat(DefName,".def");
+    //printf("ken %s\n",DefName);
     i++;
     }
   }

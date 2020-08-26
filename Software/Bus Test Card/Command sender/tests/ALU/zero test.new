@@ -1,0 +1,50 @@
+-RESET:1#
+-RESET:0#
+-ALU-FUNC:1#
+-BUS-EN:1#
+ALU0:0#
+ALU1:0#
+ALU2:0#
+-AC-RD:0#
+DATABUS-WR-MODE:0#
+//put 55 in accumulator
+WR-DATABUS:55#
+-AC-LD:1#
+-AC-LD:0#
+DATABUS-RD-MODE:0#
+-AC-RD:1#
+//1
+RD-DATABUS-L:0#55!
+-AC-RD:0#
+//test non zero
+ALU0:0#
+ALU1:0#
+ALU2:1#
+//2
+RBR-COND:0#0!
+-AC-LD-INV:1#
+//3 test invert
+RBR-COND:1#1!
+// test zero
+-AC-LD-INV:0#
+ALU0:0#
+ALU1:0#
+ALU2:0#
+DATABUS-WR-MODE:0#
+//put 00 in accumulator
+-AC-RD:0#
+WR-DATABUS:00#
+-AC-LD:1#
+-AC-LD:0#
+DATABUS-RD-MODE:0#
+-AC-RD:1#
+ALU0:0#
+ALU1:0#
+ALU2:1#
+//4
+RD-DATABUS-L:0#00!
+//5
+RBR-COND:1#1!
+-AC-LD-INV:1#
+//6
+RBR-COND:0#0!

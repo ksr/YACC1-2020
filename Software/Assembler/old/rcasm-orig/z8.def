@@ -1,0 +1,271 @@
+Z8 Native
+CLASS COND
+F=0,LT=1,LE=2,ULE=3,OV=4,MI=5,Z=6,EQ=6,C=7,ULT=7,GE=9,GT=10,UGT=11,NOV=12,PL=13,NZ=14,NE=14,NC=15,UGE=15
+*
+ADC	(\N),(\N)
+12 \1\2
+ADC	(\N),@(\N)
+13 \1\2
+ADC	\B,\B
+14 \2 \1
+ADC	\B,@\B
+15 \2 \1
+ADC	\B,#\B
+16 \1 \2
+ADC	@\B,#\B
+17 \1 \2
+ADD	(\N),(\N)
+02 \1\2
+ADD	(\N),@(\N)
+03 \1\2
+ADD	\B,\B
+04 \2 \1
+ADD	\B,@\B
+05 \2 \1
+ADD	\B,#\B
+06 \1 \2
+ADD	@\B,#\B
+07 \1 \2
+AND	(\N),(\N)
+52 \1\2
+AND	(\N),@(\N)
+53 \1\2
+AND	\B,\B
+54 \2 \1
+AND	\B,@\B
+55 \2 \1
+AND	\B,#\B
+56 \1 \2
+AND	@\B,#\B
+57 \1 \2
+CALL	\W
+D6 hi(1) lo(1)
+CALL	\D
+D4 \1
+CCF
+EF
+CLR	\B
+B0 \1
+CLR	@\B
+B1 \1
+COM	\B
+60 \1
+COM	@\B
+61 \1
+CP	(\N),(\N)
+A2 \1\2
+CP	(\N),@(\N)
+A3 \1\2
+CP	\B,\B
+A4 \2 \1
+CP	\B,@\B
+A5 \2 \1
+CP	\B,#\B
+A6 \1 \2
+CP	@\B,#\B
+A7 \1 \2
+DEC	\B
+00 \1
+DEC	@\B
+01 \1
+DECW	\B
+80 \1
+DECW	@\B
+81 \1
+DI
+8F
+DJNZ	(\N),\D
+0A|1<4 \2
+EI
+9F
+HALT
+7F
+INC	(\N)
+0E|1<4
+INC	\B
+20 \1
+INC	@\B
+21 \1
+INCW	\B
+A0 \1
+INCW	@\B
+A1 \1
+IRET
+BF
+JP	\{COND},\W
+0D|1<4 hi(2) lo(2)
+JP	\W
+8D hi(1) lo(1)
+JP	@\B
+30 \1
+JR	\{COND},\D
+0B|1<4 \2
+LD	(\N),#\B
+0C|1<4 \2
+LD	(\N),\B
+08|1<4 \2
+LD	\B,(\N)
+09|2<4 \1
+LD	(\N),@(\N)
+E3 \1\2
+LD	@(\N),(\N)
+F3 \1\2
+LD	\B,\B
+E4 \2 \1
+LD	\B,@\B
+E5 \2 \1
+LD	\B,#\B
+E6 \1 \2
+LD	@\B,#\B
+E7 \1 \2
+LD	@\B,\B
+F5 \2 \1
+LD	(\N),\B+\N
+C7 \1\3 \2
+LD	\B+\N,(\N)
+D7 \3\2 \1
+LDC	\N,\N
+C2 \1\2
+LDCI	\N,\N
+C3 \1\2
+NOP
+FF
+OR	(\N),(\N)
+42 \1\2
+OR	(\N),@(\N)
+43 \1\2
+OR	\B,\B
+44 \2 \1
+OR	\B,@\B
+45 \2 \1
+OR	\B,#\B
+46 \1 \2
+OR	@\B,#\B
+47 \1 \2
+POP	\B
+50 \1
+POP	@\B
+51 \1
+PUSH	\B
+70 \1
+PUSH	@\B
+71 \1
+RCF
+CF
+RET
+AF
+RL	\B
+90 \1
+RL	@\B
+91 \1
+RLC	\B
+10 \1
+RLC	@\B
+11 \1
+RR	\B
+E0 \1
+RR	@\B
+E1 \1
+RRC	\B
+C0 \1
+RRC	@\B
+C1 \1
+SBC	(\N),(\N)
+32 \1\2
+SBC	(\N),@(\N)
+33 \1\2
+SBC	\B,\B
+34 \2 \1
+SBC	\B,@\B
+35 \2 \1
+SBC	\B,#\B
+36 \1 \2
+SBC	@\B,#\B
+37 \1 \2
+SCF
+DF
+SRA	\B
+D0 \1
+SRA	@\B
+D1 \1
+SRP	#\B
+31 \1
+STOP
+6F
+SUB	(\N),(\N)
+22 \1\2
+SUB	(\N),@(\N)
+23 \1\2
+SUB	\B,\B
+24 \2 \1
+SUB	\B,@\B
+25 \2 \1
+SUB	\B,#\B
+26 \1 \2
+SUB	@\B,#\B
+27 \1 \2
+SWAP	\B
+F0 \1
+SWAP	@\B
+F1 \1
+TCM	(\N),(\N)
+62 \1\2
+TCM	(\N),@(\N)
+63 \1\2
+TCM	\B,\B
+64 \2 \1
+TCM	\B,@\B
+65 \2 \1
+TCM	\B,#\B
+66 \1 \2
+TCM	@\B,#\B
+67 \1 \2
+TM	(\N),(\N)
+72 \1\2
+TM	(\N),@(\N)
+73 \1\2
+TM	\B,\B
+74 \2 \1
+TM	\B,@\B
+75 \2 \1
+TM	\B,#\B
+76 \1 \2
+TM	@\B,#\B
+77 \1 \2
+WDH
+4F
+WDT
+5F
+XOR	(\N),(\N)
+B2 \1\2
+XOR	(\N),@(\N)
+B3 \1\2
+XOR	\B,\B
+B4 \2 \1
+XOR	\B,@\B
+B5 \2 \1
+XOR	\B,#\B
+B6 \1 \2
+XOR	@\B,#\B
+B7 \1 \2
+ORG	\W
+\O1
+END	\W
+\S1
+DB	\L
+\1
+DS	\W
+\B1
+EQU	\W
+\E1
+PUBLIC
+\P
+LIB PROC
+\R
+LIB ENDP
+\Q
+PUBLIC EQU
+\P\E1
+EXTERN
+\X
+*

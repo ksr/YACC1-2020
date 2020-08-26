@@ -1,0 +1,102 @@
+	TITLE:		1805A Cross-Assembler (Portable);
+	AUTHOR:		William C. Colley, III
+	VERSION:	2.5 with updates by HRJ 1/2010
+	DATE:		08/27/1988;
+
+	DESCRIPTION:	"This program lets you use your computer to assemble
+			code for the RCA 1802, 1804, 1805, 1805A, 1806, and
+			1806A microprocessors.  The program is written in
+			portable C.
+
+The command line for the cross-assembler looks like this:
+	A18 source_file { >list_file OR -l list_file} { -o object_file }
+        where the { } indicates that the specified item is optional.
+
+             a18 test18.asm                          source:   test18.asm
+                                                     listing:  none
+                                                     object:   none
+
+             a18 test18.asm -l test18.prn            source:   test18.asm
+                                                     listing:  test18.prn
+                                                     object:   none
+
+             a18 test18.asm -o test18.hex            source:   test18.asm
+                                                     listing:  none
+                                                     object:   test18.hex
+
+             a18 test18.asm -l test18.prn -o test18.hex
+                                                     source:   test18.asm
+                                                     listing:  test18.prn
+                                                     object:   test18.hex
+
+An error count is displayed after program exits.
+
+
+Expressions and operations
+	Highest	anything in parentheses
+		unary +, unary -
+		*, /, MOD, SHL, SHR
+		binary +, binary -
+		LT, LE, EQ, GE, GT, NE (< <=or=< = >=or=> > <>or><) 
+		NOT
+		AND
+		OR, XOR
+	Lowest	HIGH, LOW
+
+	HIGH n	produces high four-bits value of N
+	LOW n	produces low four-bits value of N
+	Numeric constants: %11111111 $FF 0ffH   255   255D   377O   377Q   11111111B
+		where the radix is binary, hex, octal or decimal. Default is decimal.
+	String constants: "st" 'c' 
+
+
+Pseudo Opcodes
+	n can be a series of values: n, n, n, ...
+	BLK n	reserves n bytes of storage
+	BYTE n,n,..	puts N in memory as byte, or string as many bytes
+	DB n,n,...	puts N in memory as byte, or string as many bytes
+	CPU 1802/1805	turns off/on 1805 opcodes
+	EJCT n	put page tab in listing every N lines
+	END	end of source
+	EQU n	sets label to value N
+	IF n	conditional assembly if N is nonzero
+	ELSE	nesting to 16 levels
+	ENDI
+	INCL "file" - include file in assembly
+	LOAD R,V - see doc file
+	ORG n	set ASM program counter to N
+	PAGE	set ASM program counter to next 256 byte page address
+	SET N	reassigns N to label
+	TEXT "s" - puts string in memory no null terminator
+	TITL "s" - listing has title s at top of each page
+	WORD n,n,..	puts N in memory as word
+	DW n,n,..	puts N in memory as word
+
+
+Error codes in listing in column 2
+	
+	* - illegal or missing END statement
+	( - parentheisis imbalance
+	" - missing quote
+	B - branch too far (256 byte boundary)
+	D - illegal digit
+	E - illegal expression
+	I - if/endi imbalance
+	L - illegal label
+	O - illegal opcode
+	P - phase error from pass 1 to 2 (see docs)
+	S - Illegal syntax
+	T - too many args
+	U - undefined lable
+	V - illegal value
+
+
+	
+
+
+	
+		
+
+
+
+

@@ -29,7 +29,7 @@
 #define INSTRUCTIONS 256
 #define MEMORY_SIZE BYTES_PER_LINE*LINES_PER_INSTRUCTION*INSTRUCTIONS
 
-#define INSTRUCTIONS_TO_OUTPUT 10   // KEN sould be 255
+#define INSTRUCTIONS_TO_DUMP 256   // KEN sould be 255
 
 #define SIGNALS 64
 
@@ -229,8 +229,8 @@ bool processInstruction(int instruction) {
         printf("---\n");
     }
 
-    if (instruction == 10)
-        exit(0);
+    //if (instruction == 10)
+    //    exit(0);
 
     return (validInstruction);
 }

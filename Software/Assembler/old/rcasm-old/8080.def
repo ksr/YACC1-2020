@@ -1,0 +1,266 @@
+8080 -> Native
+OPTION LITTLE
+CLASS regs
+B=0,C=1,D=2,E=3,H=4,L=5,M=6,A=7
+CLASS rsts
+0H=0,8H=1,10H=2,18H=3,20H=4,28H=5,30H=6,38H=7
+*
+ACI	\b
+CE \1
+ADC	\{regs}
+88|1
+ADC	M
+8E
+ADCI	\b
+CE \1
+ADD	\{regs}
+80|1
+ADD	M
+86
+ADI	\b
+C6 \1
+ANA	\{regs}
+A0|1
+ANA	M
+A6
+ANI	\b
+E6 \1
+CALL	\w
+CD lo(1) hi(1)
+CC	\w
+DC lo(1) hi(1)
+CM	\w
+FC lo(1) hi(1)
+CMA
+2F
+CMC
+3F
+CMP	\{regs}
+B8|1
+CMP	M
+BE
+CNC	\w
+D4 lo(1) hi(1)
+CNZ	\w
+C4 lo(1) hi(1)
+CP	\w
+F4 lo(1) hi(1)
+CPE	\w
+EC lo(1) hi(1)
+CPI	\b
+FE \1
+CPO	\w
+E4 lo(1) hi(1)
+CZ	\w
+CC lo(1) hi(1)
+DAA
+27
+DAD	B
+09
+DAD	D
+19
+DAD	H
+29
+DAD	SP
+39
+DCR	\{regs}
+05|1<3
+DCR M
+35
+DCX	B
+0B
+DCX	D
+1B
+DCX	H
+2B
+DCX	SP
+3B
+DI
+F3
+EI
+FB
+HLT
+76
+IN	\b
+DB \1
+INR	\{regs}
+04|1<3
+INR	M
+3C
+INX	B
+03
+INX	D
+13
+INX H
+23
+INX	SP
+33
+JMP	\w
+C3 lo(1) hi(1)
+JC	\w
+DA lo(1) hi(1)
+JM	\w
+FA lo(1) hi(1)
+JNC	\w
+D2 lo(1) hi(1)
+JNZ	\w
+C2 lo(1) hi(1)
+JP	\w
+F2 lo(1) hi(1)
+JPE	\w
+EA lo(1) hi(1)
+JPO	\w
+E2 lo(1) hi(1)
+JZ	\w
+CA lo(1) hi(1)
+LDA	\w
+3A lo(1) hi(1)
+LDAX	B
+0A
+LDAX	D
+1A
+LHLD	\w
+2A lo(1) hi(1)
+LXI	B,\w
+01 lo(1) hi(1)
+LXI	B, \w
+01 lo(1) hi(1)
+LXI	D,\w
+11 lo(1) hi(1)
+LXI	D, \w
+11 lo(1) hi(1)
+LXI	H,\w
+21 lo(1) hi(1)
+LXI	H, \w
+21 lo(1) hi(1)
+LXI	SP,\w
+31 lo(1) hi(1)
+LXI	SP, \w
+31 lo(1) hi(1)
+MOV	\{regs},\{regs}
+40|1<3|2
+MOV	\{regs}, \{regs}
+40|1<3|2
+MOV M,\{regs}
+70|1
+MOV M, \{regs}
+70|1
+MOV	\{regs},M
+46|1<3
+MOV	\{regs}, M
+46|1<3
+MVI	\{regs},\b
+06|1<3 \2
+MVI	\{regs}, \b
+06|1<3 \2
+MVI	M,\b
+36 \1
+MVI	M, \b
+36 \1
+NOP
+00
+ORA	\{regs}
+B0|1
+ORA	M
+B6
+ORI	\b
+F6 \1
+OUT	\b
+D3 \1
+PCHL
+E9
+POP	B
+C1
+POP	D
+D1
+POP	H
+E1
+POP	PSW
+F1
+PUSH	B
+C5
+PUSH	D
+D5
+PUSH	H
+E5
+PUSH	PSW
+F5
+RAL
+17
+RAR
+1F
+RET
+C9
+RC
+D8
+RM
+F8
+RNC
+D0
+RNZ
+C0
+RP
+F0
+RPE
+E8
+RPO
+E0
+RZ
+C8
+RLC
+07
+RRC
+0F
+RST	\{rsts}
+C7|1<3
+SBB	\{regs}
+98|1
+SBB	M
+9E
+SBI	\b
+DE \1
+SHLD	\w
+22 lo(1) hi(1)
+SPHL
+F9
+STA	\w
+32 lo(1) hi(1)
+STAX	B
+02
+STAX	D
+12
+STC
+37
+SUB	\{regs}
+90|1
+SUI	\b
+D6 \1
+XCHG
+EB
+XRA	\{regs}
+A8|1
+XRA	M
+AE
+XRI	\b
+EE \1
+XTHL
+E3
+ORG     \W
+\O1
+END     \W
+\S1
+DB      HIGH \W
+hi(1)
+DB      \L
+\1
+DW      \W
+lo(1) hi(1)
+DW      \M
+\1
+DS      \W
+\B1
+EQU     \{regs}
+\E1
+EQU     \W
+\E1
+*

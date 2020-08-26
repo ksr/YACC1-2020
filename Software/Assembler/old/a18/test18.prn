@@ -1,0 +1,557 @@
+                        		TITL	"1802/1805A Cross-Assembler Test Source File"
+                        		EJCT	60
+1802/1805A Cross-Assembler Test Source File
+
+                        
+                        		CPU	1805
+                        
+   0000                 NUMBER		EQU	0
+                        
+                        ;
+                        ; Register Definitions:
+                        ;
+   0000                 R0		EQU	0
+   0001                 R1		EQU	1
+   0002                 R2		EQU	2
+   0003                 R3		EQU	3
+   0004                 R4		EQU	4
+   0005                 R5		EQU	5
+   0006                 R6		EQU	6
+   0007                 R7		EQU	7
+   0008                 R8		EQU	8
+   0009                 R9		EQU	9
+   000a                 R10		EQU	10
+   000b                 R11		EQU	11
+   000c                 R12		EQU	12
+   000d                 R13		EQU	13
+   000e                 R14		EQU	14
+   000f                 R15		EQU	15
+                        
+                        ;
+                        ; I/O Port Definitions:
+                        ;
+   0001                 P1		EQU	1
+   0002                 P2		EQU	2
+   0003                 P3		EQU	3
+   0004                 P4		EQU	4
+   0005                 P5		EQU	5
+   0006                 P6		EQU	6
+   0007                 P7		EQU	7
+                        
+                        ;
+                        ; The 1805A opcodes in opcode numerical order -- one-byte opcodes first:
+                        ;
+   0100                 START		ORG	100H
+                        
+                        ; 00H - 0FH.
+   0100   00            		IDL
+   0101   01            		LDN	R1
+   0102   02            		LDN	R2
+   0103   03            		LDN	R3
+   0104   04            		LDN	R4
+   0105   05            		LDN	R5
+   0106   06            		LDN	R6
+   0107   07            		LDN	R7
+   0108   08            		LDN	R8
+   0109   09            		LDN	R9
+   010a   0a            		LDN	R10
+   010b   0b            		LDN	R11
+   010c   0c            		LDN	R12
+   010d   0d            		LDN	R13
+   010e   0e            		LDN	R14
+   010f   0f            		LDN	R15
+1802/1805A Cross-Assembler Test Source File
+
+                        ; 10H - 1FH.
+   0110   10            		INC	R0
+   0111   11            		INC	R1
+   0112   12            		INC	R2
+   0113   13            		INC	R3
+   0114   14            		INC	R4
+   0115   15            		INC	R5
+   0116   16            		INC	R6
+   0117   17            		INC	R7
+   0118   18            		INC	R8
+   0119   19            		INC	R9
+   011a   1a            		INC	R10
+   011b   1b            		INC	R11
+   011c   1c            		INC	R12
+   011d   1d            		INC	R13
+   011e   1e            		INC	R14
+   011f   1f            		INC	R15
+                        ; 20H - 2FH.
+   0120   20            		DEC	R0
+   0121   21            		DEC	R1
+   0122   22            		DEC	R2
+   0123   23            		DEC	R3
+   0124   24            		DEC	R4
+   0125   25            		DEC	R5
+   0126   26            		DEC	R6
+   0127   27            		DEC	R7
+   0128   28            		DEC	R8
+   0129   29            		DEC	R9
+   012a   2a            		DEC	R10
+   012b   2b            		DEC	R11
+   012c   2c            		DEC	R12
+   012d   2d            		DEC	R13
+   012e   2e            		DEC	R14
+   012f   2f            		DEC	R15
+                        ; 30H - 3FH.
+   0130   30 00         		BR	$ AND 1111111100000000B
+   0132   31 00         		BQ	$ AND 1111111100000000B
+   0134   32 00         		BZ	$ AND 1111111100000000B
+   0136   33 00         		BDF	$ AND 1111111100000000B
+   0138   34 00         		B1	$ AND 1111111100000000B
+   013a   35 00         		B2	$ AND 1111111100000000B
+   013c   36 00         		B3	$ AND 1111111100000000B
+   013e   37 00         		B4	$ AND 1111111100000000B
+   0140   38 00         		NBR	$ AND 1111111100000000B
+   0142   39 00         		BNQ	$ AND 1111111100000000B
+   0144   3a 00         		BNZ	$ AND 1111111100000000B
+   0146   3b 00         		BNF	$ AND 1111111100000000B
+   0148   3c 00         		BN1	$ AND 1111111100000000B
+   014a   3d 00         		BN2	$ AND 1111111100000000B
+   014c   3e 00         		BN3	$ AND 1111111100000000B
+   014e   3f 00         		BN4	$ AND 1111111100000000B
+                        ; 40H - 4FH.
+   0150   40            		LDA	R0
+   0151   41            		LDA	R1
+   0152   42            		LDA	R2
+   0153   43            		LDA	R3
+   0154   44            		LDA	R4
+   0155   45            		LDA	R5
+1802/1805A Cross-Assembler Test Source File
+
+   0156   46            		LDA	R6
+   0157   47            		LDA	R7
+   0158   48            		LDA	R8
+   0159   49            		LDA	R9
+   015a   4a            		LDA	R10
+   015b   4b            		LDA	R11
+   015c   4c            		LDA	R12
+   015d   4d            		LDA	R13
+   015e   4e            		LDA	R14
+   015f   4f            		LDA	R15
+                        ; 50H - 5FH.
+   0160   50            		STR	R0
+   0161   51            		STR	R1
+   0162   52            		STR	R2
+   0163   53            		STR	R3
+   0164   54            		STR	R4
+   0165   55            		STR	R5
+   0166   56            		STR	R6
+   0167   57            		STR	R7
+   0168   58            		STR	R8
+   0169   59            		STR	R9
+   016a   5a            		STR	R10
+   016b   5b            		STR	R11
+   016c   5c            		STR	R12
+   016d   5d            		STR	R13
+   016e   5e            		STR	R14
+   016f   5f            		STR	R15
+                        ; 60H - 6FH.
+   0170   60            		IRX
+   0171   61            		OUT	P1
+   0172   62            		OUT	P2
+   0173   63            		OUT	P3
+   0174   64            		OUT	P4
+   0175   65            		OUT	P5
+   0176   66            		OUT	P6
+   0177   67            		OUT	P7
+                        					; 68H goes with the two-byte opcodes.
+   0178   69            		INP	P1
+   0179   6a            		INP	P2
+   017a   6b            		INP	P3
+   017b   6c            		INP	P4
+   017c   6d            		INP	P5
+   017d   6e            		INP	P6
+   017e   6f            		INP	P7
+                        ; 70H - 7FH.
+   017f   70            		RET
+   0180   71            		DIS
+   0181   72            		LDXA
+   0182   73            		STXD
+   0183   74            		ADC
+   0184   75            		SDB
+   0185   76            		SHRC
+   0186   77            		SMB
+   0187   78            		SAV
+   0188   79            		MARK
+   0189   7a            		REQ
+   018a   7b            		SEQ
+   018b   7c 00         		ADCI	NUMBER
+1802/1805A Cross-Assembler Test Source File
+
+   018d   7d 00         		SDBI	NUMBER
+   018f   7e            		SHLC
+   0190   7f 00         		SMBI	NUMBER
+                        ; 80H - 8FH.
+   0192   80            		GLO	R0
+   0193   81            		GLO	R1
+   0194   82            		GLO	R2
+   0195   83            		GLO	R3
+   0196   84            		GLO	R4
+   0197   85            		GLO	R5
+   0198   86            		GLO	R6
+   0199   87            		GLO	R7
+   019a   88            		GLO	R8
+   019b   89            		GLO	R9
+   019c   8a            		GLO	R10
+   019d   8b            		GLO	R11
+   019e   8c            		GLO	R12
+   019f   8d            		GLO	R13
+   01a0   8e            		GLO	R14
+   01a1   8f            		GLO	R15
+                        ; 90H - 9FH.
+   01a2   90            		GHI	R0
+   01a3   91            		GHI	R1
+   01a4   92            		GHI	R2
+   01a5   93            		GHI	R3
+   01a6   94            		GHI	R4
+   01a7   95            		GHI	R5
+   01a8   96            		GHI	R6
+   01a9   97            		GHI	R7
+   01aa   98            		GHI	R8
+   01ab   99            		GHI	R9
+   01ac   9a            		GHI	R10
+   01ad   9b            		GHI	R11
+   01ae   9c            		GHI	R12
+   01af   9d            		GHI	R13
+   01b0   9e            		GHI	R14
+   01b1   9f            		GHI	R15
+                        ; 0A0H - 0AFH.
+   01b2   a0            		PLO	R0
+   01b3   a1            		PLO	R1
+   01b4   a2            		PLO	R2
+   01b5   a3            		PLO	R3
+   01b6   a4            		PLO	R4
+   01b7   a5            		PLO	R5
+   01b8   a6            		PLO	R6
+   01b9   a7            		PLO	R7
+   01ba   a8            		PLO	R8
+   01bb   a9            		PLO	R9
+   01bc   aa            		PLO	R10
+   01bd   ab            		PLO	R11
+   01be   ac            		PLO	R12
+   01bf   ad            		PLO	R13
+   01c0   ae            		PLO	R14
+   01c1   af            		PLO	R15
+                        ; 0B0H - 0BFH.
+   01c2   b0            		PHI	R0
+   01c3   b1            		PHI	R1
+   01c4   b2            		PHI	R2
+1802/1805A Cross-Assembler Test Source File
+
+   01c5   b3            		PHI	R3
+   01c6   b4            		PHI	R4
+   01c7   b5            		PHI	R5
+   01c8   b6            		PHI	R6
+   01c9   b7            		PHI	R7
+   01ca   b8            		PHI	R8
+   01cb   b9            		PHI	R9
+   01cc   ba            		PHI	R10
+   01cd   bb            		PHI	R11
+   01ce   bc            		PHI	R12
+   01cf   bd            		PHI	R13
+   01d0   be            		PHI	R14
+   01d1   bf            		PHI	R15
+                        ; 0C0H - 0CFH.
+   01d2   c0 01 00      		LBR	START
+   01d5   c1 01 00      		LBQ	START
+   01d8   c2 01 00      		LBZ	START
+   01db   c3 01 00      		LBDF	START
+   01de   c4            		NOP
+   01df   c5            		LSNQ
+   01e0   c6            		LSNZ
+   01e1   c7            		LSNF
+   01e2   c8 01 00      		NLBR	START
+   01e5   c9 01 00      		LBNQ	START
+   01e8   ca 01 00      		LBNZ	START
+   01eb   cb 01 00      		LBNF	START
+   01ee   cc            		LSIE
+   01ef   cd            		LSQ
+   01f0   ce            		LSZ
+   01f1   cf            		LSDF
+                        ; 0D0H - 0DFH.
+   01f2   d0            		SEP	R0
+   01f3   d1            		SEP	R1
+   01f4   d2            		SEP	R2
+   01f5   d3            		SEP	R3
+   01f6   d4            		SEP	R4
+   01f7   d5            		SEP	R5
+   01f8   d6            		SEP	R6
+   01f9   d7            		SEP	R7
+   01fa   d8            		SEP	R8
+   01fb   d9            		SEP	R9
+   01fc   da            		SEP	R10
+   01fd   db            		SEP	R11
+   01fe   dc            		SEP	R12
+   01ff   dd            		SEP	R13
+   0200   de            		SEP	R14
+   0201   df            		SEP	R15
+                        ; 0E0H - 0EFH.
+   0202   e0            		SEX	R0
+   0203   e1            		SEX	R1
+   0204   e2            		SEX	R2
+   0205   e3            		SEX	R3
+   0206   e4            		SEX	R4
+   0207   e5            		SEX	R5
+   0208   e6            		SEX	R6
+   0209   e7            		SEX	R7
+   020a   e8            		SEX	R8
+   020b   e9            		SEX	R9
+1802/1805A Cross-Assembler Test Source File
+
+   020c   ea            		SEX	R10
+   020d   eb            		SEX	R11
+   020e   ec            		SEX	R12
+   020f   ed            		SEX	R13
+   0210   ee            		SEX	R14
+   0211   ef            		SEX	R15
+                        ; 0F0H - 0FFH.
+   0212   f0            		LDX
+   0213   f1            		OR
+   0214   f2            		AND
+   0215   f3            		XOR
+   0216   f4            		ADD
+   0217   f5            		SD
+   0218   f6            		SHR
+   0219   f7            		SM
+   021a   f8 00         		LDI	NUMBER
+   021c   f9 00         		ORI	NUMBER
+   021e   fa 00         		ANI	NUMBER
+   0220   fb 00         		XRI	NUMBER
+   0222   fc 00         		ADI	NUMBER
+   0224   fd 00         		SDI	NUMBER
+   0226   fe            		SHL
+   0227   ff 00         		SMI	NUMBER
+                        
+                        ;
+                        ; Now, the unique 1805A opcodes in numerical order by second opcode byte:
+                        ;
+   0300                 		PAGE
+                        
+                        ; 00H - 0FH
+   0300   68 00         		STPC
+   0302   68 01         		DTC
+   0304   68 02         		SPM2
+   0306   68 03         		SCM2
+   0308   68 04         		SPM1
+   030a   68 05         		SCM1
+   030c   68 06         		LDC
+   030e   68 07         		STM
+   0310   68 08         		GEC
+   0312   68 09         		ETQ
+   0314   68 0a         		XIE
+   0316   68 0b         		XID
+   0318   68 0c         		CIE
+   031a   68 0d         		CID
+                        					; 0EH - 0FH are undefined.
+                        ; 10H - 1FH
+                        					; 10H - 1FH are undefined.
+                        ; 20H - 2FH
+   031c   68 20 01 00   		DBNZ	R0, START
+   0320   68 21 01 00   		DBNZ	R1, START
+   0324   68 22 01 00   		DBNZ	R2, START
+   0328   68 23 01 00   		DBNZ	R3, START
+   032c   68 24 01 00   		DBNZ	R4, START
+   0330   68 25 01 00   		DBNZ	R5, START
+   0334   68 26 01 00   		DBNZ	R6, START
+   0338   68 27 01 00   		DBNZ	R7, START
+   033c   68 28 01 00   		DBNZ	R8, START
+   0340   68 29 01 00   		DBNZ	R9, START
+1802/1805A Cross-Assembler Test Source File
+
+   0344   68 2a 01 00   		DBNZ	R10, START
+   0348   68 2b 01 00   		DBNZ	R11, START
+   034c   68 2c 01 00   		DBNZ	R12, START
+   0350   68 2d 01 00   		DBNZ	R13, START
+   0354   68 2e 01 00   		DBNZ	R14, START
+   0358   68 2f 01 00   		DBNZ	R15, START
+                        ; 30H - 3FH
+                        					; 30H - 3DH are undefined.
+   035c   68 3e 00      		BCI	$ AND 1111111100000000B
+   035f   68 3f 00      		BXI	$ AND 1111111100000000B
+                        ; 40H - 4FH
+                        					; 40H - 4FH are undefined.
+                        ; 50H - 5FH
+                        					; 50H - 5FH are undefined.
+                        ; 60H - 6FH
+   0362   68 60         		RLXA	R0
+   0364   68 61         		RLXA	R1
+   0366   68 62         		RLXA	R2
+   0368   68 63         		RLXA	R3
+   036a   68 64         		RLXA	R4
+   036c   68 65         		RLXA	R5
+   036e   68 66         		RLXA	R6
+   0370   68 67         		RLXA	R7
+   0372   68 68         		RLXA	R8
+   0374   68 69         		RLXA	R9
+   0376   68 6a         		RLXA	R10
+   0378   68 6b         		RLXA	R11
+   037a   68 6c         		RLXA	R12
+   037c   68 6d         		RLXA	R13
+   037e   68 6e         		RLXA	R14
+   0380   68 6f         		RLXA	R15
+                        ; 70H - 7FH
+                        					; 70H - 73H are undefined.
+   0382   68 74         		DADC
+                        					; 75H is undefined.
+   0384   68 76         		DSAV
+   0386   68 77         		DSMB
+                        					; 78H - 7BH are undefined.
+   0388   68 7c 00      		DACI	NUMBER
+                        					; 7DH - 7EH are undefined.
+   038b   68 7f 00      		DSBI	NUMBER
+                        ; 80H - 8FH
+   038e   68 80 01 00   		SCAL	R0, START
+   0392   68 81 01 00   		SCAL	R1, START
+   0396   68 82 01 00   		SCAL	R2, START
+   039a   68 83 01 00   		SCAL	R3, START
+   039e   68 84 01 00   		SCAL	R4, START
+   03a2   68 85 01 00   		SCAL	R5, START
+   03a6   68 86 01 00   		SCAL	R6, START
+   03aa   68 87 01 00   		SCAL	R7, START
+   03ae   68 88 01 00   		SCAL	R8, START
+   03b2   68 89 01 00   		SCAL	R9, START
+   03b6   68 8a 01 00   		SCAL	R10, START
+   03ba   68 8b 01 00   		SCAL	R11, START
+   03be   68 8c 01 00   		SCAL	R12, START
+   03c2   68 8d 01 00   		SCAL	R13, START
+   03c6   68 8e 01 00   		SCAL	R14, START
+   03ca   68 8f 01 00   		SCAL	R15, START
+1802/1805A Cross-Assembler Test Source File
+
+                        ; 90H - 9FH
+   03ce   68 90         		SRET	R0
+   03d0   68 91         		SRET	R1
+   03d2   68 92         		SRET	R2
+   03d4   68 93         		SRET	R3
+   03d6   68 94         		SRET	R4
+   03d8   68 95         		SRET	R5
+   03da   68 96         		SRET	R6
+   03dc   68 97         		SRET	R7
+   03de   68 98         		SRET	R8
+   03e0   68 99         		SRET	R9
+   03e2   68 9a         		SRET	R10
+   03e4   68 9b         		SRET	R11
+   03e6   68 9c         		SRET	R12
+   03e8   68 9d         		SRET	R13
+   03ea   68 9e         		SRET	R14
+   03ec   68 9f         		SRET	R15
+                        ; 0A0H - 0AFH
+   03ee   68 a0         		RSXD	R0
+   03f0   68 a1         		RSXD	R1
+   03f2   68 a2         		RSXD	R2
+   03f4   68 a3         		RSXD	R3
+   03f6   68 a4         		RSXD	R4
+   03f8   68 a5         		RSXD	R5
+   03fa   68 a6         		RSXD	R6
+   03fc   68 a7         		RSXD	R7
+   03fe   68 a8         		RSXD	R8
+   0400   68 a9         		RSXD	R9
+   0402   68 aa         		RSXD	R10
+   0404   68 ab         		RSXD	R11
+   0406   68 ac         		RSXD	R12
+   0408   68 ad         		RSXD	R13
+   040a   68 ae         		RSXD	R14
+   040c   68 af         		RSXD	R15
+                        ; 0B0H - 0BFH
+   040e   68 b0         		RNX	R0
+   0410   68 b1         		RNX	R1
+   0412   68 b2         		RNX	R2
+   0414   68 b3         		RNX	R3
+   0416   68 b4         		RNX	R4
+   0418   68 b5         		RNX	R5
+   041a   68 b6         		RNX	R6
+   041c   68 b7         		RNX	R7
+   041e   68 b8         		RNX	R8
+   0420   68 b9         		RNX	R9
+   0422   68 ba         		RNX	R10
+   0424   68 bb         		RNX	R11
+   0426   68 bc         		RNX	R12
+   0428   68 bd         		RNX	R13
+   042a   68 be         		RNX	R14
+   042c   68 bf         		RNX	R15
+                        ; 0C0H - 0CFH
+   042e   68 c0 01 00   		RLDI	R0, START
+   0432   68 c1 01 00   		RLDI	R1, START
+   0436   68 c2 01 00   		RLDI	R2, START
+   043a   68 c3 01 00   		RLDI	R3, START
+   043e   68 c4 01 00   		RLDI	R4, START
+   0442   68 c5 01 00   		RLDI	R5, START
+1802/1805A Cross-Assembler Test Source File
+
+   0446   68 c6 01 00   		RLDI	R6, START
+   044a   68 c7 01 00   		RLDI	R7, START
+   044e   68 c8 01 00   		RLDI	R8, START
+   0452   68 c9 01 00   		RLDI	R9, START
+   0456   68 ca 01 00   		RLDI	R10, START
+   045a   68 cb 01 00   		RLDI	R11, START
+   045e   68 cc 01 00   		RLDI	R12, START
+   0462   68 cd 01 00   		RLDI	R13, START
+   0466   68 ce 01 00   		RLDI	R14, START
+   046a   68 cf 01 00   		RLDI	R15, START
+                        ; 0D0H - 0DFH
+                        					; 0D0H - 0DFH are undefined.
+                        ; 0E0H - 0EFH
+                        					; 0E0H - 0EFH are undefined.
+                        ; 0F0H - 0FFH
+                        					; 0F0H - 0F3H are undefined.
+   046e   68 f4         		DADD
+                        					; 0F5H - 0F6H are undefined.
+   0470   68 f7         		DSM
+                        					; 0F8H - 0FBH are undefined.
+   0472   68 fc 00      		DADI	NUMBER
+                        					; 0FDH - 0FEH are undefined.
+   0475   68 ff 00      		DSMI	NUMBER
+                        
+                        ;
+                        ; Let's test the rest of the pseudo-ops while we're at it:
+                        ;
+   0478   f8 01 b2 f8   		LOAD	R2, START
+   047c   00 a2         
+                        
+   ffff                 VARIABLE	SET	-1
+                        
+   ffff                 		IF	VARIABLE
+   047e   ff 01         		BYTE	-1, , +1
+                        		ELSE
+                        		BYTE	+1, , -1
+                        		ENDI
+                        
+   0000                 VARIABLE	SET	VARIABLE EQ 0
+                        
+   0000                 		IF	VARIABLE
+                        		WORD	, +1
+                        		ELSE
+   0480   00 00 ff ff   		WORD	, -1
+                        		ENDI
+                        
+   0484                 		BLK	10H
+                        
+   0494   45 58 50 4c   		TEXT	"EXPLOSION"
+   0498   4f 53 49 4f   
+   049c   4e            
+                        
+   049d   01 ff 68 65   herb1:		db 1,255,"hello there" ;DB, colon, strings
+   04a1   6c 6c 6f 20   
+   04a5   74 68 65 72   
+   04a9   65            
+   04aa   30 a7         		br $-3		; use of PC reference $
+   04ac   12 ef 43 21   		dw 12EFH, $4321	; DW and alternate base 16
+1802/1805A Cross-Assembler Test Source File
+
+   04b0   24            		db %00100100	; base 2
+                        
+   04b1                 		END
+1802/1805A Cross-Assembler Test Source File
+
+0000  NUMBER        0001  P1            0002  P2            0003  P3        
+0004  P4            0005  P5            0006  P6            0007  P7        
+0000  R0            0001  R1            000a  R10           000b  R11       
+000c  R12           000d  R13           000e  R14           000f  R15       
+0002  R2            0003  R3            0004  R4            0005  R5        
+0006  R6            0007  R7            0008  R8            0009  R9        
+0100  START         0000  VARIABLE      049d  herb1         
+
