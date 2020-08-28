@@ -186,7 +186,7 @@ void buildTokens(char* buffer) {
       }
     else if (*buffer == '+' || *buffer == '-' || *buffer == '*' ||
         *buffer == '/' || *buffer == '$' || *buffer == '(' ||
-        *buffer == ')' || *buffer == '.') {
+        *buffer == ')' || *buffer == '.' || *buffer == '!' || *buffer == '&'){ //ken add | & 
       if (len == 0) {
         *bPtr++ = *buffer++;
         *bPtr = 0;
@@ -297,6 +297,31 @@ int process_tokens(int start,int end) {
       tokenCount -=2;
       } else i++;
     }
+  
+  /* ***** Process & and | ***** KEN ADD */
+  i = start;
+  while (i <= end) {
+    if (tokens[i].typ != 'N' && 
+        (strcmp(tokens[i].data.chr,"&") == 0 ||
+         strcmp(tokens[i].data.chr,"!") == 0)) {
+      if (i == 0 || i == tokenCount-1) {
+        return -1;
+        }
+      if (tokens[i-1].typ != 'N' || tokens[i+1].typ != 'N') {
+        return -1;
+        }
+      if (strcmp(tokens[i].data.chr,"&") == 0){
+        tokens[i-1].data.number &= tokens[i+1].data.number;
+        //printf("AND");
+      }else {
+          tokens[i-1].data.number |= tokens[i+1].data.number;
+          //printf("OR");
+      }
+      for (j=i; j<tokenCount; j++) tokens[j] = tokens[j+2];
+      tokenCount -=2;
+      } else i++;
+    }
+  
   return 0;
   }
 

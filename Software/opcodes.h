@@ -28,7 +28,8 @@ extern "C" {
 #define        ON	0x01
 #define        OFF	0x02
 #define        HALT	0x03
-//#define        TBR      0x05
+#define        JSR      0X04
+#define        RET      0x05
 //#define        TBRON    0x06
 //#define        TBROFF   0x07
 //#define        TBRZ     0x08

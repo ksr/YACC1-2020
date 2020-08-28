@@ -1,4 +1,4 @@
-
+ 
 UARTA0:       EQU 000h
 UARTA1:       EQU 008h
 UARTA2:       EQU 010h
@@ -16,11 +16,7 @@ UARTCS:      EQU 040H
 CNTL-PORT:    EQU "P0"
 DATAPORT:    EQU "P1"
 
-        ORG 0f000h
-        BR eprom
-        ORG 0f003h
-
-eprom:  ON
+        
 
         OUTI  P0,(UARTA3!UARTCS)
         OUTI  P1,080H
@@ -35,25 +31,48 @@ eprom:  ON
         OUTI  P1,03H
 
         OUTI  P0,UARTCS
-
+        
         MVIB  R1,'A'
         MVIB  R2,26
-
 uloop:
         MVRLA R1
         OUTA  P1
-        
         DECR  R2
         INCR   R1
-
-        MVIW R3,0FFFh
-loop1:  DECR R3
-        MVRHA R3
-        BRNZ loop1
-
         MVRLA R2
-        BRNZ uloop
+        BRNZ  uloop
 
 aloop:
         OUTI  P1,'1'
         BR  aloop
+
+
+
+
+
+
+
+
+
+        BR eprom
+;       db      'D',(03h!05hH),4
+        ORG 0f003h
+top:
+eprom:  ON
+        MVIB R1,080h
+loop1:  DECR R1
+        MVRLA R1
+        BRNZ loop1
+        OFF
+        MVIB R1,080h
+loop2:  DECR R1
+        MVRLA R1
+        BRNZ loop2
+        BR top
+        OUTA P1
+        OUTA PF
+        OUTI P3,055H
+        OUTVR P2,R1
+        OUTVR PE,R1
+        INP P3
+        MVIB R1,(2+080h)

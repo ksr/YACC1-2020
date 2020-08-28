@@ -250,6 +250,7 @@ int main(int argc, char** argv) {
             //printf("Instruction [%d] found\n", i);
         }
     }
+    processInstruction(0xA0);
     return (EXIT_SUCCESS);
 }
 

@@ -10,14 +10,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/rcasm.rc</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/yacc1test.img</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/asmcmds.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/c_standard_headers_indexer.c</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/mstrings.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/rcasm.rc</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/asm.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/yacc1.def</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/yacc1test.asm</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/yacc1test.img</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/header.h</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/mstrings.h</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/support.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/asmcmds.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Assembler/yacc1.def</file>
         </group>
     </open-files>
 </project-private>

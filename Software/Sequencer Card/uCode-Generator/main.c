@@ -33,6 +33,8 @@
 #define NOINVERT 0
 
 #define PC 0 //program counter is currently locked to reg 0
+#define SP 1 //stack pointer is currently locked to reg 1 (only needed if JSR/RET is used)
+
 //#define DEBUG 1
 
 /*
@@ -166,7 +168,14 @@ void setAlu(int aluBits) {
     setRegBit("ALU1", aluBits & 0x0002);
     setRegBit("ALU2", aluBits & 0x0004);
     setRegBit("ALU3", aluBits & 0x0008);
-    // what about alu3
+}
+
+void setIo(int ioBits) {
+    printf("setIO %d\n", ioBits);
+    setRegBit("IOADDR0", ioBits & 0x0001);
+    setRegBit("IOADDR1", ioBits & 0x0002);
+    setRegBit("IOADDR2", ioBits & 0x0004);
+    setRegBit("IOADDR3", ioBits & 0x0008);
 }
 
 /* 
@@ -181,7 +190,7 @@ void loadNextInstruction() {
 
     //initCurrentLine(); // not needed, load next instruction is always done at start of instruction and initCurrentLIne is called
     putMemAtRegOnBus(0);
-    setSignal("LD-INS-REG"); // rising or falling
+    setSignal("LD-INS-REG"); // rising or falling?
     writeCurrentLine();
     clearSignal("LD-INS-REG");
     //writeCurrentLine(); // -reg-up is rising edge
@@ -193,7 +202,7 @@ void loadNextInstruction() {
     writeCurrentLine(); //clear reg-func-rd?
 }
 
-void branch(int mode, int invert,int actest) {
+void branch(int mode, int invert, int actest) {
     //load the next two PC bytes format HHLL into branch register
     putMemAtRegOnBus(PC);
     setSignal("BRANCH-LD-HI");
@@ -223,8 +232,8 @@ void branch(int mode, int invert,int actest) {
     setSignal("-BRANCH-RD-HI");
     //setSignal("-REG-FUNC-LD");//?
     //writeCurrentLine(); //Ken Probably not needed
-    if(actest == 1)
-           setSignal("-AC-RD");
+    if (actest == 1)
+        setSignal("-AC-RD");
     setSignal("-ALU-FUNC");
     setAlu(mode);
     //if (mode == 4) exit(0);
@@ -247,6 +256,26 @@ void putMemAtRegOnBus(int reg) {
     setSignal("-REG-RD-LO");
     setSignal("-REG-RD-HI");
     setRdId(reg);
+    writeCurrentLine();// not needed if if reg loads on rising edge
+    setSignal("-ADDR-REG-LD0");
+    writeCurrentLine();  
+    clearSignal("-ADDR-REG-LD0");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-RD");
+    clearSignal("-REG-RD-LO");
+    clearSignal("-REG-RD-HI");
+    writeCurrentLine(); // probably not needed
+    setSignal("-ADDR-REG-RD0");
+    setSignal("-VMA");
+    setSignal("-MEM-RD");
+    writeCurrentLine();
+}
+
+void putBustoReg(int reg) {
+    setSignal("-REG-FUNC-LD");
+    setSignal("-REG-RD-LO");
+    setSignal("-REG-RD-HI");
+    setRdId(reg);
     writeCurrentLine();
     setSignal("-ADDR-REG-LD0");
     writeCurrentLine();
@@ -258,8 +287,10 @@ void putMemAtRegOnBus(int reg) {
     writeCurrentLine();
     setSignal("-ADDR-REG-RD0");
     setSignal("-VMA");
-    setSignal("-MEM-RD");
     writeCurrentLine();
+    setSignal("-MEM-WR");
+    writeCurrentLine();
+    clearSignal("-MEM-WR");
 }
 
 int main(int argc, char** argv) {
@@ -308,21 +339,21 @@ int main(int argc, char** argv) {
     startInstruction(BR); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBR, NOINVERT,0);
+    branch(ALUBR, NOINVERT, 0);
     endInstruction();
     showCntlMemory(BR);
 
     startInstruction(BRINH); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBRIN, NOINVERT,0);
+    branch(ALUBRIN, NOINVERT, 0);
     endInstruction();
     showCntlMemory(BRINH);
 
     startInstruction(BRINL); //Ken switch to permanent code
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBRIN, INVERT,0);
+    branch(ALUBRIN, INVERT, 0);
     endInstruction();
     showCntlMemory(BRINL);
 
@@ -330,7 +361,7 @@ int main(int argc, char** argv) {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(ALUBRZ, NOINVERT,1);
+    branch(ALUBRZ, NOINVERT, 1);
     endInstruction();
     showCntlMemory(BRZ);
 
@@ -338,11 +369,51 @@ int main(int argc, char** argv) {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(ALUBRZ, INVERT,1);
+    branch(ALUBRZ, INVERT, 1);
     endInstruction();
     showCntlMemory(BRNZ);
 
+    //Decrement Register
+    for (reg = 0; reg < 8; reg++) {
+        ins = DECR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
 
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+
+        writeCurrentLine();
+        setSignal("-REG-DN");
+        writeCurrentLine();
+        clearSignal("-REG-DN");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Increment Register
+    for (reg = 0; reg < 8; reg++) {
+        ins = INCR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+
+        writeCurrentLine();
+        setSignal("-REG-UP");
+        writeCurrentLine();
+        clearSignal("-REG-UP");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
 
     //load register low immediate 8 bit
     for (reg = 0; reg < 8; reg++) {
@@ -373,49 +444,55 @@ int main(int argc, char** argv) {
         showCntlMemory(ins);
     }
 
-    //Increment Register
+    //load register low & hi immediate 16 bit
     for (reg = 0; reg < 8; reg++) {
-        ins = INCR | (reg & 0x07);
+        ins = MVIW | (reg & 0x07);
         startInstruction(ins);
         loadNextInstruction();
         initCurrentLine();
 
+        putMemAtRegOnBus(PC);
 
-        setSignal("-REG-FUNC-RD");
-        setRdId(reg);
-
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
         writeCurrentLine();
-        setSignal("-REG-UP"); 
+        setSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("REG-LD-HI");
+        writeCurrentLine();
+
+        clearSignal("-REG-FUNC-LD");
+        setRdId(PC);
+        setSignal("-REG-FUNC-RD");
+        setSignal("-REG-UP");
         writeCurrentLine();
         clearSignal("-REG-UP");
         writeCurrentLine();
 
-        endInstruction();
-        showCntlMemory(ins);
-    }
+        putMemAtRegOnBus(PC);
 
-    //Decrement Register
-    for (reg = 0; reg < 8; reg++) {
-        ins = DECR | (reg & 0x07);
-        startInstruction(ins);
-        loadNextInstruction();
-        initCurrentLine();
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
+
+        writeCurrentLine();
+        setSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("REG-LD-LO");
+        writeCurrentLine();
 
 
+        clearSignal("-REG-FUNC-LD");
+        setRdId(PC);
         setSignal("-REG-FUNC-RD");
-        setRdId(reg);
-
+        setSignal("-REG-UP");
         writeCurrentLine();
-        setSignal("-REG-DN"); 
-        writeCurrentLine();
-        clearSignal("-REG-DN");
-        writeCurrentLine();
+        clearSignal("-REG-UP");
+        writeCurrentLine(); // clear reg-func-rd?
 
         endInstruction();
         showCntlMemory(ins);
     }
-
-    //Move Register to Accumulator
+    //Move Register low to Accumulator
     for (reg = 0; reg < 8; reg++) {
         ins = MVRLA | (reg & 0x07);
         startInstruction(ins);
@@ -433,6 +510,129 @@ int main(int argc, char** argv) {
         writeCurrentLine();
         clearSignal("-AC-LD");
         writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Move Register high to Accumulator
+    for (reg = 0; reg < 8; reg++) {
+        ins = MVRHA | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+        setSignal("-REG-RD-HI");
+        setSignal("-HL-SWAP");
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        writeCurrentLine();
+        setSignal("-AC-LD");
+        writeCurrentLine();
+        clearSignal("-AC-LD");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //LDA MEM via REG to Accum
+    for (reg = 0; reg < 8; reg++) {
+        ins = LDAVR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        putMemAtRegOnBus(reg); 
+
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        writeCurrentLine();
+        setSignal("-AC-LD");
+        writeCurrentLine();
+        clearSignal("-AC-LD");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Store Accum at  MEM via REG
+    for (reg = 0; reg < 8; reg++) {
+        ins = STAVR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+        
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        writeCurrentLine();
+        setSignal("-AC-RD");
+        writeCurrentLine();
+        
+        putBustoReg(reg);
+
+        
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //OUT immediate 
+    for (reg = 0; reg <= 15; reg++) {
+        ins = OUTI | (reg & 0x0f);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        putMemAtRegOnBus(PC);
+
+
+        setIo(reg);
+        writeCurrentLine();
+        setSignal("-IO-ADDR-LD"); //if io addr is latched on rising edge then setio and io-addr-ld can be combined Is ioaddrld even needed
+        writeCurrentLine();
+        clearSignal("-IO-ADDR-LD");
+        writeCurrentLine();
+        setSignal("-IO-WR");
+        writeCurrentLine();
+        clearSignal("-IO-WR");
+        writeCurrentLine();
+
+        initCurrentLine();
+        setRdId(PC);
+        setSignal("-REG-FUNC-RD");
+        setSignal("-REG-UP");
+        writeCurrentLine();
+        clearSignal("-REG-UP");
+        writeCurrentLine(); // clear reg-func-rd?
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //OUT ACCUM 
+    for (reg = 0; reg <= 15; reg++) {
+        ins = OUTA | (reg & 0x0f);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        setSignal("-AC-RD");
+        setSignal("-ALU-FUNC");
+
+        setIo(reg);
+        writeCurrentLine();
+        setSignal("-IO-ADDR-LD"); //if io addr is latched on rising edge then setio and io-addr-ld can be combined Is ioaddrld even needed
+        writeCurrentLine();
+        clearSignal("-IO-ADDR-LD");
+        writeCurrentLine();
+        setSignal("-IO-WR");
+        writeCurrentLine();
+        clearSignal("-IO-WR");
+        writeCurrentLine(); // clear reg-func-rd?
 
         endInstruction();
         showCntlMemory(ins);
