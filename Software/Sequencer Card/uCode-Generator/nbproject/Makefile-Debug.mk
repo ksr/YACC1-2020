@@ -35,8 +35,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/accumulator.o \
+	${OBJECTDIR}/branch.o \
 	${OBJECTDIR}/controlLine.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/io.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/register.o
 
 
 # C Compiler Flags
@@ -63,15 +67,35 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ucode-generator: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ucode-generator ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/accumulator.o: accumulator.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/accumulator.o accumulator.c
+
+${OBJECTDIR}/branch.o: branch.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/branch.o branch.c
+
 ${OBJECTDIR}/controlLine.o: controlLine.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/controlLine.o controlLine.c
 
+${OBJECTDIR}/io.o: io.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/io.o io.c
+
 ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/register.o: register.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/register.o register.c
 
 # Subprojects
 .build-subprojects:

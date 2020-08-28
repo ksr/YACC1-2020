@@ -36,7 +36,10 @@ extern "C" {
 #endif /* CODES_H */
 
 void clearCurrentLine();
+void loadNextInstruction();
+void initCurrentLine();
 void putMemAtRegOnBus(int reg);
+void putBustoReg(int);
 void cmd(char *str, int reg);
 void bitOn();
 void bitOff();
@@ -50,3 +53,9 @@ void clearCntlMemory();
 void showCntlMemory(int instruction);
 void basicTest();
 void showCurrentLine();
+void setRdId(int);
+void setLdId(int);
+void setIo(int);
+void setAlu(int);
+void setSignal(char *);
+void clearSignal(char *);

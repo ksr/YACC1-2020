@@ -35,3 +35,22 @@ extern "C" {
 #define MEMORY_SIZE BYTES_PER_LINE*LINES_PER_INSTRUCTION*INSTRUCTIONS
 
 #define INSTRUCTIONS_TO_OUTPUT 256   // KEN sould be 255
+
+#define ALUDATA 0
+#define ALUSUB 1
+#define ALUAND 2
+#define ALUOR  3
+#define ALUXOR 4
+#define ALUSHIFT 5
+#define ALUZERO 6
+#define ALUADD 7
+
+#define ALUBR 0
+#define ALUBRZ 4
+#define ALUBRIN 5
+
+#define INVERT 1
+#define NOINVERT 0
+
+#define PC 0 //program counter is currently locked to reg 0
+#define SP 1 //stack pointer is currently locked to reg 1 (only needed if JSR/RET is used)
