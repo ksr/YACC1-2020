@@ -8886,6 +8886,7 @@ Based on the following sources:
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 <part name="IC34" library="40xx" library_urn="urn:adsk.eagle:library:80" deviceset="4077" device="N" package3d_urn="urn:adsk.eagle:package:16407/2"/>
 <part name="IC38" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*139" device="N" package3d_urn="urn:adsk.eagle:package:922/2" technology="LS"/>
+<part name="IC39" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*139" device="N" package3d_urn="urn:adsk.eagle:package:922/2" technology="LS"/>
 <part name="J3" library="SparkFun-Connectors" deviceset="M04X2" device=""/>
 <part name="IC40" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*32" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="LS"/>
 <part name="IC41" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*244" device="N" package3d_urn="urn:adsk.eagle:package:16429/2" technology="LS"/>
@@ -13074,6 +13075,10 @@ Based on the following sources:
 <attribute name="NAME" x="45.72" y="36.195" size="1.778" layer="95"/>
 <attribute name="VALUE" x="45.72" y="22.86" size="1.778" layer="96"/>
 </instance>
+<instance part="IC39" gate="A" x="99.06" y="93.98" smashed="yes">
+<attribute name="NAME" x="91.44" y="99.695" size="1.778" layer="95"/>
+<attribute name="VALUE" x="91.44" y="83.82" size="1.778" layer="96"/>
+</instance>
 <instance part="J3" gate="G$1" x="129.54" y="91.44" smashed="yes">
 <attribute name="VALUE" x="124.968" y="83.82" size="1.778" layer="96"/>
 <attribute name="NAME" x="125.476" y="99.822" size="1.778" layer="95"/>
@@ -13085,10 +13090,6 @@ Based on the following sources:
 <instance part="IC40" gate="A" x="53.34" y="88.9" smashed="yes">
 <attribute name="NAME" x="45.72" y="94.615" size="1.778" layer="95"/>
 <attribute name="VALUE" x="45.72" y="81.28" size="1.778" layer="96"/>
-</instance>
-<instance part="IC38" gate="B" x="99.06" y="93.98" smashed="yes">
-<attribute name="NAME" x="91.44" y="99.695" size="1.778" layer="95"/>
-<attribute name="VALUE" x="91.44" y="83.82" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -13345,30 +13346,37 @@ Based on the following sources:
 </net>
 <net name="N$45" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="G"/>
 <wire x1="86.36" y1="88.9" x2="66.04" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="IC40" gate="A" pin="O"/>
-<pinref part="IC38" gate="B" pin="G"/>
+</segment>
+</net>
+<net name="-VMA" class="0">
+<segment>
+<wire x1="40.64" y1="86.36" x2="20.32" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="IC40" gate="A" pin="I1"/>
+<label x="20.32" y="86.36" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$51" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="Y1"/>
 <pinref part="J3" gate="G$1" pin="3"/>
 <wire x1="111.76" y1="93.98" x2="121.92" y2="93.98" width="0.1524" layer="91"/>
-<pinref part="IC38" gate="B" pin="Y1"/>
 </segment>
 </net>
 <net name="N$52" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="Y2"/>
 <pinref part="J3" gate="G$1" pin="5"/>
 <wire x1="111.76" y1="91.44" x2="121.92" y2="91.44" width="0.1524" layer="91"/>
-<pinref part="IC38" gate="B" pin="Y2"/>
 </segment>
 </net>
 <net name="N$53" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="Y3"/>
 <pinref part="J3" gate="G$1" pin="7"/>
 <wire x1="111.76" y1="88.9" x2="121.92" y2="88.9" width="0.1524" layer="91"/>
-<pinref part="IC38" gate="B" pin="Y3"/>
 </segment>
 </net>
 <net name="-ADDRSEL" class="0">
@@ -13432,31 +13440,24 @@ Based on the following sources:
 </net>
 <net name="ARD0" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="Y0"/>
 <pinref part="J3" gate="G$1" pin="1"/>
 <wire x1="111.76" y1="96.52" x2="121.92" y2="96.52" width="0.1524" layer="91"/>
 <label x="114.3" y="96.52" size="1.778" layer="95"/>
-<pinref part="IC38" gate="B" pin="Y0"/>
 </segment>
 </net>
 <net name="ADDR-REG-ID2" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="A"/>
 <wire x1="86.36" y1="96.52" x2="68.58" y2="96.52" width="0.1524" layer="91"/>
 <label x="68.58" y="96.52" size="1.778" layer="95"/>
-<pinref part="IC38" gate="B" pin="A"/>
 </segment>
 </net>
 <net name="ADDR-REG-ID3" class="0">
 <segment>
+<pinref part="IC39" gate="A" pin="B"/>
 <wire x1="86.36" y1="93.98" x2="68.58" y2="93.98" width="0.1524" layer="91"/>
 <label x="68.58" y="93.98" size="1.778" layer="95"/>
-<pinref part="IC38" gate="B" pin="B"/>
-</segment>
-</net>
-<net name="-VMA" class="0">
-<segment>
-<pinref part="IC40" gate="A" pin="I1"/>
-<wire x1="40.64" y1="86.36" x2="22.86" y2="86.36" width="0.1524" layer="91"/>
-<label x="22.86" y="86.36" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
@@ -14303,7 +14304,7 @@ Based on the following sources:
 </instance>
 </instances>
 <busses>
-<bus name="-AC-LD,-AC-LD-INV,-AC-RD,ADDR[0..15],-ADDR-REG-LD[0..1],-ADDR-REG-RD[0..1],ALU[0..3],-ALU-FUNC,BR-COND,-BUS-EN,DATA[0..15],-HL-SWAP,IN,-INT,-INTA,IO-ADDR[0..3],-IO-ADDR-LD,-IO-RD,-IO-WR,-MEM-RD,-MEM-WR,OUT,-REG-DN,-REG-FUNC-LD,-REG-FUNC-RD,-REG-LD-HI,REG-LD-ID[0..3],-REG-LD-LO,-REG-RD-HI,REG-RD-ID[0..3],-REG-RD-LO,-REG-UP,-RESET,-RUN,-SR-LD,-TMP-REG-LD[0..1],-TMP-REG-RD[0..1],-VMA">
+<bus name="-AC-LD,-AC-LD-INV,-AC-RD,ADDR[0..15],-ADDR-REG-LD[0..1],-ADDR-REG-RD[0..1],ALU[0..3],-ALU-FUNC,BR-COND,-BUS-EN,DATA[0..15],-HL-SWAP,IN,-INT,-INTA,IO-ADDR[0..3],-IO-ADDR-LD,-IO-RD,-IO-WR,-MEM-RD,-MEM-WR,OUT,-REG-DN,-REG-FUNC-LD,-REG-FUNC-RD,-REG-LD-HI,REG-LD-ID[0..3],-REG-LD-LO,-REG-RD-HI,REG-RD-ID[0..3],-REG-RD-LO,-REG-UP,-RESET,-RUN,-SR-LD,-TMP-REG-LD[0..1],-TMP-REG-RD[0..1],UNUSED0">
 <segment>
 <wire x1="-33.02" y1="6.35" x2="182.88" y2="6.35" width="0.762" layer="92"/>
 </segment>
@@ -14667,7 +14668,7 @@ Based on the following sources:
 <label x="134.62" y="8.89" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-VMA" class="0">
+<net name="UNUSED0" class="0">
 <segment>
 <pinref part="X1" gate="-C12" pin="B"/>
 <wire x1="137.16" y1="6.35" x2="137.16" y2="36.83" width="0.1524" layer="91"/>
