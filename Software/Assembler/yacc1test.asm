@@ -21,6 +21,9 @@ DATAPORT:    EQU "P1"
         ORG 0f003h
 
 eprom:  ON
+;
+;Setup UART
+;
 
         OUTI  P0,(UARTA3!UARTCS)
         OUTI  P1,080H
@@ -36,17 +39,29 @@ eprom:  ON
 
         OUTI  P0,UARTCS
 
-        MVIB  R1,'A'
-        MVIB  R2,26
+        MVIW  R1,0x0010
+        LDIVR R1,'A'
+        INCR  R1
+        LDIVR R1,'C'
+        INCR  R1
+        LDIVR R1,'E'
+        INCR  R1
+        LDIVR R1,'G'
+        INCR  R1
+        LDIVR R1,'I'
+
+        MVIW  R1,0x0010
+        MVIB  R2,5
 
 uloop:
-        MVRLA R1
+        LDAVR R1
+        ADDI 1
         OUTA  P1
-        
+
         DECR  R2
         INCR   R1
 
-        MVIW R3,0FFFh
+        MVIW R3,01FFh
 loop1:  DECR R3
         MVRHA R3
         BRNZ loop1
@@ -54,6 +69,20 @@ loop1:  DECR R3
         MVRLA R2
         BRNZ uloop
 
-aloop:
-        OUTI  P1,'1'
-        BR  aloop
+onoffloop:
+        ON
+;
+        MVIW R3,02FFh
+onloop:
+        DECR R3
+        MVRHA R3
+        BRNZ onloop
+
+        OFF
+        MVIW R3,02FFh
+offloop:
+        DECR R3
+        MVRHA R3
+        BRNZ offloop
+
+        br onoffloop
