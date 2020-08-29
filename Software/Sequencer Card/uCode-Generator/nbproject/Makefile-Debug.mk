@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/controlLine.o \
 	${OBJECTDIR}/io.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/memory.o \
 	${OBJECTDIR}/register.o
 
 
@@ -91,6 +92,11 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/memory.o: memory.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/memory.o memory.c
 
 ${OBJECTDIR}/register.o: register.c
 	${MKDIR} -p ${OBJECTDIR}

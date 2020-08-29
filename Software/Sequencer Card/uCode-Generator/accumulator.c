@@ -12,9 +12,9 @@
 #include "../../opcodes.h"
 #include "CodeGen.h"
 
-void accumulatorInstructions(){
-    int ins,reg;
-    
+void accumulatorInstructions() {
+    int ins, reg;
+
     //Move Register low to Accumulator
     for (reg = 0; reg < 8; reg++) {
         ins = MVRLA | (reg & 0x07);
@@ -63,7 +63,7 @@ void accumulatorInstructions(){
     }
 
 
-//LDA MEM via REG to Accum
+    //Load Accum From MEM pointed to by REG
     for (reg = 0; reg < 8; reg++) {
         ins = LDAVR | (reg & 0x07);
         startInstruction(ins);
@@ -84,7 +84,7 @@ void accumulatorInstructions(){
         showCntlMemory(ins);
     }
 
-    //Store Accum at  MEM via REG
+    //Store Accum at  MEM pointed to by REG
     for (reg = 0; reg < 8; reg++) {
         ins = STAVR | (reg & 0x07);
         startInstruction(ins);
@@ -97,10 +97,65 @@ void accumulatorInstructions(){
         setSignal("-AC-RD");
         writeCurrentLine();
 
-        putBustoReg(reg);
+        putBustoRegMem(reg);
 
 
         endInstruction();
         showCntlMemory(ins);
     }
+
+    //load Accum low immediate 8 bit
+    ins = LDAI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    setRdId(PC);
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //Add to  Accum low immediate 8 bit
+    ins = ADDI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUADD);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+
+
+
+
 }

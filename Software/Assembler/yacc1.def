@@ -82,6 +82,8 @@ LDTVR \{regs}
 C0|1
 STTVR \{regs}
 C8|1
+LDIVR \{regs},\B
+D0|1 \2
 ORG     \W
 \O1
 END     \W

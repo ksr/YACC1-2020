@@ -20,6 +20,7 @@ void branchInstructions();
 void registerOnlyInstructions();
 void ioInstructions();
 void accumulatorInstructions();
+void doMemory();
 
 
 //#define DEBUG 1
@@ -209,7 +210,7 @@ void putMemAtRegOnBus(int reg) {
     writeCurrentLine();
 }
 
-void putBustoReg(int reg) {
+void putBustoRegMem(int reg) {
     setSignal("-REG-FUNC-LD");
     setSignal("-REG-RD-LO");
     setSignal("-REG-RD-HI");
@@ -262,6 +263,8 @@ int main(int argc, char** argv) {
     ioInstructions();
     
     accumulatorInstructions();
+    
+    doMemory();
     
 
     

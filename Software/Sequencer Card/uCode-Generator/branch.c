@@ -103,4 +103,13 @@ void branchInstructions(){
     endInstruction();
     showCntlMemory(BRNZ);
     
+    //don't branch but setup branch register for JSR
+    startInstruction(NBR);
+    loadNextInstruction();
+    initCurrentLine();
+    //setSignal("-AC-RD");
+    branch(ALUBR, INVERT, 0);
+    endInstruction();
+    showCntlMemory(NBR);
+    
 }

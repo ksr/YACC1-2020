@@ -35,7 +35,7 @@ extern "C" {
 //#define        TBRZ     0x08
 //#define        TBRNZ    0x09
 #define        LDT	0x0D
-#define        LDA	0x0E
+#define        LDAI	0x0E
 #define        MVIB	0x10
 #define        MVIW	0x18
 #define        MVRLA	0x20
@@ -55,6 +55,7 @@ extern "C" {
 #define        BRNZ	0xA2
 #define        BRINH	0xA3
 #define        BRINL	0xA4
+#define        NBR      0x05
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2
@@ -70,6 +71,7 @@ extern "C" {
 #define        XORT	0xBC
 #define        LDTVR	0xC0
 #define        STTVR	0xC8
+#define        LDIVR    0xD0
 
 #endif /* OPCODES_H */
 

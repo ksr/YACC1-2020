@@ -19,6 +19,7 @@
       <itemPath>controlLine.c</itemPath>
       <itemPath>io.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>memory.c</itemPath>
       <itemPath>register.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -68,6 +69,8 @@
       <item path="io.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="memory.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="register.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -119,6 +122,8 @@
       <item path="io.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="memory.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="register.c" ex="false" tool="0" flavor2="0">
       </item>
