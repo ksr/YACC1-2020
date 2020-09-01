@@ -210,8 +210,8 @@ void putMemAtRegOnBus(int reg) {
     writeCurrentLine();
 }
 
-void putBustoRegMem(int reg) {
-    setSignal("-REG-FUNC-LD");
+void putBustoRegMem(int reg,char *source) {
+    setSignal("-REG-FUNC-RD");
     setSignal("-REG-RD-LO");
     setSignal("-REG-RD-HI");
     setRdId(reg);
@@ -223,13 +223,19 @@ void putBustoRegMem(int reg) {
     clearSignal("-REG-FUNC-RD");
     clearSignal("-REG-RD-LO");
     clearSignal("-REG-RD-HI");
-    writeCurrentLine();
+    //writeCurrentLine();
     setSignal("-ADDR-REG-RD0");
     setSignal("-VMA");
+    setSignal(source);
     writeCurrentLine();
     setSignal("-MEM-WR");
     writeCurrentLine();
     clearSignal("-MEM-WR");
+    writeCurrentLine();
+    clearSignal(source);
+    clearSignal("-VMA");
+    writeCurrentLine();
+    
 }
 
 int main(int argc, char** argv) {

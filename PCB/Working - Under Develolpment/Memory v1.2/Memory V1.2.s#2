@@ -3777,6 +3777,17 @@ Based on the following sources:
 <pin name="Q" x="12.7" y="5.08" length="middle" direction="out" rot="R180"/>
 <pin name="!Q" x="12.7" y="-5.08" length="middle" direction="out" rot="R180"/>
 </symbol>
+<symbol name="7400" urn="urn:adsk.eagle:symbol:2701/1" library_version="3">
+<wire x1="-7.62" y1="5.08" x2="-7.62" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="-7.62" y1="-5.08" x2="2.54" y2="-5.08" width="0.4064" layer="94"/>
+<wire x1="2.54" y1="5.08" x2="-7.62" y2="5.08" width="0.4064" layer="94"/>
+<wire x1="2.54" y1="5.08" x2="2.54" y2="-5.08" width="0.4064" layer="94" curve="-180"/>
+<text x="-7.62" y="5.715" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-7.62" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="I0" x="-12.7" y="2.54" visible="pad" length="middle" direction="in" swaplevel="1"/>
+<pin name="I1" x="-12.7" y="-2.54" visible="pad" length="middle" direction="in" swaplevel="1"/>
+<pin name="O" x="12.7" y="0" visible="pad" length="middle" direction="out" function="dot" rot="R180"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="74*04" urn="urn:adsk.eagle:component:2942/3" prefix="IC" library_version="3">
@@ -4434,6 +4445,132 @@ Based on the following sources:
 </device>
 </devices>
 </deviceset>
+<deviceset name="74*00" urn="urn:adsk.eagle:component:2984/3" prefix="IC" library_version="3">
+<description>Quad 2-input &lt;b&gt;NAND&lt;/b&gt; gate</description>
+<gates>
+<gate name="A" symbol="7400" x="20.32" y="0" swaplevel="1"/>
+<gate name="B" symbol="7400" x="20.32" y="-12.7" swaplevel="1"/>
+<gate name="C" symbol="7400" x="48.26" y="0" swaplevel="1"/>
+<gate name="D" symbol="7400" x="48.26" y="-12.7" swaplevel="1"/>
+<gate name="P" symbol="PWRN" x="2.54" y="-5.08" addlevel="request"/>
+</gates>
+<devices>
+<device name="N" package="DIL14">
+<connects>
+<connect gate="A" pin="I0" pad="1"/>
+<connect gate="A" pin="I1" pad="2"/>
+<connect gate="A" pin="O" pad="3"/>
+<connect gate="B" pin="I0" pad="4"/>
+<connect gate="B" pin="I1" pad="5"/>
+<connect gate="B" pin="O" pad="6"/>
+<connect gate="C" pin="I0" pad="9"/>
+<connect gate="C" pin="I1" pad="10"/>
+<connect gate="C" pin="O" pad="8"/>
+<connect gate="D" pin="I0" pad="12"/>
+<connect gate="D" pin="I1" pad="13"/>
+<connect gate="D" pin="O" pad="11"/>
+<connect gate="P" pin="GND" pad="7"/>
+<connect gate="P" pin="VCC" pad="14"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:16407/2"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="ALS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="AS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="LS">
+<attribute name="POPULARITY" value="4" constant="no"/>
+</technology>
+<technology name="S">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="D" package="SO14">
+<connects>
+<connect gate="A" pin="I0" pad="1"/>
+<connect gate="A" pin="I1" pad="2"/>
+<connect gate="A" pin="O" pad="3"/>
+<connect gate="B" pin="I0" pad="4"/>
+<connect gate="B" pin="I1" pad="5"/>
+<connect gate="B" pin="O" pad="6"/>
+<connect gate="C" pin="I0" pad="9"/>
+<connect gate="C" pin="I1" pad="10"/>
+<connect gate="C" pin="O" pad="8"/>
+<connect gate="D" pin="I0" pad="12"/>
+<connect gate="D" pin="I1" pad="13"/>
+<connect gate="D" pin="O" pad="11"/>
+<connect gate="P" pin="GND" pad="7"/>
+<connect gate="P" pin="VCC" pad="14"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:2917/1"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="ALS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="AS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="LS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="S">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="FK" package="LCC20">
+<connects>
+<connect gate="A" pin="I0" pad="2"/>
+<connect gate="A" pin="I1" pad="3"/>
+<connect gate="A" pin="O" pad="4"/>
+<connect gate="B" pin="I0" pad="6"/>
+<connect gate="B" pin="I1" pad="8"/>
+<connect gate="B" pin="O" pad="9"/>
+<connect gate="C" pin="I0" pad="13"/>
+<connect gate="C" pin="I1" pad="14"/>
+<connect gate="C" pin="O" pad="12"/>
+<connect gate="D" pin="I0" pad="18"/>
+<connect gate="D" pin="I1" pad="19"/>
+<connect gate="D" pin="O" pad="16"/>
+<connect gate="P" pin="GND" pad="10"/>
+<connect gate="P" pin="VCC" pad="20"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:2919/1"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="ALS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="AS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="LS">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+<technology name="S">
+<attribute name="POPULARITY" value="0" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 <library name="resistor-net" urn="urn:adsk.eagle:library:343">
@@ -5060,6 +5197,7 @@ Based on the following sources:
 <part name="IC12" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*74" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="LS"/>
 <part name="P+8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="IC10" library="74xx-us" library_urn="urn:adsk.eagle:library:88" deviceset="74*00" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="ALS"/>
 </parts>
 <sheets>
 <sheet>
@@ -5372,9 +5510,9 @@ Based on the following sources:
 <instance part="X1" gate="-C32" x="66.04" y="77.47" smashed="yes" rot="R90">
 <attribute name="NAME" x="66.802" y="79.375" size="1.778" layer="95" rot="R90"/>
 </instance>
-<instance part="IC6" gate="F" x="-2.54" y="106.68" smashed="yes">
-<attribute name="NAME" x="0" y="109.855" size="1.778" layer="95"/>
-<attribute name="VALUE" x="0" y="101.6" size="1.778" layer="96"/>
+<instance part="IC6" gate="F" x="-2.54" y="104.14" smashed="yes">
+<attribute name="NAME" x="0" y="107.315" size="1.778" layer="95"/>
+<attribute name="VALUE" x="0" y="99.06" size="1.778" layer="96"/>
 </instance>
 <instance part="GND8" gate="1" x="-12.7" y="55.88" smashed="yes">
 <attribute name="VALUE" x="-15.24" y="53.34" size="1.778" layer="96"/>
@@ -5382,6 +5520,10 @@ Based on the following sources:
 <instance part="IC12" gate="B" x="0" y="124.46" smashed="yes">
 <attribute name="NAME" x="-7.62" y="132.715" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-7.62" y="114.3" size="1.778" layer="96"/>
+</instance>
+<instance part="IC10" gate="D" x="0" y="86.36" smashed="yes">
+<attribute name="NAME" x="-7.62" y="92.075" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-7.62" y="78.74" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -5969,10 +6111,11 @@ Based on the following sources:
 <pinref part="X1" gate="-C32" pin="B"/>
 </segment>
 <segment>
-<pinref part="IC6" gate="F" pin="I"/>
-<wire x1="-12.7" y1="58.42" x2="-12.7" y2="106.68" width="0.1524" layer="91"/>
 <pinref part="GND8" gate="1" pin="GND"/>
-<junction x="-12.7" y="106.68"/>
+<wire x1="-12.7" y1="58.42" x2="-12.7" y2="83.82" width="0.1524" layer="91"/>
+<pinref part="IC10" gate="D" pin="I1"/>
+<pinref part="IC6" gate="F" pin="I"/>
+<junction x="-12.7" y="104.14"/>
 <pinref part="IC12" gate="B" pin="PRE"/>
 <pinref part="IC12" gate="B" pin="D"/>
 <wire x1="-12.7" y1="129.54" x2="-12.7" y2="127" width="0.1524" layer="91"/>
@@ -5982,8 +6125,13 @@ Based on the following sources:
 <pinref part="IC12" gate="B" pin="CLR"/>
 <wire x1="-12.7" y1="119.38" x2="-12.7" y2="121.92" width="0.1524" layer="91"/>
 <junction x="-12.7" y="121.92"/>
-<wire x1="-12.7" y1="119.38" x2="-12.7" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="119.38" x2="-12.7" y2="104.14" width="0.1524" layer="91"/>
 <junction x="-12.7" y="119.38"/>
+<wire x1="-12.7" y1="88.9" x2="-12.7" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="IC10" gate="D" pin="I0"/>
+<wire x1="-12.7" y1="83.82" x2="-12.7" y2="88.9" width="0.1524" layer="91"/>
+<junction x="-12.7" y="83.82"/>
+<junction x="-12.7" y="88.9"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -6199,13 +6347,9 @@ Based on the following sources:
 </net>
 <net name="GND" class="0">
 <segment>
-<pinref part="IC7" gate="A" pin="G2A"/>
-<wire x1="66.04" y1="63.5" x2="58.42" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="IC7" gate="A" pin="G2B"/>
-<wire x1="58.42" y1="63.5" x2="58.42" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="58.42" y1="60.96" x2="66.04" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="58.42" y1="60.96" x2="58.42" y2="55.88" width="0.1524" layer="91"/>
-<junction x="58.42" y="60.96"/>
 <pinref part="GND5" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -6267,6 +6411,13 @@ Based on the following sources:
 <label x="38.1" y="88.9" size="1.778" layer="95"/>
 </segment>
 </net>
+<net name="-VMA" class="0">
+<segment>
+<pinref part="IC7" gate="A" pin="G2A"/>
+<wire x1="66.04" y1="63.5" x2="38.1" y2="63.5" width="0.1524" layer="91"/>
+<label x="38.1" y="63.5" size="1.778" layer="95"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
@@ -6307,6 +6458,18 @@ Based on the following sources:
 <instance part="IC6" gate="D" x="-22.86" y="-12.7" smashed="yes">
 <attribute name="NAME" x="-20.32" y="-9.525" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-20.32" y="-17.78" size="1.778" layer="96"/>
+</instance>
+<instance part="IC10" gate="A" x="-20.32" y="27.94" smashed="yes">
+<attribute name="NAME" x="-27.94" y="33.655" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-27.94" y="20.32" size="1.778" layer="96"/>
+</instance>
+<instance part="IC10" gate="B" x="-55.88" y="35.56" smashed="yes">
+<attribute name="NAME" x="-63.5" y="41.275" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-63.5" y="27.94" size="1.778" layer="96"/>
+</instance>
+<instance part="IC10" gate="C" x="-55.88" y="17.78" smashed="yes">
+<attribute name="NAME" x="-63.5" y="23.495" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-63.5" y="10.16" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -6777,13 +6940,6 @@ Based on the following sources:
 <label x="-53.34" y="-12.7" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="BADDR15" class="0">
-<segment>
-<pinref part="IC1" gate="G$1" pin="!CS"/>
-<wire x1="73.66" y1="48.26" x2="50.8" y2="48.26" width="0.1524" layer="91"/>
-<label x="50.8" y="48.26" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="-HI-RAM" class="0">
 <segment>
 <pinref part="IC2" gate="G$1" pin="!CS"/>
@@ -6798,11 +6954,62 @@ Based on the following sources:
 <label x="50.8" y="-68.58" size="1.778" layer="95"/>
 </segment>
 </net>
+<net name="-LO-RAM" class="0">
+<segment>
+<pinref part="IC10" gate="A" pin="O"/>
+<wire x1="-7.62" y1="27.94" x2="5.08" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="27.94" x2="5.08" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="40.64" x2="66.04" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="40.64" x2="66.04" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="IC1" gate="G$1" pin="!CS"/>
+<wire x1="66.04" y1="48.26" x2="73.66" y2="48.26" width="0.1524" layer="91"/>
+<label x="53.34" y="40.64" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="IC10" gate="C" pin="O"/>
+<pinref part="IC10" gate="A" pin="I1"/>
+<wire x1="-43.18" y1="17.78" x2="-43.18" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="-43.18" y1="25.4" x2="-33.02" y2="25.4" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$13" class="0">
+<segment>
+<pinref part="IC10" gate="B" pin="O"/>
+<wire x1="-43.18" y1="35.56" x2="-43.18" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="IC10" gate="A" pin="I0"/>
+<wire x1="-33.02" y1="30.48" x2="-43.18" y2="30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="BADDR15" class="0">
+<segment>
+<pinref part="IC10" gate="B" pin="I0"/>
+<pinref part="IC10" gate="B" pin="I1"/>
+<wire x1="-68.58" y1="38.1" x2="-68.58" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="35.56" x2="-68.58" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="35.56" x2="-91.44" y2="35.56" width="0.1524" layer="91"/>
+<junction x="-68.58" y="35.56"/>
+<label x="-91.44" y="35.56" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="-VMA" class="0">
+<segment>
+<pinref part="IC10" gate="C" pin="I0"/>
+<pinref part="IC10" gate="C" pin="I1"/>
+<wire x1="-68.58" y1="20.32" x2="-68.58" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="17.78" x2="-68.58" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="-68.58" y1="17.78" x2="-91.44" y2="17.78" width="0.1524" layer="91"/>
+<junction x="-68.58" y="17.78"/>
+<label x="-91.44" y="17.78" size="1.778" layer="95"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
 <description>Adress Buffering</description>
 <plain>
+<text x="190.5" y="114.3" size="1.778" layer="91">Optional - Leave empty</text>
 </plain>
 <instances>
 <instance part="RN1" gate="_" x="96.52" y="114.3" smashed="yes" rot="R90">

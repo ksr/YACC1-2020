@@ -28,13 +28,10 @@ extern "C" {
 #define        ON	0x01
 #define        OFF	0x02
 #define        HALT	0x03
-#define        JSR      0X04
+#define        NBR      0X04
 #define        RET      0x05
-//#define        TBRON    0x06
-//#define        TBROFF   0x07
-//#define        TBRZ     0x08
-//#define        TBRNZ    0x09
-#define        LDT	0x0D
+#define        JSR      0x06
+#define        LDTI	0x0D
 #define        LDAI	0x0E
 #define        MVIB	0x10
 #define        MVIW	0x18
@@ -55,7 +52,6 @@ extern "C" {
 #define        BRNZ	0xA2
 #define        BRINH	0xA3
 #define        BRINL	0xA4
-#define        NBR      0x05
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2

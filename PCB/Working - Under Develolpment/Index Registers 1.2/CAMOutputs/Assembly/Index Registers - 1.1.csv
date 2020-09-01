@@ -1,0 +1,14 @@
+"Qty";"Value";"Device";"Package";"Parts";"Description";"MF";"MPN";"OC_FARNELL";"OC_NEWARK";"POPULARITY";"SPICEMODEL";"SPICEPREFIX";
+"1";"";"LED5MM";"LED5MM";"PWR";"LED";"";"";"";"";"";"";"";
+"3";"";"M04X2";"2X4";"J1, J2, J3";".1" header, two rows of four.";"";"";"";"";"";"";"";
+"47";"0.1";"C-US025-040X050";"C025-040X050";"C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19, C20, C21, C22, C23, C24, C25, C26, C27, C28, C29, C30, C31, C32, C33, C34, C35, C36, C37, C38, C39, C40, C41, C42, C43, C44, C45, C46, C47";"CAPACITOR, American symbol";"";"";"";"";"";"";"";
+"2";"10k";"RNX8";"RN-9";"RN1, RN2";"RESISTOR NETWORK";"";"";"unknown";"unknown";"";"";"";
+"1";"330";"R0207/10";"0207/10";"R1";"RESISTOR, European symbol";"";"";"";"";"";"NONE";"R";
+"1";"4077N";"4077N";"DIL14";"IC34";"Quad XNOR";"";"";"";"";"0";"";"";
+"3";"74LS139N";"74LS139N";"DIL16";"IC32, IC33, IC38";"Dual 2-line to 4-line DECODER/DEMULTIPLEXER";"";"";"";"";"0";"";"";
+"16";"74LS192N";"74LS192N";"DIL16";"IC3, IC4, IC5, IC6, IC9, IC10, IC11, IC12, IC19, IC20, IC21, IC22, IC29, IC30, IC43, IC44";"Synchronous 4-bit UP/DOWN COUNTER";"";"";"";"";"";"";"";
+"8";"74LS244N";"74LS244N";"DIL20";"IC17, IC18, IC27, IC28, IC41, IC42, IC49, IC50";"Octal BUFFER and LINE DRIVER, 3-state";"";"";"";"";"0";"";"";
+"8";"74LS244N";"74LS244N";"DIL20";"IC7, IC8, IC13, IC14, IC23, IC24, IC45, IC46";"Octal BUFFER and LINE DRIVER, 3-state";"";"";"";"";"";"";"";
+"3";"74LS245N";"74LS245N";"DIL20";"IC35, IC36, IC37";"Octal BUS TRANSCEIVER, 3-state";"";"";"";"";"";"";"";
+"8";"74LS32N";"74LS32N";"DIL14";"IC1, IC2, IC15, IC25, IC26, IC31, IC40, IC47";"Quad 2-input OR gate";"";"";"";"";"9";"";"";
+"1";"FABC96R";"FABC96R";"FABC96R";"X1";"CONNECTOR female, 96 pins, type R, rows ABC, grid 2.54 mm";"";"";"";"";"";"";"";

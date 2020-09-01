@@ -22,8 +22,15 @@ void doMemory() {
         initCurrentLine();
 
         putMemAtRegOnBus(PC);
+        setSignal("-TMP-REG-LD0");
 
-        putBustoRegMem(reg);
+        writeCurrentLine();
+        clearSignal("-TMP-REG-LD0");
+        writeCurrentLine();
+        initCurrentLine(); // or just clear specific lines?
+
+
+        putBustoRegMem(reg,"-TMP-REG-RD0");
 
         setRdId(PC);
         setSignal("-REG-FUNC-RD");

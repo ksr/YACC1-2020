@@ -25,6 +25,7 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test >list</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test</runcommand>

@@ -39,7 +39,7 @@ eprom:  ON
 
         OUTI  P0,UARTCS
 
-        MVIW  R1,0x0010
+        MVIW  R1,0010h
         LDIVR R1,'A'
         INCR  R1
         LDIVR R1,'C'
@@ -50,18 +50,18 @@ eprom:  ON
         INCR  R1
         LDIVR R1,'I'
 
-        MVIW  R1,0x0010
+        MVIW  R1,0010h
         MVIB  R2,5
 
 uloop:
         LDAVR R1
-        ADDI 1
+        ADDI  1
         OUTA  P1
 
         DECR  R2
         INCR   R1
 
-        MVIW R3,01FFh
+        MVIW R3,02FFh
 loop1:  DECR R3
         MVRHA R3
         BRNZ loop1
@@ -86,3 +86,6 @@ offloop:
         BRNZ offloop
 
         br onoffloop
+        on
+codes:  DB 'A','B','C','D','E'
+        LDAI 2

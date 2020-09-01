@@ -58,7 +58,7 @@ void writeCurrentLine() {
         cntlMemory[lineToWrite + i] = currentLine[i];
     ucodeLine++;
     if (ucodeLine >= LINES_PER_INSTRUCTION) {
-        printf("ucode lines overflow");
+        printf("ucode lines overflow %02x",currentUcodeBlock);
         exit(1);
     }
 #ifdef DEBUG

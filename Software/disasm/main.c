@@ -243,14 +243,15 @@ int main(int argc, char** argv) {
 
     printf("Start Disassembler\n");
     printf("Read in file\n");
-    readSource("test.123");
+    readSource("../Sequencer\ card/ucode-Generator/test.123");
 
     for (i = 0; i < INSTRUCTIONS; i++) {
         if (processInstruction(i)) {
             //printf("Instruction [%d] found\n", i);
         }
     }
-    processInstruction(0xA0);
+    processInstruction(0xD0);
+    processInstruction(0x18);
     return (EXIT_SUCCESS);
 }
 

@@ -10,9 +10,15 @@ OFF
 02
 HALT
 03
-LDT \B
+NBR \W
+04 hi(1) lo(1)
+RET
+05
+JSR
+06
+LDTI \B
 0D \1
-LDA \B
+LDAI \B
 0E \1
 MVIB \{regs},\B
 10|1 \2

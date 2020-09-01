@@ -61,9 +61,9 @@ struct signal signals[] = {
         "REG-LD-ID3", 1, 1, 1,
 
         "-REG-RD-LO", 1, 1, 2,
-        "-REG-LD-LO", 1, 1, 3,
+        "REG-LD-LO", 1, 1, 3,
         "-REG-RD-HI", 1, 1, 4,
-        "-REG-LD-HI", 1, 1, 5,
+        "REG-LD-HI", 1, 1, 5,
 
         "-REG-DN", 1, 1, 6,
         "-REG-UP", 1, 1, 7,

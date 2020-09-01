@@ -98,13 +98,15 @@ void registerOnlyInstructions() {
 
         setSignal("-REG-FUNC-LD");
         setLdId(reg);
+        setSignal("-HL-SWAP");
         writeCurrentLine();
         setSignal("REG-LD-HI");
         writeCurrentLine();
         clearSignal("REG-LD-HI");
         writeCurrentLine();
-
         clearSignal("-REG-FUNC-LD");
+        clearSignal("-HL-SWAP");
+        
         setRdId(PC);
         setSignal("-REG-FUNC-RD");
         setSignal("-REG-UP");

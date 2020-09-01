@@ -12,7 +12,16 @@
 #include "../../opcodes.h"
 #include "CodeGen.h"
 
-
+void moveRegtoTmp(int reg) {
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-RD-LO");
+    setSignal("-REG-RD-HI");
+    setRdId(reg);
+    setSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+}
 
 void branch(int mode, int invert, int actest) {
     //load the next two PC bytes format HHLL into branch register
@@ -63,9 +72,8 @@ void branch(int mode, int invert, int actest) {
     writeCurrentLine();
 }
 
+void branchInstructions() {
 
-void branchInstructions(){
-    
     startInstruction(BR);
     loadNextInstruction();
     initCurrentLine();
@@ -102,7 +110,7 @@ void branchInstructions(){
     branch(ALUBRZ, INVERT, 1);
     endInstruction();
     showCntlMemory(BRNZ);
-    
+
     //don't branch but setup branch register for JSR
     startInstruction(NBR);
     loadNextInstruction();
@@ -111,5 +119,49 @@ void branchInstructions(){
     branch(ALUBR, INVERT, 0);
     endInstruction();
     showCntlMemory(NBR);
+
+    // Jump to subroutine must be called after NBR
+    startInstruction(JSR);
+    loadNextInstruction();
+    initCurrentLine();
+
+    moveRegtoTmp(PC);
+    putBustoRegMem(SP, "-TMP-REG-RD0");
+
+    setRdId(SP);
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    writeCurrentLine();
+
+    setSignal("-HL-SWAP");
+    moveRegtoTmp(PC);
+    putBustoRegMem(SP, "-TMP-REG-RD0");
+    setRdId(SP);
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    writeCurrentLine();
+    setSignal("-BRANCH-RD-LO"); //output branch register
+    setSignal("-BRANCH-RD-HI");
     
+    
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+    writeCurrentLine();
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    writeCurrentLine();
+    endInstruction();
+    showCntlMemory(JSR);
+
 }
+

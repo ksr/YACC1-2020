@@ -1,7 +1,7 @@
 {
     "Header": {
         "Comment": "All values are metric (mm)",
-        "CreationDate": "2020-06-19T16:31:50Z",
+        "CreationDate": "2020-09-01T19:16:52Z",
         "GenerationSoftware": {
             "Application": "EAGLE",
             "Vendor": "Autodesk",
@@ -10,10 +10,10 @@
         "Part": "Single"
     },
     "Overall": {
-        "BoardThickness": 1.671119,
-        "LayerNumber": 2,
+        "BoardThickness": 1.640844,
+        "LayerNumber": 4,
         "Name": {
-            "ProjectId": "Memory V1.0"
+            "ProjectId": "Memory V1.2"
         },
         "Owner": "Ken Rother <ken@krother.com>",
         "Size": {

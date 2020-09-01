@@ -39,7 +39,7 @@ void clearCurrentLine();
 void loadNextInstruction();
 void initCurrentLine();
 void putMemAtRegOnBus(int reg);
-void putBustoRegMem(int);
+void putBustoRegMem(int,char *);
 void cmd(char *str, int reg);
 void bitOn();
 void bitOff();

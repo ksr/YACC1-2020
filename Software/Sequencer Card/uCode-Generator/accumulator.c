@@ -94,17 +94,14 @@ void accumulatorInstructions() {
         setSignal("-ALU-FUNC");
         setAlu(ALUDATA);
         writeCurrentLine();
-        setSignal("-AC-RD");
-        writeCurrentLine();
 
-        putBustoRegMem(reg);
-
+        putBustoRegMem(reg, "-AC-RD");
 
         endInstruction();
         showCntlMemory(ins);
     }
 
-    //load Accum low immediate 8 bit
+    //load Accum low immediate
     ins = LDAI;
     startInstruction(ins);
     loadNextInstruction();
@@ -129,6 +126,8 @@ void accumulatorInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
+
+
 
     //Add to  Accum low immediate 8 bit
     ins = ADDI;
@@ -155,7 +154,103 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
 
+    // Sub from Accum low immediate 8 bit
+    ins = SUBI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
 
+    putMemAtRegOnBus(PC);
 
+    setSignal("-ALU-FUNC");
+    setAlu(ALUSUB);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
 
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //AND to  Accum low immediate 8 bit
+    ins = ANDI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUAND);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //OR to  Accum low immediate 8 bit
+    ins = ORI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUOR);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //XORI to  Accum low immediate 8 bit
+    ins = XORI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUXOR);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
 }
