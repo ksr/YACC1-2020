@@ -12,10 +12,10 @@
 #include "../../opcodes.h"
 #include "CodeGen.h"
 
-void ioInstructions(){
-    int reg,ins;
-    
-     // OUT ON
+void ioInstructions() {
+    int reg, ins;
+
+    // OUT ON
     startInstruction(ON);
     loadNextInstruction();
     initCurrentLine();
@@ -32,8 +32,8 @@ void ioInstructions(){
     writeCurrentLine();
     endInstruction();
     showCntlMemory(OFF);
-    
-    
+
+
     //OUT immediate 
     for (reg = 0; reg <= 15; reg++) {
         ins = OUTI | (reg & 0x0f);
@@ -88,6 +88,31 @@ void ioInstructions(){
         clearSignal("-IO-WR");
         writeCurrentLine(); // clear reg-func-rd?
 
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    for (reg = 0; reg <= 15; reg++) {
+        ins = INP | (reg & 0x0f);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        setIo(reg);
+        setSignal("-IO-ADDR-LD"); //if io addr is latched on rising edge then setio and io-addr-ld can be combined Is ioaddrld even needed
+        writeCurrentLine();
+        clearSignal("-IO-ADDR-LD");
+        writeCurrentLine();
+        
+        setSignal("-IO-RD");
+        writeCurrentLine();
+        
+        setSignal("-AC-LD");
+        writeCurrentLine();
+        clearSignal("-AC-LD");
+        writeCurrentLine();
         endInstruction();
         showCntlMemory(ins);
     }

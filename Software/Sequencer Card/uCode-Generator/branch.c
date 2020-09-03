@@ -120,6 +120,7 @@ void branchInstructions() {
     endInstruction();
     showCntlMemory(NBR);
 
+#ifdef JUNK
     // Jump to subroutine must be called after NBR
     startInstruction(JSR);
     loadNextInstruction();
@@ -162,6 +163,7 @@ void branchInstructions() {
     writeCurrentLine();
     endInstruction();
     showCntlMemory(JSR);
+#endif
 
 }
 
