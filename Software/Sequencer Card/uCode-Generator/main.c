@@ -96,7 +96,8 @@ void initCurrentLine() {
         printf("initCurrent line [%d] [%s] \n", i, signals[i].name);
 #endif
         clearSignal(signals[i].name);
-        setSignal("-ADDR-REG-RD0"); // Hack prevent ROM mapping from triggering
+        setAddrId(PC);
+        setSignal("-VMA"); // Hack prevent ROM mapping from triggering
     }
 }
 
@@ -107,7 +108,8 @@ void startInstruction(int instruction) {
     startUcodeBlock(instruction);
     //clearCurrentLine(); should not be required
     initCurrentLine();
-    setSignal("-ADDR-REG-RD0"); // Hack prevent ROM mapping from triggering
+    setAddrId(PC);
+    setSignal("-VMA"); // Hack prevent ROM mapping from triggering
     if (instruction == 0) {
         setSignal("OUT-OFF");
     }
@@ -134,6 +136,13 @@ void setRegBit(char *signal, int regBit) {
         setSignal(signal);
     else
         clearSignal(signal);
+}
+
+void setAddrId(int reg) {
+    setRegBit("ADDR-REG-ID0", reg & 0x0001);
+    setRegBit("ADDR-REG-ID1", reg & 0x0002);
+    setRegBit("ADDR-REG-ID2", reg & 0x0004);
+    setRegBit("ADDR-REG-ID3", reg & 0x0008);
 }
 
 void setRdId(int reg) {
@@ -182,49 +191,38 @@ void loadNextInstruction() {
     writeCurrentLine();
     clearSignal("LD-INS-REG");
     //writeCurrentLine(); // -reg-up is rising edge
+    incrementReg(PC);
+    
+}
+
+void incrementReg(int reg) {
+    setRdId(reg);
     setSignal("-REG-FUNC-RD");
-    setRdId(0);
     setSignal("-REG-UP");
     writeCurrentLine();
     clearSignal("-REG-UP");
-    writeCurrentLine(); //clear reg-func-rd?
+    writeCurrentLine();
+}
+
+void decrementReg(int reg) {
+    setRdId(reg);
+    setSignal("-REG-FUNC-RD");
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    writeCurrentLine();
 }
 
 void putMemAtRegOnBus(int reg) {
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-RD-LO");
-    setSignal("-REG-RD-HI");
-    setRdId(reg);
-    writeCurrentLine(); // not needed if if reg loads on rising edge
-    setSignal("-ADDR-REG-LD0");
-    writeCurrentLine();
-    clearSignal("-ADDR-REG-LD0");
-    writeCurrentLine();
-    clearSignal("-REG-FUNC-RD");
-    clearSignal("-REG-RD-LO");
-    clearSignal("-REG-RD-HI");
-    writeCurrentLine(); // probably not needed
-    setSignal("-ADDR-REG-RD0");
+    setAddrId(reg);
     setSignal("-VMA");
     setSignal("-MEM-RD");
-    writeCurrentLine();
+    writeCurrentLine(); // not needed if if reg loads on rising edge
+
 }
 
-void putBustoRegMem(int reg,char *source) {
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-RD-LO");
-    setSignal("-REG-RD-HI");
-    setRdId(reg);
-    writeCurrentLine();
-    setSignal("-ADDR-REG-LD0");
-    writeCurrentLine();
-    clearSignal("-ADDR-REG-LD0");
-    writeCurrentLine();
-    clearSignal("-REG-FUNC-RD");
-    clearSignal("-REG-RD-LO");
-    clearSignal("-REG-RD-HI");
-    //writeCurrentLine();
-    setSignal("-ADDR-REG-RD0");
+void putBustoRegMem(int reg, char *source) { // Source is either Accumulator TMP registers, if index reg needs more work
+    setAddrId(reg);
     setSignal("-VMA");
     setSignal(source);
     writeCurrentLine();
@@ -235,7 +233,7 @@ void putBustoRegMem(int reg,char *source) {
     clearSignal(source);
     clearSignal("-VMA");
     writeCurrentLine();
-    
+
 }
 
 int main(int argc, char** argv) {
@@ -265,21 +263,21 @@ int main(int argc, char** argv) {
     branchInstructions();
 
     registerOnlyInstructions();
-    
-    ioInstructions();
-    
-    accumulatorInstructions();
-    
-    doMemory();
-    
 
-    
+    ioInstructions();
+
+    accumulatorInstructions();
+
+    doMemory();
+
+
+
 #ifdef NOTYET
-    
+
     // Code missing 
 
 
-   
+
     // Add to Accumulator Immediate
     startInstruction(ADD_ACC_I);
     loadNextInstruction();
@@ -305,7 +303,7 @@ int main(int argc, char** argv) {
     showCntlMemory(ADD_ACC_I);
 
 
-    
+
     // Load SP immediate
     startInstruction(LD_SP_I);
     loadNextInstruction();

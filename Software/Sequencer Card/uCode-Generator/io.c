@@ -56,12 +56,8 @@ void ioInstructions(){
         writeCurrentLine();
 
         initCurrentLine();
-        setRdId(PC);
-        setSignal("-REG-FUNC-RD");
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine(); // clear reg-func-rd?
+        
+        incrementReg(PC);
 
         endInstruction();
         showCntlMemory(ins);

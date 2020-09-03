@@ -15,6 +15,7 @@
 void doMemory() {
     int ins, reg;
 
+    // Load imm via register
     for (reg = 0; reg < 8; reg++) {
         ins = LDIVR | (reg & 0x07);
         startInstruction(ins);
@@ -29,15 +30,10 @@ void doMemory() {
         writeCurrentLine();
         initCurrentLine(); // or just clear specific lines?
 
-
         putBustoRegMem(reg,"-TMP-REG-RD0");
 
-        setRdId(PC);
-        setSignal("-REG-FUNC-RD");
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine(); // clear reg-func-rd?
+        incrementReg(PC);
+        
         endInstruction();
         showCntlMemory(ins);
     }

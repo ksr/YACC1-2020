@@ -52,18 +52,18 @@ void clearCurrentLine() {
 
 void writeCurrentLine() {
     int lineToWrite;
-
+#ifdef DEBUG
+    printf("Write line [%d]\n",ucodeLine);
+#endif 
     lineToWrite = currentUcodeBlock * LINES_PER_INSTRUCTION * BYTES_PER_LINE + ucodeLine*BYTES_PER_LINE;
     for (int i = 0; i < BYTES_PER_LINE; i++)
         cntlMemory[lineToWrite + i] = currentLine[i];
     ucodeLine++;
-    if (ucodeLine >= LINES_PER_INSTRUCTION) {
+    if (ucodeLine > LINES_PER_INSTRUCTION) {
         printf("ucode lines overflow %02x",currentUcodeBlock);
         exit(1);
     }
-#ifdef DEBUG
-    printf("Write line [%d]\n",ucodeLine-1);
-#endif 
+
 }
 
 void showCurrentLine() {

@@ -23,16 +23,8 @@ void registerOnlyInstructions() {
         loadNextInstruction();
         initCurrentLine();
 
-
-        setSignal("-REG-FUNC-RD");
-        setRdId(reg);
-
-        writeCurrentLine();
-        setSignal("-REG-DN");
-        writeCurrentLine();
-        clearSignal("-REG-DN");
-        writeCurrentLine();
-
+        decrementReg(reg);
+        
         endInstruction();
         showCntlMemory(ins);
     }
@@ -43,16 +35,8 @@ void registerOnlyInstructions() {
         startInstruction(ins);
         loadNextInstruction();
         initCurrentLine();
-
-
-        setSignal("-REG-FUNC-RD");
-        setRdId(reg);
-
-        writeCurrentLine();
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine();
+        
+        incrementReg(reg);
 
         endInstruction();
         showCntlMemory(ins);
@@ -69,19 +53,13 @@ void registerOnlyInstructions() {
 
         setSignal("-REG-FUNC-LD");
         setLdId(reg);
-
         writeCurrentLine();
         setSignal("REG-LD-LO");
         writeCurrentLine();
         clearSignal("REG-LD-LO");
         writeCurrentLine();
         clearSignal("-REG-FUNC-LD");
-        setRdId(PC);
-        setSignal("-REG-FUNC-RD");
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine(); // clear reg-func-rd?
+        incrementReg(PC);
 
         endInstruction();
         showCntlMemory(ins);
@@ -107,12 +85,7 @@ void registerOnlyInstructions() {
         clearSignal("-REG-FUNC-LD");
         clearSignal("-HL-SWAP");
         
-        setRdId(PC);
-        setSignal("-REG-FUNC-RD");
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine();
+        incrementReg(PC);
 
         putMemAtRegOnBus(PC);
 
@@ -127,12 +100,7 @@ void registerOnlyInstructions() {
 
 
         clearSignal("-REG-FUNC-LD");
-        setRdId(PC);
-        setSignal("-REG-FUNC-RD");
-        setSignal("-REG-UP");
-        writeCurrentLine();
-        clearSignal("-REG-UP");
-        writeCurrentLine(); // clear reg-func-rd?
+        incrementReg(PC);
 
         endInstruction();
         showCntlMemory(ins);
