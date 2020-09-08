@@ -21,42 +21,21 @@ DATAPORT:    EQU "P1"
         BR eprom
         ORG 0f003h
 
-eprom:
-         MVIW R2,jumps
-
-start:
-
-offw:   BRINL offw
-        MVIW R3,02FFh
-delaya:
-        DECR R3
-        MVRHA R3
-        BRNZ delaya
-        on
-
-onw:   BRINH onw
-       MVIW R3,02FFh
-delayb:
-        DECR R3
-        MVRHA R3
-        BRNZ delayb
-        off
-
-        BRVR R2
+eprom:  ON
 
 ;
 ; switches, LEDs, TIL311
 ;
-basic:
         OUTI  P0,(SWITCHLED!TIL311)
         OUTI  P1,00H
         OUTI  P1,055H
         OUTI  P1,0AAH
-        BR    start
+        OUTI  P1,00H
 ;
 ; reading switches add 1 and > LEDS, add 2 > TIL 311
 ;
-switchtest:
+
+uloop:
         OUTI  P0,(SWITCHLED)
         INP   P1
 ;
@@ -67,11 +46,11 @@ switchtest:
         ADDI  01H
         OUTI  P0,(TIL311)
         OUTA  P1
-        BR    start
+;
+        OFF
 ;
 ;LCD
 ;
-lcdtest:
         OUTI P0,(LCDENABLE)
 
         MVIW R3,1fFFh
@@ -115,56 +94,15 @@ delay4:
         OUTI P1,'A'
 
 delay5:
-        DECR R3
-        MVRHA R3
-        BRNZ delay5
+                DECR R3
+                MVRHA R3
+                BRNZ delay5
 
-        OUTI P1,'B'
-
-        BR start
-
-addtest:
-
-      OUTI  P0,(SWITCHLED)
-      INP   P1
-      ADDI  001H
-      OUTA  P1
-      BRC   con
-      BR    start
-con:  ON
-      BR    start
-
-ortest:
-      OUTI  P0,(SWITCHLED)
-      INP   P1
-      ORI  001H
-      OUTA  P1
-      BRC   con
-      BR    start
-
-andtest:
-      OUTI  P0,(SWITCHLED)
-      INP   P1
-      ANDI  001H
-      OUTA  P1
-      BRC   con
-      BR    start
-
-
-xortest:
-    OUTI  P0,(SWITCHLED)
-    INP   P1
-    XORI  001H
-    OUTA  P1
-    BRC   con
-    BR    start
-
+                OUTI P1,'B'
 
 ;
 ; SERIAL OUT
 ;
-
-uarttest:
         OUTI  P0,(UARTA3!UARTCS)
         OUTI  P1,080H
 
@@ -216,8 +154,5 @@ offloop:
         BRNZ offloop
 
         br onoffloop
-
-jumps:  DW basic,switchtest,lcdtest,addtest,addtest,addtest,ortest
-cont1:  DW ortest,ortest,andtest,andtest,andtest,xortest,xortest,xortest,uarttest
 
 codes:  DB 'G','H','I','J','H','K','L','A','B','C','D','E'
