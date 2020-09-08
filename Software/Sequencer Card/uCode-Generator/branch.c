@@ -23,26 +23,26 @@ void moveRegtoTmp(int reg) {
     writeCurrentLine();
 }
 
-void branch(int mode, int invert, int actest) {
+void branch(int reg,int mode, int invert, int actest) {
     //load the next two PC bytes format HHLL into branch register
-    putMemAtRegOnBus(PC);
+    putMemAtRegOnBus(reg);
     setSignal("BRANCH-LD-HI");
     writeCurrentLine();
     clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
     writeCurrentLine();
     setSignal("-REG-FUNC-RD");
-    setRdId(PC);
+    setRdId(reg);
     setSignal("-REG-UP"); //Are conditions correct for REG UP - Index board bits set?
     writeCurrentLine();
     clearSignal("-REG-UP"); // if addr  +ve edge triggered next write not required
     writeCurrentLine();
-    putMemAtRegOnBus(0);
+    putMemAtRegOnBus(reg);
     setSignal("BRANCH-LD-LO");
     writeCurrentLine();
     clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
     //writeCurrentLine(); reg up is rising edge
     setSignal("-REG-FUNC-RD");
-    setRdId(PC);
+    setRdId(reg);
     setSignal("-REG-UP");
     writeCurrentLine();
     clearSignal("-REG-UP");
@@ -77,21 +77,21 @@ void branchInstructions() {
     startInstruction(BR);
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBR, NOINVERT, 0);
+    branch(PC,ALUBR, NOINVERT, 0);
     endInstruction();
     showCntlMemory(BR);
 
     startInstruction(BRINH);
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBRIN, NOINVERT, 0);
+    branch(PC,ALUBRIN, NOINVERT, 0);
     endInstruction();
     showCntlMemory(BRINH);
 
     startInstruction(BRINL);
     loadNextInstruction();
     initCurrentLine();
-    branch(ALUBRIN, INVERT, 0);
+    branch(PC,ALUBRIN, INVERT, 0);
     endInstruction();
     showCntlMemory(BRINL);
 
@@ -99,7 +99,7 @@ void branchInstructions() {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(ALUBRZ, NOINVERT, 1);
+    branch(PC,ALUBRZ, NOINVERT, 1);
     endInstruction();
     showCntlMemory(BRZ);
 
@@ -107,19 +107,37 @@ void branchInstructions() {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(ALUBRZ, INVERT, 1);
+    branch(PC,ALUBRZ, INVERT, 1);
     endInstruction();
     showCntlMemory(BRNZ);
+    
+    startInstruction(BRC);
+    loadNextInstruction();
+    initCurrentLine();
+    //setSignal("-AC-RD");
+    branch(PC,ALUCS, NOINVERT, 0);
+    endInstruction();
+    showCntlMemory(BRC);
 
     //don't branch but setup branch register for JSR
     startInstruction(NBR);
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(ALUBR, INVERT, 0);
+    branch(PC,ALUBR, INVERT, 0);
     endInstruction();
     showCntlMemory(NBR);
 
+    for (int reg = 0; reg < 8; reg++) {
+        startInstruction(BRVR|reg);
+        loadNextInstruction();
+        initCurrentLine();
+        //setSignal("-AC-RD");
+        branch(reg,ALUBR, NOINVERT, 0);
+        endInstruction();
+        showCntlMemory(BRVR|reg);
+    }
+    
 #ifdef JUNK
     // Jump to subroutine must be called after NBR
     startInstruction(JSR);
@@ -147,8 +165,8 @@ void branchInstructions() {
     writeCurrentLine();
     setSignal("-BRANCH-RD-LO"); //output branch register
     setSignal("-BRANCH-RD-HI");
-    
-    
+
+
     setSignal("-ALU-FUNC");
     setAlu(ALUBR);
     setSignal("BR-TEST");

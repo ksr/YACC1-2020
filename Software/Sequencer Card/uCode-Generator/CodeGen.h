@@ -45,9 +45,15 @@ extern "C" {
 #define ALUZERO 6
 #define ALUADD 7
 
+// compare options
 #define ALUBR 0
+#define ALUGT 1
+#define ALUEQ 2
+#define ALULT 3
 #define ALUBRZ 4
 #define ALUBRIN 5
+#define ALU16Z 6
+#define ALUCS 7
 
 #define INVERT 1
 #define NOINVERT 0

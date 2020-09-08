@@ -58,6 +58,8 @@ BRINH \W
 A3 hi(1) lo(1)
 BRINL \W
 A4 hi(1) lo(1)
+BRC \W
+A6 hi(1) lo(1)
 ADDI \B
 B0 \1
 SUBI \B
@@ -90,6 +92,8 @@ STTVR \{regs}
 C8|1
 LDIVR \{regs},\B
 D0|1 \2
+BRVR \{regs}
+D8|1
 ORG     \W
 \O1
 END     \W
