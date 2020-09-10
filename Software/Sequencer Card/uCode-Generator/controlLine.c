@@ -15,7 +15,7 @@
 #define END_INS_CHAR '-'
 #define END_ALL '!'
 
-#define DEBUG 1
+//#define DEBUG 1
 
 struct signal signals[];
 
@@ -41,7 +41,9 @@ void startUcodeBlock(int index) {
 }
 
 void endUcodeBlock() {
+#ifdef DEBUG
     printf("Instruction=%02x (hex) lines=%d (dec)\n", currentUcodeBlock, ucodeLine);
+#endif
     eolInfo[currentUcodeBlock] = ucodeLine;
 }
 
@@ -67,11 +69,13 @@ void writeCurrentLine() {
 }
 
 void showCurrentLine() {
+#ifdef DEBUG
     printf("[%d]", ucodeLine);
     for (int i = 0; i < BYTES_PER_LINE; i++)
         printf("%02x ", currentLine[i]);
     printf("\n");
     //printf("BYTE[%i]=%x\n", i, currentLine[i]);
+#endif
 }
 
 void bitOn(int signalNum) {
@@ -173,6 +177,7 @@ void showCntlMemory(int instruction) {
     int lineStart;
 
     if (showDetail) {
+#ifdef DEBUG        
         printf("Show Instruction=%02x\n", instruction);
         lineStart = BYTES_PER_LINE * LINES_PER_INSTRUCTION * instruction;
         for (int j = 0; j < LINES_PER_INSTRUCTION; j++) {
@@ -182,6 +187,7 @@ void showCntlMemory(int instruction) {
             }
             printf("\n");
         }
+#endif
     }
 }
 

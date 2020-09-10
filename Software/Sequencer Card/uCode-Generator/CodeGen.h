@@ -55,6 +55,16 @@ extern "C" {
 #define ALU16Z 6
 #define ALUCS 7
 
+//Shift operations
+#define SHIFT_RIGHT 0x01
+#define SHIFT_LEFT 0x02
+#define SHIFT_LOAD 0x03
+
+#define SHIFT_ZERO 0x00
+#define SHIFT_RING 0x04
+#define SHIFT_PROP 0x08
+#define SHIFT_CARRY 0x0C
+
 #define INVERT 1
 #define NOINVERT 0
 

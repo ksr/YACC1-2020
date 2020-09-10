@@ -151,7 +151,7 @@ void setLdId(int reg) {
 }
 
 void setAlu(int aluBits) {
-    printf("setALU %d\n", aluBits);
+    //printf("setALU %d\n", aluBits);
     setRegBit("ALU0", aluBits & 0x0001);
     setRegBit("ALU1", aluBits & 0x0002);
     setRegBit("ALU2", aluBits & 0x0004);
@@ -159,7 +159,7 @@ void setAlu(int aluBits) {
 }
 
 void setIo(int ioBits) {
-    printf("setIO %d\n", ioBits);
+    //printf("setIO %d\n", ioBits);
     setRegBit("IOADDR0", ioBits & 0x0001);
     setRegBit("IOADDR1", ioBits & 0x0002);
     setRegBit("IOADDR2", ioBits & 0x0004);

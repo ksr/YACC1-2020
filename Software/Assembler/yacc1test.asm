@@ -27,7 +27,7 @@ eprom:
 start:
 
 offw:   BRINL offw
-        MVIW R3,02FFh
+        MVIW R3,00FFh
 delaya:
         DECR R3
         MVRHA R3
@@ -35,7 +35,7 @@ delaya:
         on
 
 onw:   BRINH onw
-       MVIW R3,02FFh
+       MVIW R3,00FFh
 delayb:
         DECR R3
         MVRHA R3
@@ -137,7 +137,7 @@ con:  ON
 ortest:
       OUTI  P0,(SWITCHLED)
       INP   P1
-      ORI  001H
+      ORI  055H
       OUTA  P1
       BRC   con
       BR    start
@@ -145,20 +145,50 @@ ortest:
 andtest:
       OUTI  P0,(SWITCHLED)
       INP   P1
-      ANDI  001H
+      ANDI  055H
       OUTA  P1
       BRC   con
       BR    start
 
-
 xortest:
+     OUTI  P0,(SWITCHLED)
+     INP   P1
+     XORI  055H
+     OUTA  P1
+     BRC   con
+     BR    start
+
+shltest:
+   OUTI  P0,(SWITCHLED)
+   INP   P1
+   XORI  055H
+   OUTA  P1
+   BRC   con
+   BR    start
+
+shrtest:
     OUTI  P0,(SWITCHLED)
     INP   P1
-    XORI  001H
+    XORI  055H
     OUTA  P1
     BRC   con
     BR    start
 
+rshltest:
+   OUTI  P0,(SWITCHLED)
+   INP   P1
+   XORI  001H
+   OUTA  P1
+   BRC   con
+   BR    start
+
+rshrtest:
+  OUTI  P0,(SWITCHLED)
+  INP   P1
+  XORI  001H
+  OUTA  P1
+  BRC   con
+  BR    start
 
 ;
 ; SERIAL OUT
@@ -217,7 +247,10 @@ offloop:
 
         br onoffloop
 
-jumps:  DW basic,switchtest,lcdtest,addtest,addtest,addtest,ortest
-cont1:  DW ortest,ortest,andtest,andtest,andtest,xortest,xortest,xortest,uarttest
+
+jumps:
+        DW basic,switchtest,lcdtest
+        DW addtest,addtest,addtest,ortest,ortest,ortest,andtest,andtest,andtest
+        DW xortest,xortest,xortest,uarttest
 
 codes:  DB 'G','H','I','J','H','K','L','A','B','C','D','E'

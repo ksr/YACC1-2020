@@ -62,6 +62,60 @@ void accumulatorInstructions() {
         showCntlMemory(ins);
     }
 
+    //Move Accumulator to Register Low
+    for (reg = 0; reg < 8; reg++) {
+        ins = MVARL | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        setSignal("-AC-RD");
+        writeCurrentLine();
+        
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
+
+        writeCurrentLine();
+        setSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    //Move Accumulator to Register High
+    for (reg = 0; reg < 8; reg++) {
+        ins = MVARH | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        setSignal("-ALU-FUNC");
+        setAlu(ALUDATA);
+        setSignal("-AC-RD");
+        writeCurrentLine();
+
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
+
+        writeCurrentLine();
+        setSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
 
     //Load Accum From MEM pointed to by REG
     for (reg = 0; reg < 8; reg++) {
@@ -253,4 +307,51 @@ void accumulatorInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
+    
+    //Shift Accum Left LSB->MSB
+    ins = SHL;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-ALU-FUNC");
+    setAlu(SHIFT_LEFT|SHIFT_ZERO);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
+
+    setAlu(ALUSHIFT);
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+    
+    //Shift Accum Left MSB->LSB
+    ins = SHR;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-ALU-FUNC");
+    setAlu(SHIFT_LEFT|SHIFT_ZERO);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
+
+    setAlu(ALUSHIFT);
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(ins);
+    
 }
