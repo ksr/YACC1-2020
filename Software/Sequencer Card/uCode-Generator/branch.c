@@ -30,23 +30,17 @@ void branch(int reg,int mode, int invert, int actest) {
     writeCurrentLine();
     clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
     writeCurrentLine();
-    setSignal("-REG-FUNC-RD");
-    setRdId(reg);
-    setSignal("-REG-UP"); //Are conditions correct for REG UP - Index board bits set?
-    writeCurrentLine();
-    clearSignal("-REG-UP"); // if addr  +ve edge triggered next write not required
-    writeCurrentLine();
-    putMemAtRegOnBus(reg);
+
+    incrementReg(PC);
+
+    putMemAtRegOnBus(0);
+
     setSignal("BRANCH-LD-LO");
     writeCurrentLine();
     clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
-    //writeCurrentLine(); reg up is rising edge
-    setSignal("-REG-FUNC-RD");
-    setRdId(reg);
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
+    //writeCurrentLine(); reg up is rising edge??? are you sure
+
+    incrementReg(PC);
 
     initCurrentLine(); //KEN - AUG 25 remove test, try existing code
     setSignal("-BRANCH-RD-LO"); //output branch register
@@ -110,7 +104,7 @@ void branchInstructions() {
     branch(PC,ALUBRZ, INVERT, 1);
     endInstruction();
     showCntlMemory(BRNZ);
-    
+
     startInstruction(BRC);
     loadNextInstruction();
     initCurrentLine();
@@ -119,50 +113,42 @@ void branchInstructions() {
     endInstruction();
     showCntlMemory(BRC);
 
-    //don't branch but setup branch register for JSR
-    startInstruction(NBR);
-    loadNextInstruction();
-    initCurrentLine();
-    //setSignal("-AC-RD");
-    branch(PC,ALUBR, INVERT, 0);
-    endInstruction();
-    showCntlMemory(NBR);
-
-    for (int reg = 0; reg < 8; reg++) {
-        startInstruction(BRVR|reg);
-        loadNextInstruction();
-        initCurrentLine();
-        //setSignal("-AC-RD");
-        branch(reg,ALUBR, NOINVERT, 0);
-        endInstruction();
-        showCntlMemory(BRVR|reg);
-    }
-    
-#ifdef JUNK
-    // Jump to subroutine must be called after NBR
-    startInstruction(JSR);
+    // JSR
+    startInstruction(JSR); //try as one instruction *** possible two writeCurrentLine needed see below
     loadNextInstruction();
     initCurrentLine();
 
-    moveRegtoTmp(PC);
-    putBustoRegMem(SP, "-TMP-REG-RD0");
+    putMemAtRegOnBus(PC);
+    setSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //maybe not needed
 
-    setRdId(SP);
+    incrementReg(PC);
+
+    putMemAtRegOnBus(PC);
+    setSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //reg up is rising edge??? are you sure
+
+    incrementReg(PC);
+
     setSignal("-REG-FUNC-RD");
-    setSignal("-REG-DN");
-    writeCurrentLine();
-    clearSignal("-REG-DN");
-    writeCurrentLine();
+    setRdId(PC);
+    //writeCurrentLine(); //???
+    putBustoRegMem(SP, "-REG-RD-HI");
 
+    decrementReg(SP);
+
+    setSignal("-REG-FUNC-RD");
+    setRdId(PC);
     setSignal("-HL-SWAP");
-    moveRegtoTmp(PC);
-    putBustoRegMem(SP, "-TMP-REG-RD0");
-    setRdId(SP);
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-DN");
-    writeCurrentLine();
-    clearSignal("-REG-DN");
-    writeCurrentLine();
+
+    putBustoRegMem(SP, "-REG-RD-LO");
+
+    decrementReg(SP);
+
     setSignal("-BRANCH-RD-LO"); //output branch register
     setSignal("-BRANCH-RD-HI");
 
@@ -183,5 +169,38 @@ void branchInstructions() {
     showCntlMemory(JSR);
 #endif
 
-}
 
+    startInstruction(RET); //try as one instruction
+    loadNextInstruction();
+    initCurrentLine();
+
+    incrementReg(SP);
+    putMemAtRegOnBus(SP);
+    setSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //reg up is rising edge??? are you sure
+
+    incrementReg(SP);
+    putMemAtRegOnBus(SP);
+     setSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //maybe not needed
+
+    setSignal("-BRANCH-RD-LO"); //output branch register
+    setSignal("-BRANCH-RD-HI");
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+    writeCurrentLine();
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    endInstruction();
+    showCntlMemory(RET);
+}

@@ -78,10 +78,10 @@ struct signal signals[] = {
         "-TMP-REG-RD1", 2, 0, 6,
         "-TMP-REG-LD1", 2, 0, 7,
 
-        "-ADDR-REG-RD0", 2, 1, 0,
-        "-ADDR-REG-LD0", 2, 1, 1,
-        "-ADDR-REG-RD1", 2, 1, 2,
-        "-ADDR-REG-LD1", 2, 1, 3,
+        "ADDR-REG-ID0", 2, 1, 0,
+        "ADDR-REG-ID1", 2, 1, 1,
+        "ADDR-REG-ID2", 2, 1, 2,
+        "ADDR-REG-ID3", 2, 1, 3,
 
         "IOADDR0", 2, 1, 4,
         "IOADDR1", 2, 1, 5,

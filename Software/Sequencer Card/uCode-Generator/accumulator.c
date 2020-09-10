@@ -12,6 +12,16 @@
 #include "../../opcodes.h"
 #include "CodeGen.h"
 
+void aluOp(int func){
+    setSignal("-ALU-FUNC");
+    setAlu(func);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+}
+
 void accumulatorInstructions() {
     int ins, reg;
 
@@ -171,13 +181,9 @@ void accumulatorInstructions() {
     clearSignal("-AC-LD");
     writeCurrentLine();
 
-    setRdId(PC);
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
-
+    incrementReg(PC);
+    
+    
     endInstruction();
     showCntlMemory(ins);
 
@@ -191,19 +197,9 @@ void accumulatorInstructions() {
 
     putMemAtRegOnBus(PC);
 
-    setSignal("-ALU-FUNC");
-    setAlu(ALUADD);
-    writeCurrentLine();
-    setSignal("-AC-LD");
-    writeCurrentLine();
-    clearSignal("-AC-LD");
-    writeCurrentLine();
-
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
+    aluOp(ALUADD);
+   
+    incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
@@ -216,19 +212,9 @@ void accumulatorInstructions() {
 
     putMemAtRegOnBus(PC);
 
-    setSignal("-ALU-FUNC");
-    setAlu(ALUSUB);
-    writeCurrentLine();
-    setSignal("-AC-LD");
-    writeCurrentLine();
-    clearSignal("-AC-LD");
-    writeCurrentLine();
-
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
+    aluOp(ALUSUB);
+    
+    incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
@@ -241,20 +227,10 @@ void accumulatorInstructions() {
 
     putMemAtRegOnBus(PC);
 
-    setSignal("-ALU-FUNC");
-    setAlu(ALUAND);
-    writeCurrentLine();
-    setSignal("-AC-LD");
-    writeCurrentLine();
-    clearSignal("-AC-LD");
-    writeCurrentLine();
+    aluOp(ALUAND);
 
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
-
+    incrementReg(PC);
+    
     endInstruction();
     showCntlMemory(ins);
 
@@ -266,19 +242,9 @@ void accumulatorInstructions() {
 
     putMemAtRegOnBus(PC);
 
-    setSignal("-ALU-FUNC");
-    setAlu(ALUOR);
-    writeCurrentLine();
-    setSignal("-AC-LD");
-    writeCurrentLine();
-    clearSignal("-AC-LD");
-    writeCurrentLine();
-
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
+    aluOp(ALUOR);
+    
+    incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
@@ -291,19 +257,9 @@ void accumulatorInstructions() {
 
     putMemAtRegOnBus(PC);
 
-    setSignal("-ALU-FUNC");
-    setAlu(ALUXOR);
-    writeCurrentLine();
-    setSignal("-AC-LD");
-    writeCurrentLine();
-    clearSignal("-AC-LD");
-    writeCurrentLine();
-
-    setSignal("-REG-FUNC-RD");
-    setSignal("-REG-UP");
-    writeCurrentLine();
-    clearSignal("-REG-UP");
-    writeCurrentLine(); // clear reg-func-rd?
+    aluOp(ALUXOR);
+    
+    incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);

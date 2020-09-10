@@ -17,7 +17,7 @@
 #include <Wire.h>
 #include "Adafruit_MCP23017.h"
 #include <avr/pgmspace.h>
-#include "YACC_Common_header.h"
+#include "YACC_Common_header.h" //switch to YACC_Common_header new3-2 file for new boards
 
 //#define DEBUG
 
