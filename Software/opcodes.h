@@ -28,9 +28,8 @@ extern "C" {
 #define        ON	0x01
 #define        OFF	0x02
 #define        HALT	0x03
-#define        NBR      0X04
+#define        JSR      0X04
 #define        RET      0x05
-#define        JSR      0x06
 #define        LDTI	0x0D
 #define        LDAI	0x0E
 #define        MVIB	0x10

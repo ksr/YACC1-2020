@@ -26,27 +26,33 @@ void moveRegtoTmp(int reg) {
 void branch(int reg,int mode, int invert, int actest) {
     //load the next two PC bytes format HHLL into branch register
     putMemAtRegOnBus(reg);
+    
+    writeCurrentLine();
     setSignal("BRANCH-LD-HI");
     writeCurrentLine();
     clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
     writeCurrentLine();
 
-    incrementReg(PC);
-
-    putMemAtRegOnBus(0);
-
+    incrementReg(reg);
+    writeCurrentLine();
+    
+    putMemAtRegOnBus(reg);
+    
+    writeCurrentLine();
     setSignal("BRANCH-LD-LO");
     writeCurrentLine();
     clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
-    //writeCurrentLine(); reg up is rising edge??? are you sure
+    writeCurrentLine(); //reg up is rising edge??? are you sure
 
-    incrementReg(PC);
-
-    initCurrentLine(); //KEN - AUG 25 remove test, try existing code
+    incrementReg(reg);
+    writeCurrentLine();
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    //initCurrentLine(); //KEN - AUG 25 remove test, try existing code
     setSignal("-BRANCH-RD-LO"); //output branch register
     setSignal("-BRANCH-RD-HI");
     //setSignal("-REG-FUNC-LD");//?
-    //writeCurrentLine(); //Ken Probably not needed
+    writeCurrentLine(); //Ken Probably not needed
     if (actest == 1)
         setSignal("-AC-RD");
     setSignal("-ALU-FUNC");
@@ -112,6 +118,18 @@ void branchInstructions() {
     branch(PC,ALUCS, NOINVERT, 0);
     endInstruction();
     showCntlMemory(BRC);
+    
+    for (int reg = 0; reg < 8; reg++) {
+        startInstruction(BRVR|reg);
+        loadNextInstruction();
+        initCurrentLine();
+        //setSignal("-AC-RD");
+        branch(reg,ALUBR, NOINVERT, 0);
+        endInstruction();
+        showCntlMemory(BRVR|reg);
+    }
+
+
 
     // JSR
     startInstruction(JSR); //try as one instruction *** possible two writeCurrentLine needed see below
@@ -146,9 +164,9 @@ void branchInstructions() {
     setSignal("-HL-SWAP");
 
     putBustoRegMem(SP, "-REG-RD-LO");
-
+/*
     decrementReg(SP);
-
+/*
     setSignal("-BRANCH-RD-LO"); //output branch register
     setSignal("-BRANCH-RD-HI");
 
@@ -165,9 +183,10 @@ void branchInstructions() {
     clearSignal("REG-LD-LO");
     clearSignal("REG-LD-HI"); //Fix on new card  ???
     writeCurrentLine();
+ */
     endInstruction();
     showCntlMemory(JSR);
-#endif
+
 
 
     startInstruction(RET); //try as one instruction
@@ -203,4 +222,5 @@ void branchInstructions() {
     clearSignal("REG-LD-HI"); //Fix on new card  ???
     endInstruction();
     showCntlMemory(RET);
+
 }

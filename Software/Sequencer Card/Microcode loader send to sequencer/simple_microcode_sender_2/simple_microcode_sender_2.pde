@@ -43,7 +43,7 @@ void setup() {
   println(dataPath(""));
   println(sketchPath(""));
 
-  size(640, 400);
+  size(100, 100);
   fill(100);
 
 

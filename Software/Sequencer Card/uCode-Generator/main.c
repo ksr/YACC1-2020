@@ -186,11 +186,11 @@ void loadNextInstruction() {
     //increment Reg 0
 
     //initCurrentLine(); // not needed, load next instruction is always done at start of instruction and initCurrentLIne is called
-    putMemAtRegOnBus(0);
+    putMemAtRegOnBus(PC);
     setSignal("LD-INS-REG"); // rising or falling?
     writeCurrentLine();
     clearSignal("LD-INS-REG");
-    //writeCurrentLine(); // -reg-up is rising edge
+    writeCurrentLine(); // -reg-up is rising edge
     incrementReg(PC);
     
 }
@@ -198,18 +198,24 @@ void loadNextInstruction() {
 void incrementReg(int reg) {
     setRdId(reg);
     setSignal("-REG-FUNC-RD");
+    //writeCurrentLine();
     setSignal("-REG-UP");
     writeCurrentLine();
     clearSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-RD");
     writeCurrentLine();
 }
 
 void decrementReg(int reg) {
     setRdId(reg);
     setSignal("-REG-FUNC-RD");
+    //writeCurrentLine();
     setSignal("-REG-DN");
     writeCurrentLine();
     clearSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-RD");
     writeCurrentLine();
 }
 

@@ -10,12 +10,10 @@ OFF
 02
 HALT
 03
-NBR \W
+JSR \W
 04 hi(1) lo(1)
 RET
 05
-JSR
-06
 LDTI \B
 0D \1
 LDAI \B
