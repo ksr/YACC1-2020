@@ -114,7 +114,7 @@ void startInstruction(int instruction) {
         setSignal("OUT-OFF");
     }
     writeCurrentLine(); // KEN maybe only need these 2 extra Lines 0&1 for Instruction 0 so maybe test
-    writeCurrentLine();
+    //writeCurrentLine(); step 7
 }
 
 /* 
@@ -192,7 +192,7 @@ void loadNextInstruction() {
     clearSignal("LD-INS-REG");
     writeCurrentLine(); // -reg-up is rising edge
     incrementReg(PC);
-    
+    clearSignal("-MEM-RD"); //STEP 9 DO NOT LEAVE DATA BUS DRIVEN WITH INSTRUCTION FETCHED FROM MEM  
 }
 
 void incrementReg(int reg) {
@@ -201,8 +201,9 @@ void incrementReg(int reg) {
     //writeCurrentLine();
     setSignal("-REG-UP");
     writeCurrentLine();
+    
     clearSignal("-REG-UP");
-    writeCurrentLine();
+    //writeCurrentLine();  step 1 cleanup
     clearSignal("-REG-FUNC-RD");
     writeCurrentLine();
 }
@@ -214,7 +215,7 @@ void decrementReg(int reg) {
     setSignal("-REG-DN");
     writeCurrentLine();
     clearSignal("-REG-DN");
-    writeCurrentLine();
+    //writeCurrentLine(); step 3 cleanup
     clearSignal("-REG-FUNC-RD");
     writeCurrentLine();
 }
@@ -237,7 +238,7 @@ void putBustoRegMem(int reg, char *source) { // Source is either Accumulator TMP
     clearSignal("-MEM-WR");
     writeCurrentLine();
     clearSignal(source);
-    clearSignal("-VMA");
+    //clearSignal("-VMA"); step 8
     writeCurrentLine();
 
 }

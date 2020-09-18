@@ -22,6 +22,37 @@ void aluOp(int func){
     writeCurrentLine();
 }
 
+void shiftOp(int instruction,int mode){
+  
+    startInstruction(instruction);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-ALU-FUNC");
+    setAlu(SHIFT_LOAD);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
+    setAlu(mode);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
+
+    setAlu(ALUSHIFT);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine(); // clear reg-func-rd?
+
+    endInstruction();
+    showCntlMemory(instruction);  
+}
+
 void accumulatorInstructions() {
     int ins, reg;
 
@@ -264,6 +295,15 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
     
+    shiftOp(SHL,(SHIFT_LEFT|SHIFT_ZERO));
+    shiftOp(SHR,(SHIFT_RIGHT|SHIFT_ZERO));
+    shiftOp(RSHL,(SHIFT_LEFT|SHIFT_RING));
+    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_RING));
+    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_PROP));
+    shiftOp(RSHL,(SHIFT_LEFT|SHIFT_CARRY));
+    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_CARRY));
+
+#ifdef notused    
     //Shift Accum Left LSB->MSB
     ins = SHL;
     startInstruction(ins);
@@ -271,6 +311,12 @@ void accumulatorInstructions() {
     initCurrentLine();
 
     setSignal("-ALU-FUNC");
+    setAlu(SHIFT_LOAD);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
     setAlu(SHIFT_LEFT|SHIFT_ZERO);
     writeCurrentLine();
     setSignal("-SR-LD");
@@ -279,6 +325,7 @@ void accumulatorInstructions() {
     writeCurrentLine();
 
     setAlu(ALUSHIFT);
+    writeCurrentLine();
     setSignal("-AC-LD");
     writeCurrentLine();
     clearSignal("-AC-LD");
@@ -294,7 +341,13 @@ void accumulatorInstructions() {
     initCurrentLine();
 
     setSignal("-ALU-FUNC");
-    setAlu(SHIFT_LEFT|SHIFT_ZERO);
+    setAlu(SHIFT_LOAD);
+    writeCurrentLine();
+    setSignal("-SR-LD");
+    writeCurrentLine();
+    clearSignal("-SR-LD");
+    writeCurrentLine();
+    setAlu(SHIFT_RIGHT|SHIFT_ZERO);
     writeCurrentLine();
     setSignal("-SR-LD");
     writeCurrentLine();
@@ -302,6 +355,7 @@ void accumulatorInstructions() {
     writeCurrentLine();
 
     setAlu(ALUSHIFT);
+    writeCurrentLine();
     setSignal("-AC-LD");
     writeCurrentLine();
     clearSignal("-AC-LD");
@@ -309,5 +363,5 @@ void accumulatorInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
-    
+#endif    
 }

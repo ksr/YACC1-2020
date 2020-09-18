@@ -251,7 +251,7 @@ int main(int argc, char** argv) {
         }
     }
     processInstruction(0xA0);
-    //processInstruction(0x06);
+    processInstruction(0x04);
     return (EXIT_SUCCESS);
 }
 

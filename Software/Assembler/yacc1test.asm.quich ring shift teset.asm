@@ -17,6 +17,14 @@ TIL311:       EQU 080H
 CNTL-PORT:    EQU "P0"
 DATAPORT:     EQU "P1"
 
+
+
+         LDAI 081h
+         RSHR
+         LDAI 081h
+         RSHL
+
+         
          ORG 0f000h
          BR eprom
          ORG 0f003h
@@ -53,9 +61,6 @@ eprom:
          JSR shltest
          JSR rshrtest
          JSR rshltest
-         JSR pshltest
-         JSR cshltest
-         JSR cshrtest
 
 
 
@@ -110,7 +115,7 @@ rshlloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
-         RSHL
+         SHL
          OUTA  P1
 
          DECR R2
@@ -127,63 +132,12 @@ rshrloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
-          RSHR
+          SHR
           OUTA  P1
 
           DECR R2
           MVRLA R2
           BRNZ rshrloop
-          RET
-
-pshltest:
-          MVIW   R2,PSHIFT_LEFT
-          JSR    stringout
-          MVIB   R2,10
-pshlloop:
-          JSR blink
-          JSR switchtoggle
-          OUTI P0,(SWITCHLED)
-          INP P1
-          RSHR
-          OUTA  P1
-
-          DECR R2
-          MVRLA R2
-          BRNZ pshlloop
-          RET
-
-cshltest:
-          MVIW   R2,CSHIFT_LEFT
-          JSR    stringout
-          MVIB   R2,10
-cshlloop:
-          JSR blink
-          JSR switchtoggle
-          OUTI P0,(SWITCHLED)
-          INP P1
-          RSHR
-          OUTA  P1
-
-          DECR R2
-          MVRLA R2
-          BRNZ cshlloop
-          RET
-
-cshrtest:
-          MVIW   R2,CSHIFT_RIGHT
-          JSR    stringout
-          MVIB   R2,10
-cshrloop:
-          JSR blink
-          JSR switchtoggle
-          OUTI P0,(SWITCHLED)
-          INP P1
-          RSHR
-          OUTA  P1
-
-          DECR R2
-          MVRLA R2
-          BRNZ cshrloop
           RET
 ;
 ; Compare Tests/compare input switches to 0x55 10 times
@@ -316,9 +270,7 @@ SHIFT_LEFT: DB "Shift Left",0
 SHIFT_RIGHT: DB "Shift Right",0
 RSHIFT_LEFT: DB "Ring Shift Left",0
 RSHIFT_RIGHT: DB "Ring Shift Right",0,0,0
-PSHIFT_LEFT: DB "PROP Shift Left",0
-CSHIFT_LEFT: DB "CARRY Shift Left",0
-CSHIFT_RIGHT: DB "CARRY Shift Right",0,0,0
+
 ;
 ;LCD
 ;

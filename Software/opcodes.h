@@ -52,6 +52,9 @@ extern "C" {
 #define        BRINH	0xA3
 #define        BRINL	0xA4
 #define        BRC      0xA6
+#define        BRLT     0xA7
+#define        BREQ     0xA8
+#define        BRGT     0xA9
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2
@@ -65,10 +68,15 @@ extern "C" {
 #define        ORT	0xBA
 #define        ANDT	0xBB
 #define        XORT	0xBC
+#define        RSHL	0xBD
+#define        RSHR	0xBE
+#define        PSHR     0xBF
 #define        LDTVR	0xC0
 #define        STTVR	0xC8
 #define        LDIVR    0xD0
 #define        BRVR     0xD8
+#define        CSHL     0xE0
+#define        CSHR     0xE1
 
 #endif /* OPCODES_H */
 

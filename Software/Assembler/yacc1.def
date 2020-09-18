@@ -58,6 +58,12 @@ BRINL \W
 A4 hi(1) lo(1)
 BRC \W
 A6 hi(1) lo(1)
+BRLT \W
+A7  hi(1) lo(1)
+BREQ \W
+A8  hi(1) lo(1)
+BRGT \W
+A9  hi(1) lo(1)
 ADDI \B
 B0 \1
 SUBI \B
@@ -84,6 +90,12 @@ ANDT
 BB
 XORT
 BC
+RSHL
+BD
+RSHR
+BE
+PSHR
+BF
 LDTVR \{regs}
 C0|1
 STTVR \{regs}
@@ -92,6 +104,10 @@ LDIVR \{regs},\B
 D0|1 \2
 BRVR \{regs}
 D8|1
+CSHL
+E0
+CSHR
+E1
 ORG     \W
 \O1
 END     \W

@@ -15,7 +15,7 @@
 void registerOnlyInstructions() {
     int reg;
     int ins;
-    
+
     //Decrement Register
     for (reg = 0; reg < 8; reg++) {
         ins = DECR | (reg & 0x07);
@@ -24,7 +24,7 @@ void registerOnlyInstructions() {
         initCurrentLine();
 
         decrementReg(reg);
-        
+
         endInstruction();
         showCntlMemory(ins);
     }
@@ -35,7 +35,7 @@ void registerOnlyInstructions() {
         startInstruction(ins);
         loadNextInstruction();
         initCurrentLine();
-        
+
         incrementReg(reg);
 
         endInstruction();
@@ -64,6 +64,23 @@ void registerOnlyInstructions() {
         endInstruction();
         showCntlMemory(ins);
     }
+    
+    //load tmp reg 0 immediate 
+    ins = LDTI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+
+    setSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    endInstruction();
+    showCntlMemory(ins);
 
     //load register low & hi immediate 16 bit
     for (reg = 0; reg < 8; reg++) {
@@ -84,7 +101,7 @@ void registerOnlyInstructions() {
         writeCurrentLine();
         clearSignal("-REG-FUNC-LD");
         clearSignal("-HL-SWAP");
-        
+
         incrementReg(PC);
 
         putMemAtRegOnBus(PC);

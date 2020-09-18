@@ -56,8 +56,8 @@ extern "C" {
 #define ALUCS 7
 
 //Shift operations
-#define SHIFT_RIGHT 0x01
-#define SHIFT_LEFT 0x02
+#define SHIFT_LEFT 0x01
+#define SHIFT_RIGHT 0x02
 #define SHIFT_LOAD 0x03
 
 #define SHIFT_ZERO 0x00

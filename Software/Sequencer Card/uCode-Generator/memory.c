@@ -28,7 +28,8 @@ void doMemory() {
         writeCurrentLine();
         clearSignal("-TMP-REG-LD0");
         writeCurrentLine();
-        initCurrentLine(); // or just clear specific lines?
+        initCurrentLine(); // or just clear specific lines? memrd is active from putMemAtREG...
+        
 
         putBustoRegMem(reg,"-TMP-REG-RD0");
 
