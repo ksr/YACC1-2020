@@ -382,13 +382,11 @@ cmpres:
 :
 
 cmdloop:
-      LDAI '>'
-      JSR uartout
-      LDAI '>'
-      JSR uartout
+      MVIW R2,PROMPT
+      JSR stringout
 
       JSR uartin
-      JSR uartout
+      JSR toupper
       LDTI 'E'
       BREQ examine
       LDTI 'D'
@@ -475,31 +473,20 @@ getaddress:
 ;
             Push
             JSR getnibble
-
             SHL
             SHL
             shL
             shL
             ANDI 0f0h
-
             Push
-
             JSR getnibble
-
             ANDI 0FH
-
             MVAT
             Pop
-
             ORT
-
-            jsr ledout
-            jsr switchtoggle
-
             MVARH R3
 
             JSR getnibble
-
             shL
             shl
             shl
@@ -511,8 +498,6 @@ getaddress:
             MVAT
             pop
             ORT
-            jsr ledout
-            jsr switchtoggle
             MVARL R3
             POP
             RET
@@ -521,21 +506,24 @@ getaddress:
 ;
 getnibble:
           JSR uartin
-          JSR uartout
 getnibblec:
           LDTI '9'
           BRGT INAF
           SUBI '0'
           RET
-INAF:     LDTI 'Z'
-          BRGT lowercasein
+INAF:     JSR toupper
           SUBI 'A'
-;added this addi needs testing
           ADDI 10
           RET
-lowercasein:
+;
+; convert to uppercase
+;
+toupper:  LDTI 'Z'
+          BRGT lower
+          RET
+lower:
           SUBI 020h
-          BR  INAF
+          RET
 ;
 ; display R3
 ;
@@ -647,10 +635,6 @@ sloop:
 ; send CR and LF
 ;
 sloopdone:
-        LDAI 0ah
-        JSR uartout
-        LDAI 0dh
-        JSR uartout
         POP
         RET
 ;
@@ -691,6 +675,7 @@ uartin:
         BRZ   uartin
         OUTI  P0,(UARTCS)
         INP   P1
+        JSR uartout
         RET
 ;
 ; toggle input switch
@@ -738,25 +723,26 @@ offloop:
 
 codes:  DB 'G','H','I','J','H','K','L','A','B','C','D','E'
 
-hello:  DB 0ah,0dh,"YACC 2020: hello world  ",0
-COMPARE_STRING: DB "Compare Tests",0
-SHIFT_LEFT: DB "Shift Left",0
-SHIFT_RIGHT: DB "Shift Right",0
-RSHIFT_LEFT: DB "Ring Shift Left",0
-RSHIFT_RIGHT: DB "Ring Shift Right",0
-PSHIFT_LEFT: DB "PROP Shift Left",0
-CSHIFT_LEFT: DB "CARRY Shift Left",0
-CSHIFT_RIGHT: DB "CARRY Shift Right",0
-SUB: DB "SUBTRACT",0
-ERROR: DB "UNRECOGINIZED COMMAND",0
-CONTINUEERROR: DB "CONTINUE CMD ERROR",0
-DUMPMSG: DB "DUMP MODE",0
-EXAMINEMSG: DB "EXAMINE MODE",0
+hello:  DB 0ah,0dh,"YACC 2020: hello world  ",0ah,0dh,0
+COMPARE_STRING: DB "Compare Tests",0ah,0dh,0
+SHIFT_LEFT: DB "Shift Left",0ah,0dh,0
+SHIFT_RIGHT: DB "Shift Right",0ah,0dh,0
+RSHIFT_LEFT: DB "Ring Shift Left",0ah,0dh,0
+RSHIFT_RIGHT: DB "Ring Shift Right",0ah,0dh,0
+PSHIFT_LEFT: DB "PROP Shift Left",0ah,0dh,0
+CSHIFT_LEFT: DB "CARRY Shift Left",0ah,0dh,0
+CSHIFT_RIGHT: DB "CARRY Shift Right",0ah,0dh,0
+SUB: DB "SUBTRACT",0ah,0dh,0
+ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
+CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0
+DUMPMSG: DB 0ah,0dh,"DUMP ADDRESS:",0
+EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
 CONTMSG: DB "CONTINUE MODE",0
-accumtests: DB "accumulator test",0
-PUSHPOPMSG: DB "Push Pop enter 3 numbers",0
-ORTESTMSG: DB "OR tests",0
-ORTTESTMSG: DB " OR Tmp tests",
+accumtests: DB "accumulator test",0ah,0dh,0
+PUSHPOPMSG: DB "Push Pop enter 3 numbers",0ah,0dh,0
+ORTESTMSG: DB "OR tests",0ah,0dh,0
+ORTTESTMSG: DB "OR Tmp register tests",0ah,0dh,0
+PROMPT: DB 0ah,0dh,">>",0
 ;
 ; OLD
 ;
