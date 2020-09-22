@@ -78,7 +78,36 @@ void printInstruction(int instruction) {
     }
     printf("\n");
 }
+#ifdef newstuff
+checkInstruction(int instruction, bool validlines[]) {
+    int ins1[BYTES_PER_LINE], ins2[BYTES_PER_LINE];
+    int diff;
+    int line;
 
+    printf("Check Instruction [%d]\n", instruction);
+    line = 0;
+    for (int i = 0; i < BYTES_PER_LINE; i++) {
+        ins1[i] = cntlMemory[(instruction * INSTRUCTION_SIZE)+(line * BYTES_PER_LINE) + i];
+    }
+
+    for (int line = 1; line < LINES_PER_INSTRUCTION; line++) {
+        if (validlines[line] == true) {
+            for (int i = 0; i < BYTES_PER_LINE; i++)
+                ins1[2] = cntlMemory[(instruction * INSTRUCTION_SIZE)+(line * BYTES_PER_LINE) + i];
+            diff = 0;
+            for (int i = 0; i < BYTES_PER_LINE; i++) {
+                if (ins1[i] != ins2[i])
+                    diff = 1;
+                ins1[i] = ins2[i];
+            }
+            if (diff == 0) {
+                printf("ins %d   line %d is duplicate", instruction, line);
+                exit(0);
+            }
+        }
+    }
+}
+#endif
 void loadInstructionSignals(unsigned char *instruction, bool validLines[]) {
     unsigned char mask;
 
@@ -222,6 +251,8 @@ bool processInstruction(int instruction) {
         printActiveSignals(activeSignals);
 
         printSignalsHistory(activeSignals, validLine);
+
+        //checkInstruction(instruction, validLine);
 
         printWave(instruction, activeSignals, validLine);
 
