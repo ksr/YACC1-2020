@@ -29,7 +29,7 @@ eprom:
 ;
 ; Setup Stack
 ;
-         MVIW R1,2000h
+         MVIW R1,1000h
 ;
 ; SERIAL OUT SETUP
 ;
@@ -56,13 +56,15 @@ eprom:
          MVIW R2,hello
          JSR stringout
 
+         JSR pushpop
+
+         MVIW R2,hello
+         JSR stringout
+
          MVIW R3,0f000h
          JSR showaddr
-
          JSR show16
-
          JSR cmdloop
-
          JSR subtest
          JSR cmptest
          JSR shrtest
@@ -73,56 +75,12 @@ eprom:
          JSR cshltest
          JSR cshrtest
          JSR accumtest
-         JSR pushpop
-         JSR ortest
-         JSR orttest
-
 
 
 ;
 ; Tests
 ;
 
-;
-; OR test
-;
-ortest:
-         MVIW   R2,ORTESTMSG
-         JSR    stringout
-         MVIB   R2,5
-orloop:
-         JSR blink
-         JSR switchtoggle
-         OUTI P0,(SWITCHLED)
-         INP P1
-         ORI  055H
-         OUTA  P1
-
-         DECR R2
-         MVRLA R2
-         BRNZ orloop
-         RET
-
-orttest:
-        MVIW   R2,ORTTESTMSG
-        JSR    stringout
-        MVIB   R2,5
-ortloop:
-        JSR blink
-        JSR switchtoggle
-        OUTI P0,(SWITCHLED)
-        INP P1
-        MVAT
-        JSR switchtoggle
-        OUTI P0,(SWITCHLED)
-        INP P1
-        ORT
-        OUTA  P1
-
-        DECR R2
-        MVRLA R2
-        BRNZ ortloop
-        RET
 ;
 ; push pop tests
 ;
@@ -423,35 +381,6 @@ examine:
        jsr getaddress
 
 examinecont:
-      JSR showaddr
-      JSR showbyte
-      LDAI ' '
-      JSR uartout
-
-      JSR uartin
-      LDTI 01bh
-      BREQ cmdloop
-      LDTI 0dh
-      BREQ examnext
-      JSR getnibblec
-      shL
-      shL
-      shL
-      shL
-      push
-      jsr getnibble
-      MVAT
-      Pop
-      ORT
-      STAVR R3
-
-examnext:
-      INCR R3
-      LDAI 0ah
-      JSR uartout
-      LDAI 0dh
-      JSR uartout
-      BR examinecont
 
 dump:
       MVIW R2,DUMPMSG
@@ -473,48 +402,50 @@ getaddress:
 ;
 ; Read 4 char address and return in R3
 ;
-            Push
             JSR getnibble
+            jsr ledout
+            jsr switchtoggle
 
             SHL
             SHL
             shL
             shL
-            ANDI 0f0h
-
-            Push
-
-            JSR getnibble
-
-            ANDI 0FH
-
-            MVAT
-            Pop
-
-            ORT
 
             jsr ledout
             jsr switchtoggle
 
+            ANDI 0f0h
+
+            jsr ledout
+            jsr switchtoggle
+
+            MVAT
+
+            jsr ledout
+            jsr switchtoggle
+
+;
+            JSR getnibble
+            ANDI 0FH
+            ORT
+            MVAT
+            JSR showbytea
+            MVTA
             MVARH R3
-
             JSR getnibble
-
             shL
             shl
             shl
             shl
             ANDI 0f0h
-            push
+            MVAT
             JSR getnibble
             ANDI 0FH
-            MVAT
-            pop
             ORT
-            jsr ledout
-            jsr switchtoggle
+            MVAT
+            JSR showbytea
+            MVTA
             MVARL R3
-            POP
             RET
 ;
 ; getnibble return in accumulator
@@ -522,7 +453,6 @@ getaddress:
 getnibble:
           JSR uartin
           JSR uartout
-getnibblec:
           LDTI '9'
           BRGT INAF
           SUBI '0'
@@ -539,8 +469,7 @@ lowercasein:
 ;
 ; display R3
 ;
-showaddr:   Push
-            MVRHA R3
+showaddr:   MVRHA R3
             SHR
             SHR
             SHR
@@ -562,7 +491,6 @@ showaddr:   Push
             JSR uartout
             LDAI ' '
             JSR uartout
-            POP
             RET
 ;
 ; display 16 bytes point to by R3
@@ -584,14 +512,8 @@ show16:     JSR showbyte
 ; or showbye in accumulator
 ; both destructive for accumulator
 :
-showbyte:   PUSH
-            LDAVR R3
-            BR doshowbyte
-
-showbytea:  Push
-
-doshowbyte:
-            SHR
+showbyte:   LDAVR R3
+showbytea:  SHR
             SHR
             SHR
             SHR
@@ -599,23 +521,19 @@ doshowbyte:
             LDAVR R3
             ANDI 0FH
             JSR shownibble
-            POP
             RET
 ;
 ; Display nibble in accumulator (destructive)
 ;
-shownibble:  PUSH
+shownibble:  MVARL R4
              LDTI 9
              BRGT AF
              ADDI '0'
-             JSR uartout
-             Pop
+             BR uartout
              RET
-
 AF:          SUBI 10
              ADDI 'A'
-             JSR uartout
-             Pop
+             BR uartout
              RET
 ;
 ; reading switches into accumulator
@@ -636,7 +554,7 @@ ledout:
 ; Output null string pointed to by R2 to UART then send CR and LF
 ;
 stringout:
-        Push
+        MVARL R4
 sloop:
         LDAVR R2
         BRZ sloopdone
@@ -651,35 +569,29 @@ sloopdone:
         JSR uartout
         LDAI 0dh
         JSR uartout
-        POP
+        MVRLA R4
         RET
 ;
 ; output accumulator to UART
 ;
 uartout:
-        PUSH
-        push
-uartoutw:
+        MVARL R4
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
         ANDI  020h
-;
 ; i think this a brnz test -- that didn't work
-;       BRZ   uartoutw
-        POP
+;       BRZ   uartout
+        MVRLA R4
         OUTI  P0,UARTCS
         OUTA  P1
-;
 ; may not be needed
-;       Pop
 ;       RET
-
         MVIW R7,01FFh
 uartdelay:
         DECR R7
         MVRHA R7
         BRNZ uartdelay
-        POP
+        MVRLA R4
         RET
 ;
 ; input UART to accumulator
@@ -696,7 +608,7 @@ uartin:
 ; toggle input switch
 ;
 switchtoggle:
-        Push
+        MVARL R4
 offw:   BRINL offw
         MVIW R7,01FFh
 delaya:
@@ -712,13 +624,13 @@ delayb:
         MVRHA R7
         BRNZ delayb
         OFF
-        Pop
+        MVRLA R4
         RET
 ;
 ; blink LED
 ;
 blink:
-        Push
+        MVARL R4
         ON
 ;
         MVIW R7,04FFh
@@ -733,7 +645,7 @@ offloop:
         DECR R7
         MVRHA R7
         BRNZ offloop
-        Pop
+        MVRLA R4
         RET
 
 codes:  DB 'G','H','I','J','H','K','L','A','B','C','D','E'
@@ -755,8 +667,8 @@ EXAMINEMSG: DB "EXAMINE MODE",0
 CONTMSG: DB "CONTINUE MODE",0
 accumtests: DB "accumulator test",0
 PUSHPOPMSG: DB "Push Pop enter 3 numbers",0
-ORTESTMSG: DB "OR tests",0
-ORTTESTMSG: DB " OR Tmp tests",
+
+
 ;
 ; OLD
 ;
@@ -813,10 +725,18 @@ ORTTESTMSG: DB " OR Tmp tests",
 
 ;        OUTI P1,'B'
 
+
+
 ;xaddtest:
 ;      OUTI  P0,(SWITCHLED)
 ;      INP   P1
 ;      ADDI  001H
+;      OUTA  P1
+
+;xortest:
+;      OUTI  P0,(SWITCHLED)
+;      INP   P1
+;      ORI  055H
 ;      OUTA  P1
 
 ;xandtest:

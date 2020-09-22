@@ -30,6 +30,10 @@ extern "C" {
 #define        HALT	0x03
 #define        JSR      0X04
 #define        RET      0x05
+#define        PUSH     0x09
+#define        POP      0x0A
+#define        MVAT     0x0B
+#define        MVTA     0x0C
 #define        LDTI	0x0D
 #define        LDAI	0x0E
 #define        MVIB	0x10

@@ -12,7 +12,7 @@
 #include "../../opcodes.h"
 #include "CodeGen.h"
 
-void aluOp(int func){
+void aluOp(int func) {
     setSignal("-ALU-FUNC");
     setAlu(func);
     writeCurrentLine();
@@ -22,8 +22,8 @@ void aluOp(int func){
     writeCurrentLine();
 }
 
-void shiftOp(int instruction,int mode){
-  
+void shiftOp(int instruction, int mode) {
+
     startInstruction(instruction);
     loadNextInstruction();
     initCurrentLine();
@@ -50,7 +50,7 @@ void shiftOp(int instruction,int mode){
     writeCurrentLine(); // clear reg-func-rd?
 
     endInstruction();
-    showCntlMemory(instruction);  
+    showCntlMemory(instruction);
 }
 
 void accumulatorInstructions() {
@@ -114,7 +114,7 @@ void accumulatorInstructions() {
         setAlu(ALUDATA);
         setSignal("-AC-RD");
         writeCurrentLine();
-        
+
         setSignal("-REG-FUNC-LD");
         setLdId(reg);
 
@@ -124,7 +124,7 @@ void accumulatorInstructions() {
         clearSignal("REG-LD-LO");
         writeCurrentLine();
         clearSignal("-REG-FUNC-LD");
-        
+
         writeCurrentLine();
 
         endInstruction();
@@ -144,6 +144,7 @@ void accumulatorInstructions() {
         writeCurrentLine();
 
         setSignal("-REG-FUNC-LD");
+        setSignal("-HL-SWAP"); // needs testing Sept 21 entering address in montitor not working
         setLdId(reg);
 
         writeCurrentLine();
@@ -213,8 +214,8 @@ void accumulatorInstructions() {
     writeCurrentLine();
 
     incrementReg(PC);
-    
-    
+
+
     endInstruction();
     showCntlMemory(ins);
 
@@ -229,7 +230,7 @@ void accumulatorInstructions() {
     putMemAtRegOnBus(PC);
 
     aluOp(ALUADD);
-   
+
     incrementReg(PC);
 
     endInstruction();
@@ -241,14 +242,34 @@ void accumulatorInstructions() {
     loadNextInstruction();
     initCurrentLine();
 
+    setSignal("-AC-RD");
+    setSignal("-ALU-FUNC");
+    writeCurrentLine();
+    setSignal("-TMP-REG-LD1");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD1");
+    writeCurrentLine();
+    clearSignal("-AC-RD");
+    writeCurrentLine();
+
     putMemAtRegOnBus(PC);
 
+    setAlu(ALUDATA);
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-MEM-RD");
+    setSignal("-TMP-REG-RD1");
+    writeCurrentLine();
+
     aluOp(ALUSUB);
-    
+
     incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
+
 
     //AND to  Accum low immediate 8 bit
     ins = ANDI;
@@ -261,7 +282,7 @@ void accumulatorInstructions() {
     aluOp(ALUAND);
 
     incrementReg(PC);
-    
+
     endInstruction();
     showCntlMemory(ins);
 
@@ -274,8 +295,42 @@ void accumulatorInstructions() {
     putMemAtRegOnBus(PC);
 
     aluOp(ALUOR);
-    
+
     incrementReg(PC);
+
+    endInstruction();
+    showCntlMemory(ins);
+
+
+    //AND to  Accum low immediate 8 bit
+    ins = ANDT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    writeCurrentLine();
+
+    aluOp(ALUAND);
+
+    //incrementReg(PC);
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //OR to  Accum low immediate 8 bit
+    ins = ORT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    aluOp(ALUOR);
+
+    //incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
@@ -289,19 +344,55 @@ void accumulatorInstructions() {
     putMemAtRegOnBus(PC);
 
     aluOp(ALUXOR);
-    
+
     incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
-    
-    shiftOp(SHL,(SHIFT_LEFT|SHIFT_ZERO));
-    shiftOp(SHR,(SHIFT_RIGHT|SHIFT_ZERO));
-    shiftOp(RSHL,(SHIFT_LEFT|SHIFT_RING));
-    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_RING));
-    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_PROP));
-    shiftOp(RSHL,(SHIFT_LEFT|SHIFT_CARRY));
-    shiftOp(RSHR,(SHIFT_RIGHT|SHIFT_CARRY));
+
+    shiftOp(SHL, (SHIFT_LEFT | SHIFT_ZERO));
+    shiftOp(SHR, (SHIFT_RIGHT | SHIFT_ZERO));
+    shiftOp(RSHL, (SHIFT_LEFT | SHIFT_RING));
+    shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_RING));
+    shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_PROP));
+    shiftOp(RSHL, (SHIFT_LEFT | SHIFT_CARRY));
+    shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_CARRY));
+
+    ins = MVAT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    setSignal("-AC-RD");
+    writeCurrentLine();
+    setSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    ins = MVTA;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    writeCurrentLine();
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+
+    endInstruction();
+    showCntlMemory(ins);
 
 #ifdef notused    
     //Shift Accum Left LSB->MSB
@@ -317,7 +408,7 @@ void accumulatorInstructions() {
     writeCurrentLine();
     clearSignal("-SR-LD");
     writeCurrentLine();
-    setAlu(SHIFT_LEFT|SHIFT_ZERO);
+    setAlu(SHIFT_LEFT | SHIFT_ZERO);
     writeCurrentLine();
     setSignal("-SR-LD");
     writeCurrentLine();
@@ -333,7 +424,7 @@ void accumulatorInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
-    
+
     //Shift Accum Left MSB->LSB
     ins = SHR;
     startInstruction(ins);
@@ -347,7 +438,7 @@ void accumulatorInstructions() {
     writeCurrentLine();
     clearSignal("-SR-LD");
     writeCurrentLine();
-    setAlu(SHIFT_RIGHT|SHIFT_ZERO);
+    setAlu(SHIFT_RIGHT | SHIFT_ZERO);
     writeCurrentLine();
     setSignal("-SR-LD");
     writeCurrentLine();

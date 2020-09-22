@@ -166,7 +166,9 @@ void branchInstructions() {
     endInstruction();
     showCntlMemory(BRGT);
 
+    //
     // JSR
+    //
     startInstruction(JSR); //try as one instruction *** possible two writeCurrentLine needed see below
     loadNextInstruction();
     initCurrentLine();
@@ -228,7 +230,9 @@ void branchInstructions() {
     showCntlMemory(JSR);
 
 
-
+    //
+    //RET
+    //
     startInstruction(RET); //try as one instruction
     loadNextInstruction();
     initCurrentLine();
@@ -266,5 +270,41 @@ void branchInstructions() {
     clearSignal("REG-LD-HI"); //Fix on new card  ???
     endInstruction();
     showCntlMemory(RET);
+
+    //
+    //push pop
+    //
+    startInstruction(PUSH); //try as one instruction *** possible two writeCurrentLine needed see below
+    loadNextInstruction();
+    initCurrentLine();
+    
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    writeCurrentLine();
+
+    putBustoRegMem(SP, "-AC-RD");
+
+    decrementReg(SP);
+    endInstruction();
+    showCntlMemory(PUSH);
+    
+    
+    
+    startInstruction(POP); //try as one instruction *** possible two writeCurrentLine needed see below
+    loadNextInstruction();
+    initCurrentLine();
+    
+    incrementReg(SP);
+    putMemAtRegOnBus(SP);
+    
+    setSignal("-ALU-FUNC");
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+    
+    endInstruction();
+    showCntlMemory(POP);
 
 }
