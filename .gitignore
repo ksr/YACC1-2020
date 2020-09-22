@@ -6,3 +6,9 @@
 /Software/Assembler/CppApplication_1/build/
 /Software/Assembler/CppApplication_1/dist/
 /Software/Assembler/old/a18/a18/build/
+PCB/*.s#?
+PCB/*.b#?
+PCB/*.l#?
+PCB/*.b$?
+PCB/*.s$?
+PCB/*.l$?
