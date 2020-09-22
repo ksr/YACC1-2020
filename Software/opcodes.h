@@ -59,6 +59,7 @@ extern "C" {
 #define        BRLT     0xA7
 #define        BREQ     0xA8
 #define        BRGT     0xA9
+#define        BRNEQ    0xAA
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2

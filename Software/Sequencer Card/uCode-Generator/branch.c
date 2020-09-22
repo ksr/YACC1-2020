@@ -158,6 +158,14 @@ void branchInstructions() {
     branch(PC, ALUEQ, NOINVERT, SOURCE_TMP);
     endInstruction();
     showCntlMemory(BREQ);
+    
+    startInstruction(BRNEQ);
+    loadNextInstruction();
+    initCurrentLine();
+    branch(PC, ALUEQ, INVERT, SOURCE_TMP);
+    endInstruction();
+    showCntlMemory(BRNEQ);
+
 
     startInstruction(BRGT);
     loadNextInstruction();

@@ -400,8 +400,8 @@ cmdloop:
       BR cmdloop
 ;
 continue:
-      MVIW R2,CONTMSG
-      JSR stringout
+;      MVIW R2,CONTMSG
+;      JSR stringout
 
        MVRLA R6
        LDTI EXAMINEMODE
@@ -419,6 +419,8 @@ examine:
        JSR stringout
        MVIB R6,EXAMINEMODE
        jsr getaddress
+       MVIW R2,CRLF
+       JSR stringout
 
 examinecont:
       JSR showaddr
@@ -428,7 +430,7 @@ examinecont:
 
       JSR uartin
       LDTI 01bh
-      BREQ cmdloop
+      BREQ examdone
       LDTI 0dh
       BREQ examnext
       JSR getnibblec
@@ -450,18 +452,23 @@ examnext:
       LDAI 0dh
       JSR uartout
       BR examinecont
+examdone:
+      MVIW R2,CRLF
+      JSR stringout
+      BR cmdloop
 
 dump:
       MVIW R2,DUMPMSG
       JSR stringout
       MVIB R6,DUMPMODE
       jsr getaddress
+      MVIW R2,CRLF
+      JSR stringout
 
 dumpcont:
       jsr showaddr
       jsr show16
       BR cmdloop
-
 
 go:
       jsr getaddress
@@ -643,7 +650,7 @@ sloopdone:
 uartout:
         PUSH
         push
-; doubt 2nd push pop is needed, to be tested        
+; doubt 2nd push pop is needed, to be tested
 uartoutw:
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
@@ -746,7 +753,8 @@ accumtests: DB "accumulator test",0ah,0dh,0
 PUSHPOPMSG: DB "Push Pop enter 3 numbers",0ah,0dh,0
 ORTESTMSG: DB "OR tests",0ah,0dh,0
 ORTTESTMSG: DB "OR Tmp register tests",0ah,0dh,0
-PROMPT: DB 0ah,0dh,">>",0
+PROMPT: DB ">>",0
+CRLF: DB 0ah,0dh,0
 ;
 ; OLD
 ;

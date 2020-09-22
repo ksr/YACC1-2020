@@ -72,6 +72,8 @@ BREQ \W
 A8  hi(1) lo(1)
 BRGT \W
 A9  hi(1) lo(1)
+BRNEQ \W
+AA  hi(1) lo(1)
 ADDI \B
 B0 \1
 SUBI \B
