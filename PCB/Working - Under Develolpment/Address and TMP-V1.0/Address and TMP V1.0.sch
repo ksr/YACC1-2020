@@ -3760,6 +3760,7 @@ Based on the following sources:
 <sheet>
 <description>BUS</description>
 <plain>
+<text x="10.16" y="99.06" size="1.778" layer="91">test text</text>
 </plain>
 <instances>
 <instance part="X1" gate="-A3" x="-33.02" y="31.75" smashed="yes" rot="R90">
