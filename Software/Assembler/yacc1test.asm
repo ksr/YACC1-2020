@@ -643,28 +643,32 @@ sloopdone:
 uartout:
         PUSH
         push
+; doubt 2nd push pop is needed, to be tested        
 uartoutw:
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
-        ANDI  020h
+        ANDI  040h
 ;
 ; i think this a brnz test -- that didn't work
-;       BRZ   uartoutw
+        BRZ   uartoutw
         POP
         OUTI  P0,UARTCS
         OUTA  P1
 ;
 ; may not be needed
-;       Pop
-;       RET
+       Pop
+       RET
 
-        MVIW R7,01FFh
-uartdelay:
-        DECR R7
-        MVRHA R7
-        BRNZ uartdelay
-        POP
-        RET
+;
+; OLD
+;
+;        MVIW R7,01FFh
+;uartdelay:
+;        DECR R7
+;        MVRHA R7
+;        BRNZ uartdelay
+;        POP
+;        RET
 ;
 ; input UART to accumulator
 ;
