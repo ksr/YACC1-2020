@@ -21,7 +21,6 @@ NOMODE:       EQU 0
 EXAMINEMODE:  EQU 1
 DUMPMODE:     EQU 2
 
-
          ORG 0f000h
          BR eprom
          ORG 0f003h
@@ -45,11 +44,9 @@ eprom:
          OUTI  P0,(UARTA3!UARTCS)
          OUTI  P1,03H
 
-;        JSR blink
+         JSR blink
 
-        MVIB R6,NOMODE
-
-
+         MVIB R6,NOMODE
 ;
 ; Main
 ;
@@ -76,9 +73,6 @@ eprom:
          JSR pushpop
          JSR ortest
          JSR orttest
-
-
-
 ;
 ; Tests
 ;
@@ -367,7 +361,11 @@ cmpres:
 ;
 ; Commands
 ;
-; D AAAA - show 16 bytes at address AAAA
+; H      - Display help menu
+;
+; T      - Test menu
+;
+; D AAAA - Show 16 bytes at address AAAA (16 byte aligned)
 ;          followed by CR disply next 16 bytes
 ;
 ; E AAAA - show contents of location AAAA (Output AAAA:XX)
@@ -375,8 +373,8 @@ cmpres:
 ;          if followed by CR display next location
 ;
 ; G AAAA - Jump to (and execute) starting at AAAA
-;          code could end in BR to 0xf000h to restart monitor
-;
+;          code could end in BR to 0xf000h to restart monitor or RET if called via JSR
+
 ;
 ; Output Prompt
 :
@@ -387,6 +385,13 @@ cmdloop:
 
       JSR uartin
       JSR toupper
+      LDTI 'H'
+      BRNEQ testexamine
+      MVIW R2,helpmenu
+      JSR stringout
+      BR cmdloop
+
+testexamine:
       LDTI 'E'
       BREQ examine
       LDTI 'D'
@@ -396,6 +401,8 @@ cmdloop:
       LDTI 'G'
       BREQ go
       MVIW R2,ERROR
+      JSR stringout
+      MVIW R2,helpmenu
       JSR stringout
       BR cmdloop
 ;
@@ -471,7 +478,10 @@ dumpcont:
       BR cmdloop
 
 go:
+      MVIW R2,GOMSG
+      JSR stringout
       jsr getaddress
+      BRVR R3
 
 
 getaddress:
@@ -747,6 +757,7 @@ SUB: DB "SUBTRACT",0ah,0dh,0
 ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
 CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0
 DUMPMSG: DB 0ah,0dh,"DUMP ADDRESS:",0
+GOMSG: DB 0ah,0dh,"GO ADDRESS:",0
 EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
 CONTMSG: DB "CONTINUE MODE",0
 accumtests: DB "accumulator test",0ah,0dh,0
@@ -828,3 +839,12 @@ CRLF: DB 0ah,0dh,0
 ;     INP   P1
 ;     XORI  055H
 ;     OUTA  P1
+helpmenu:
+DB "H      - Display help menu",0ah,0dh
+DB "T      - Test menu",0ah,0DH
+DB "D AAAA - Show 16 bytes at address AAAA (16 byte aligned) followed by CR display next 16 bytes",0ah,0dh
+DB "E AAAA - show contents of location AAAA (Output AAAA:XX)",0ah,0dh
+DB "         if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
+DB "         if followed by CR display next location",0ah,0dh
+DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
+DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh,0

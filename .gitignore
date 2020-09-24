@@ -12,3 +12,5 @@
 *.b$?
 *.s$?
 *.l$?
+/Software/tinybasic-c/build/
+/Software/tinybasic-c/dist/

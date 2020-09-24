@@ -301,40 +301,6 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
 
-
-    //AND to  Accum low immediate 8 bit
-    ins = ANDT;
-    startInstruction(ins);
-    loadNextInstruction();
-    initCurrentLine();
-
-    setSignal("-TMP-REG-RD0");
-    writeCurrentLine();
-
-    aluOp(ALUAND);
-
-    //incrementReg(PC);
-
-    endInstruction();
-    showCntlMemory(ins);
-
-    //OR to  Accum low immediate 8 bit
-    ins = ORT;
-    startInstruction(ins);
-    loadNextInstruction();
-    initCurrentLine();
-
-    setSignal("-TMP-REG-RD0");
-    clearSignal("-MEM-RD");
-    writeCurrentLine();
-
-    aluOp(ALUOR);
-
-    //incrementReg(PC);
-
-    endInstruction();
-    showCntlMemory(ins);
-
     //XORI to  Accum low immediate 8 bit
     ins = XORI;
     startInstruction(ins);
@@ -350,13 +316,72 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
 
+     //AND to  Accum with tmp
+    ins = ANDT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    writeCurrentLine();
+
+    aluOp(ALUAND);
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //OR to  Accum with tmp
+    ins = ORT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    aluOp(ALUOR);
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    //XOR to  Accum with tmp
+    ins = XORT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    aluOp(ALUXOR);
+
+    endInstruction();
+    showCntlMemory(ins);
+    
+    //ADD to  tmp to accum
+    ins = ADDT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    aluOp(ALUADD);
+
+    endInstruction();
+    showCntlMemory(ins);
+    
     shiftOp(SHL, (SHIFT_LEFT | SHIFT_ZERO));
     shiftOp(SHR, (SHIFT_RIGHT | SHIFT_ZERO));
     shiftOp(RSHL, (SHIFT_LEFT | SHIFT_RING));
     shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_RING));
-    shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_PROP));
-    shiftOp(RSHL, (SHIFT_LEFT | SHIFT_CARRY));
-    shiftOp(RSHR, (SHIFT_RIGHT | SHIFT_CARRY));
+    shiftOp(PSHR, (SHIFT_RIGHT | SHIFT_PROP));
+    shiftOp(CSHL, (SHIFT_LEFT | SHIFT_CARRY));
+    shiftOp(CSHR, (SHIFT_RIGHT | SHIFT_CARRY));
 
     ins = MVAT;
     startInstruction(ins);
