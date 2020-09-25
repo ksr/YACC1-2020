@@ -52,6 +52,7 @@ eprom:
 ;
          MVIW R2,hello
          JSR stringout
+         HALT
 
          MVIW R3,0f000h
          JSR showaddr
