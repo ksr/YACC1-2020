@@ -136,6 +136,7 @@ void branchInstructions() {
     showCntlMemory(BRC);
 
     for (int reg = 0; reg < 8; reg++) {
+        // When reg != pc should reg autoincrement ?
         startInstruction(BRVR | reg);
         loadNextInstruction();
         initCurrentLine();

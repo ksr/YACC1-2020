@@ -219,6 +219,26 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
 
+//Invert accumulator 
+    ins = INVA;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    setSignal("-AC-RD");
+    setSignal("-AC-LD-INV");
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+   
+
+    endInstruction();
+    showCntlMemory(ins);
 
 
     //Add to  Accum low immediate 8 bit
