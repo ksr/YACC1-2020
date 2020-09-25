@@ -375,6 +375,45 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
     
+    
+    // sub tmp from accum
+    // Sub from Accum low immediate 8 bit
+    ins = SUBT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-AC-RD");
+    setSignal("-ALU-FUNC");
+    writeCurrentLine();
+    setSignal("-TMP-REG-LD1");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD1");
+    writeCurrentLine();
+    clearSignal("-AC-RD");
+    writeCurrentLine();
+
+    //putMemAtRegOnBus(PC);
+    setSignal("-TMP-REG-RD0");
+
+    setAlu(ALUDATA);
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+    //clearSignal("-MEM-RD");
+    clearSignal("-TMP-REG-RD0");
+    setSignal("-TMP-REG-RD1");
+    writeCurrentLine();
+
+    aluOp(ALUSUB);
+
+    incrementReg(PC);
+
+    endInstruction();
+    showCntlMemory(ins);
+    
+    
     shiftOp(SHL, (SHIFT_LEFT | SHIFT_ZERO));
     shiftOp(SHR, (SHIFT_RIGHT | SHIFT_ZERO));
     shiftOp(RSHL, (SHIFT_LEFT | SHIFT_RING));

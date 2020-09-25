@@ -145,6 +145,38 @@ void branchInstructions() {
         showCntlMemory(BRVR | reg);
     }
 
+    for (int reg = 0; reg < 8; reg++) {
+        startInstruction(BRUR | reg);
+        loadNextInstruction();
+        initCurrentLine();
+
+        setRdId(reg);
+        setSignal("-REG-FUNC-RD");
+        writeCurrentLine();
+        
+        setSignal("-REG-RD-HI"); //load branch register
+        writeCurrentLine();
+        setSignal("BRANCH-LD-HI");
+        writeCurrentLine();
+        clearSignal("BRANCH-LD-HI");
+        writeCurrentLine();
+        clearSignal("-REG-RD-HI"); 
+        writeCurrentLine();
+        
+        setSignal("-REG-RD-LO"); //load branch register
+        writeCurrentLine();
+        setSignal("BRANCH-LD-LO");
+        writeCurrentLine();
+        clearSignal("BRANCH-LD-LO");
+        writeCurrentLine();
+        clearSignal("-REG-RD-LO"); //load branch register 
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(BRUR | reg);
+    }
+
+
     startInstruction(BRLT);
     loadNextInstruction();
     initCurrentLine();
@@ -158,7 +190,7 @@ void branchInstructions() {
     branch(PC, ALUEQ, NOINVERT, SOURCE_TMP);
     endInstruction();
     showCntlMemory(BREQ);
-    
+
     startInstruction(BRNEQ);
     loadNextInstruction();
     initCurrentLine();
@@ -285,7 +317,7 @@ void branchInstructions() {
     startInstruction(PUSH); //try as one instruction *** possible two writeCurrentLine needed see below
     loadNextInstruction();
     initCurrentLine();
-    
+
     setSignal("-ALU-FUNC");
     setAlu(ALUDATA);
     writeCurrentLine();
@@ -295,23 +327,23 @@ void branchInstructions() {
     decrementReg(SP);
     endInstruction();
     showCntlMemory(PUSH);
-    
-    
-    
+
+
+
     startInstruction(POP); //try as one instruction *** possible two writeCurrentLine needed see below
     loadNextInstruction();
     initCurrentLine();
-    
+
     incrementReg(SP);
     putMemAtRegOnBus(SP);
-    
+
     setSignal("-ALU-FUNC");
     writeCurrentLine();
     setSignal("-AC-LD");
     writeCurrentLine();
     clearSignal("-AC-LD");
     writeCurrentLine();
-    
+
     endInstruction();
     showCntlMemory(POP);
 

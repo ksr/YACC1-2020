@@ -82,6 +82,7 @@ extern "C" {
 #define        BRVR     0xD8
 #define        CSHL     0xE0
 #define        CSHR     0xE1
+#define        BRUR     0xE8
 
 #endif /* OPCODES_H */
 
