@@ -1,14 +1,25 @@
 
 /*
-   BUS Monitor
+   Switch & LED test
 
-   Test bus for shorts
+   Flash each indicator LED
+   then
+   Continuous loop
+    read IN-SWTICH and DISPLAY on OUT LED
+    reads 8 data switches
+    adds 1
+    displays on 8 data leds
 */
 
 #include <Wire.h>
 #include "Adafruit_MCP23017.h"
 #include <avr/pgmspace.h>
 #include "YACC_Common_header.h"
+
+#define OUT_LED 4     // Single OUT LED - Schematic signal OUT-LED
+#define IN_SWITCH 5   // Input Switch - Schematic signal IN-SWITCH
+#define LEDS_LD 6     // 8 LEDs latch - Schmatic signal LEDS-LD  (LD=Load)
+#define SWITCHES_RD 7  // 8 Switches READ - Schmatic signal SWITCHES-RD
 
 //#define DEBUG
 
@@ -21,137 +32,41 @@ Adafruit_MCP23017 mcp[NUMBER_OF_CONTROLLERS];
 */
 void flash(int led) {
   digitalWrite(led, HIGH);
-  delay(250);
+  delay(100); //milliseconds
   digitalWrite(led, LOW);
-  delay(250);
 }
 
-/*
-   Test if the controller/pin combo is connected to the bus or an internal control pin
-*/
-bool is_busline(int controller, int pin) {
-  char tmp[100];
-
-  if ( ((controller  * 16) + pin)  < 84) {
-
-#ifdef DEBUG
-    sprintf(tmp, "is busline yes %d %d\n", controller, pin);
-    Serial.print(tmp);
-#endif
-
-    return (true);
-  }
-  else {
-#ifdef DEBUG1
-    sprintf(tmp, "is busline no %d %d\n", controller, pin);
-    Serial.print(tmp);
-#endif
-    return (false);
-  }
-}
-
-/*
-   Show status of all bus lines
-*/
-void show_all_lines() {
-  int i, j;
-  char tmp[100];
-
-#ifdef DEBUG
-  sprintf(tmp, "\nShow all lines --\n\n");
-  Serial.print(tmp);
-#endif
-
-  for (i = 0; i < NUMBER_OF_CONTROLLERS; i++) {
-    sprintf(tmp, "Controller %d - ", i);
-    Serial.print(tmp);
-    for (j = 0; j < BITS_PER_CONTROLLER; j++) {
-      if ( is_busline(i, j)) {
-        sprintf(tmp, "%d ", mcp[i].digitalRead(j));
-        Serial.print(tmp);
-      }
-    }
-    sprintf(tmp, "\n");
-    Serial.print(tmp);
-  }
-  sprintf(tmp, "\n\n");
-  Serial.print(tmp);
-}
-
-
-bool test_bus_for_low(int controller, int testbit) {
-  int i, j;
-  unsigned int in;
-  char tmp[100];
-
-#ifdef DEBUG
-  sprintf(tmp, "\ntest hi start %d %d\n\n", controller, testbit);
-  Serial.print(tmp);
-#endif
-
-  for (i = 0; i < NUMBER_OF_CONTROLLERS; i++) {
-    for (j = 0; j < BITS_PER_CONTROLLER; j++) {
-      if (is_busline(i, j)) {
-
-#ifdef DEBUG
-        sprintf(tmp, "test hi %d %d\n", i, j);
-        Serial.print(tmp);
-#endif
-
-        if ((i != controller) || ( j != testbit)) { //dont test the bus line that was set low
-
-#ifdef DEBUG
-          sprintf(tmp, " do test " );
-          Serial.print(tmp);
-#endif
-
-          in = mcp[i].digitalRead(j);
-
-#ifdef DEBUG
-          sprintf(tmp, "%d\n", in);
-          Serial.print(tmp);
-#endif
-
-          if (in == 0) { // if line is low there is a short
-            sprintf(tmp, "Short between %d %d and %d %d\n", controller, testbit, i, j);
-            Serial.print(tmp);
-            return (true);
-          }
-        }
-      }
-
-    }
-  }
-  return (false);
-}
-
-void switch_led_setup(){
-  mcp[5].pinMode(4, OUTPUT);
-  mcp[5].pinMode(5, INPUT);
-  mcp[5].pinMode(6, OUTPUT);
-  mcp[5].pinMode(7, OUTPUT);
+void switch_led_setup() {
+  mcp[5].pinMode(OUT_LED, OUTPUT); // Single OUT LED - Schematic signal OUT-LED
+  mcp[5].pinMode(IN_SWITCH, INPUT);  // Input Switch - Schematic signal IN-SWITCH
+  mcp[5].pinMode(LEDS_LD, OUTPUT); // 8 LEDs latch - Schmatic signal LEDS-LD  (LD=Load)
+  mcp[5].pinMode(SWITCHES_RD, OUTPUT); // 8 Switches READ - Schmatic signal SWITCHES-RD
 }
 
 int read_switches() {
   int i, j;
 
+  // SET BIT0-BIT7 to input
   for (j = 8; j < 16; j++) {
     mcp[5].pinMode(j, INPUT);
     mcp[5].pullUp(j, HIGH);  // turn on a 100K pullup internally
   }
 
-  mcp[5].digitalWrite(7, 0);
-  i = mcp[5].readGPIO(1);
-  mcp[5].digitalWrite(7, 1);
+  mcp[5].digitalWrite(SWITCHES_RD, 0);  //enable switch buffer
+  i = mcp[5].readGPIO(1);               //read switches (all 8 bits)
+  mcp[5].digitalWrite(7, 1);            //disable switch buffer
   return (i);
 }
 
 void display_led(int i) {
   int j, mask;
   mask = 0x01;
+
+  // SET BIT0-BIT7 to OUTPUT
   for (j = 8; j < 16; j++) {
     mcp[5].pinMode(j, OUTPUT);
 
+    // SET BIT(i)
     if (i & mask) {
       mcp[5].digitalWrite(j, true);
     } else {
@@ -159,8 +74,8 @@ void display_led(int i) {
     }
     mask = mask << 1;
   }
-  mcp[5].digitalWrite(6, 1);
-  mcp[5].digitalWrite(6, 0);
+  mcp[5].digitalWrite(LEDS_LD, 1); // latch switch DATA in LED Latch
+  mcp[5].digitalWrite(LEDS_LD, 0);
 }
 
 void setup() {
@@ -169,18 +84,16 @@ void setup() {
   Serial.begin(19200);
   Serial.println("Setup Start");
 
-  //Set all controllers to input, turn on internal pullups
+  //Set all controllers to output, turn on internal pullups and set to low
   for (i = 0; i < NUMBER_OF_CONTROLLERS; i++) {
     mcp[i].begin(i);
     for (j = 0; j < 16; j++) {
       mcp[i].pinMode(j, OUTPUT);
       mcp[i].pullUp(j, HIGH);  // turn on a 100K pullup internally
       mcp[1].digitalWrite(j, LOW);
-      //mcp[i].pinMode(j, INPUT);
-      //mcp[i].pullUp(j, HIGH);  // turn on a 100K pullup internally
     }
   }
-  show_all_lines();
+
   // Flash all onboard leds - 9,10,11,12,13 are direct arduino pins
   for (i = 9; i <= 13; i++) {
     pinMode(i, OUTPUT); /*??? Should 13 actually be i ??*/
@@ -200,48 +113,13 @@ void loop() {
 
   while (1) {
 
-    mcp[5].digitalWrite(4, mcp[5].digitalRead(5));
+    mcp[5].digitalWrite(OUT_LED, mcp[5].digitalRead(IN_SWITCH)); // Read IN-SWITCH and Display on OUT-LED
 
-    i = read_switches();
+    i = read_switches(); // RED 8 SWITCHES
 
-    i = i + 1;
+    i = i + 1; // ADD 1 to value read in
 
-
-    display_led (i);
+    display_led (i); // Displey on 8 LEDs
 
   }
-
-
-#ifdef DEBUG
-  show_all_lines();
-#endif
-
-
-#ifdef DEBUG
-  sprintf(tmp, "Hi Test %d %d\n", i, j);
-  Serial.print(tmp);
-#endif
-
-  if (is_busline(i, j)) {
-    mcp[i].pinMode(j, OUTPUT);
-    mcp[i].digitalWrite(j, LOW);
-#ifdef DEBUG
-    sprintf(tmp, "set low %d %d\n", i, j);
-    Serial.print(tmp);
-    show_all_lines();
-#endif
-    if (test_bus_for_low(i, j)) {
-      sprintf(tmp, "SHORT FOUND %d %d\n", i, j);
-      Serial.print(tmp);
-      show_all_lines();
-      delay(2000);
-      exit(0);
-    }
-    mcp[i].pinMode(j, INPUT);
-  }
-
-  sprintf(tmp, "Bus test completed - no shorts found\n");
-  Serial.print(tmp);
-  delay(2000);
-  exit(0);
 }
