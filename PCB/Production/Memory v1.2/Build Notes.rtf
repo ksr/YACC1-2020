@@ -5,7 +5,7 @@
 \margl1440\margr1440\vieww10800\viewh8400\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\fs24 \cf0 Build Notes:\
+\f0\fs24 \cf0 Build Notes: Memory Card\
 \
 Always start with a quick board check (See BUS description)\
 GND\
@@ -19,7 +19,7 @@ Test GND is connected to board, use C1 (any bypass cap has a GND side and a VCC 
 I like building boards in reverse height order:\
 \
 1) Lay flat resistors\
-2) IC Sockets, no need to install SIP connector\
+2) IC Sockets, no need to install SIP connectors\
 3) LEDS & Standup resistors (non on this board)\
 	LEDS are polarized and have a flat side as indicated on the board silkscreen\
 4) Jumpers\
@@ -27,6 +27,11 @@ I like building boards in reverse height order:\
 	Bolt connector in before soldering and verify all pins are properly through holes\
 	Recommend soldering the middle of pins followed by the outside rows\
 6) The exception to the height rule, I do bypass caps last\
+\
+EEPROM & Sockets\
+Solder 1 machined 28 pin socket into IC13\
+Place EEPROMS into separate machined sockets\
+Add/Remove EEPROMS from board keeping EEPROMS in their own milled sockets\
 \
 Bringing up the board \
 1) Test VCC and GND are not shorted\
