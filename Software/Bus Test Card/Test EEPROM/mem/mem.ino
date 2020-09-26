@@ -1,6 +1,5 @@
 /*
-   
-    Test EEPROM
+    Test exteranl on board EEPROM connected to AT328 chip 
 
     Based on:
     
@@ -15,8 +14,11 @@
 
 #include <Wire.h> //I2C library
 
-int offset=5000;
+#define DEVICE_ADDRESS 0X57
+int offset = 5000; //random location in EEPROM memory space
 
+
+//Write a byte into EEPROM
 void i2c_eeprom_write_byte( int deviceaddress, unsigned int eeaddress, byte data ) {
   int rdata = data;
   Wire.beginTransmission(deviceaddress);
@@ -26,7 +28,7 @@ void i2c_eeprom_write_byte( int deviceaddress, unsigned int eeaddress, byte data
   Wire.endTransmission();
 }
 
-
+//Read a byte from EEPROM
 byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
   byte rdata = 0xFF;
   Wire.beginTransmission(deviceaddress);
@@ -41,19 +43,26 @@ byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
 
 void setup()
 {
-  char somedata[] = "this is data - eeprom2123456789a"; // data to write
+  char somedata[] = "this is some sample data - eeprom2123456789a"; // data to write
+  int i;
+  
   Wire.begin(); // initialise the connection
   Serial.begin(19200);
-  offset = 5000; //random location in EEPROM memory space
+  Serial.println();
+  Serial.println();
+  Serial.println();
   
-  for (int i = 0; i < strlen(somedata) + 1; i++) { //+1 for ending null
-    i2c_eeprom_write_byte(0x57, i + offset, somedata[i] ); // write to EEPROM
-    Serial.println(somedata[i]);
-    delay(10);
+  Serial.println("Write into EEPROM the following string");
+  Serial.println(somedata);
+  
+  for (i = 0; i < strlen(somedata) + 1; i++) { //+1 for ending null, write null into EEPROM
+    i2c_eeprom_write_byte(DEVICE_ADDRESS, i + offset, somedata[i] ); // write to EEPROM
+    delay(10); //milliseconds
   }
-  delay(10); //add a small delay
-
-  Serial.println("Memory written");
+  delay(10); //milliseconds
+  Serial.println("SETUP Complete - EEPROM Memory written");
+  Serial.println();
+  
 }
 
 void loop()
@@ -62,14 +71,15 @@ void loop()
   byte b;
 
   addr=offset;
+  Serial.println("Read EEPROM");
   b = i2c_eeprom_read_byte(0x57, addr); // access the first address from the memory
 
-  while (b != 0)
+  while ((b =  i2c_eeprom_read_byte(0x57, addr)) != 0)
   {
-    Serial.print((char)b); //print content to serial port
+    Serial.print((char)b); //print content to serial port one byte at a time
     addr++; //increase address
-    b = i2c_eeprom_read_byte(0x57, addr); //access an address from the memory
   }
-  Serial.println(addr);
-  delay(2000);
+  Serial.println();
+  Serial.println();
+  while(1);
 }
