@@ -16,3 +16,6 @@ led-switch-test
 
 Test EEPROM
     Simple test to verify onboard controller can read/write onboard EEPROM chip
+
+BUS Driver commands
+    Command format for bus-driver program
