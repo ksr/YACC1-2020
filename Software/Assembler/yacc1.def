@@ -14,6 +14,8 @@ JSR \W
 04 hi(1) lo(1)
 RET
 05
+JSRUR \{regs}
+06 \1
 PUSH
 09
 POP
@@ -26,6 +28,8 @@ LDTI \B
 0D \1
 LDAI \B
 0E \1
+MOVRR \{regs},\{regs}
+0F |2<4|1
 MVIB \{regs},\B
 10|1 \2
 MVIW \{regs},\W
@@ -74,6 +78,10 @@ BRGT \W
 A9  hi(1) lo(1)
 BRNEQ \W
 AA  hi(1) lo(1)
+BR16Z \W
+AB  hi(1) lo(1)
+BR16NZ \W
+AC  hi(1) lo(1)
 ADDI \B
 B0 \1
 SUBI \B
@@ -118,6 +126,10 @@ CSHL
 E0
 CSHR
 E1
+ADDIC \B
+E2 \1
+ADDTC
+E3
 ORG     \W
 \O1
 END     \W
