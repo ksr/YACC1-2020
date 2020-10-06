@@ -55,7 +55,7 @@ prefix char  arg2[1024];
 prefix word  address;
 prefix char  doxref;
 prefix int   nlabel;
-prefix char  labels[MAX_LABELS][16];
+prefix char  labels[MAX_LABELS][25]; //KEN CHANGED FROM 16 TO 25
 prefix word  labell[MAX_LABELS];
 prefix word  labela[MAX_LABELS];
 prefix byte  labelf[MAX_LABELS];
