@@ -30,12 +30,14 @@ extern "C" {
 #define        HALT	0x03
 #define        JSR      0X04
 #define        RET      0x05
+#define        JSRUR    0x06
 #define        PUSH     0x09
 #define        POP      0x0A
 #define        MVAT     0x0B
 #define        MVTA     0x0C
 #define        LDTI	0x0D
 #define        LDAI	0x0E
+#define        MOVRR    0x0F
 #define        MVIB	0x10
 #define        MVIW	0x18
 #define        MVRLA	0x20
@@ -60,6 +62,8 @@ extern "C" {
 #define        BREQ     0xA8
 #define        BRGT     0xA9
 #define        BRNEQ    0xAA
+#define        BR16Z    0xAB
+#define        BR16NZ   0xAC
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2
@@ -82,6 +86,8 @@ extern "C" {
 #define        BRVR     0xD8
 #define        CSHL     0xE0
 #define        CSHR     0xE1
+#define        ADDIC    0xE2
+#define        ADDTC    0xE3
 #define        BRUR     0xE8
 
 #endif /* OPCODES_H */
