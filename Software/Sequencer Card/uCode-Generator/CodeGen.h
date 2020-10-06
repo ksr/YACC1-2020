@@ -45,13 +45,15 @@ extern "C" {
 #define ALUZERO 6
 #define ALUADD 7
 
+#define CARRY_SHIFT 0x08 //goes into ALU3
+
 // compare options
 #define ALUBR 0
 #define ALUGT 1
 #define ALUEQ 2
 #define ALULT 3
-#define ALUBRZ 4
-#define ALUBRIN 5
+#define ALUZ 4
+#define ALUIN 5
 #define ALU16Z 6
 #define ALUCS 7
 
