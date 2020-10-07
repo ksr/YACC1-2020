@@ -64,7 +64,7 @@ void registerOnlyInstructions() {
         endInstruction();
         showCntlMemory(ins);
     }
-    
+
     //load tmp reg 0 immediate 
     ins = LDTI;
     startInstruction(ins);
@@ -122,4 +122,42 @@ void registerOnlyInstructions() {
         endInstruction();
         showCntlMemory(ins);
     }
+    //
+    ins = MOVRR;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    setSignal("OPERAND-CLK");
+    writeCurrentLine();
+    clearSignal("OPERAND-CLK");
+    writeCurrentLine();
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    setSignal("-2-BYTE-OPERAND-SEL");
+    setSignal("-REG-FUNC-LD");
+    setSignal("-REG-FUNC-RD");
+    writeCurrentLine();
+
+    setSignal("-REG-RD-LO");
+    setSignal("-REG-RD-HI");
+    writeCurrentLine();
+
+    setSignal("REG-LD-LO");
+    setSignal("REG-LD-HI");
+    writeCurrentLine();
+
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI");
+    writeCurrentLine();
+
+    clearSignal("-REG-RD-LO");
+    clearSignal("-REG-RD-HI");
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(ins);
 }

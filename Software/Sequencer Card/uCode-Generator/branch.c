@@ -100,14 +100,14 @@ void branchInstructions() {
     startInstruction(BRINH);
     loadNextInstruction();
     initCurrentLine();
-    branch(PC, ALUBRIN, NOINVERT, SOURCE_NONE);
+    branch(PC, ALUIN, NOINVERT, SOURCE_NONE);
     endInstruction();
     showCntlMemory(BRINH);
 
     startInstruction(BRINL);
     loadNextInstruction();
     initCurrentLine();
-    branch(PC, ALUBRIN, INVERT, SOURCE_NONE);
+    branch(PC, ALUIN, INVERT, SOURCE_NONE);
     endInstruction();
     showCntlMemory(BRINL);
 
@@ -115,7 +115,7 @@ void branchInstructions() {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(PC, ALUBRZ, NOINVERT, SOURCE_AC);
+    branch(PC, ALUZ, NOINVERT, SOURCE_AC);
     endInstruction();
     showCntlMemory(BRZ);
 
@@ -123,10 +123,26 @@ void branchInstructions() {
     loadNextInstruction();
     initCurrentLine();
     //setSignal("-AC-RD");
-    branch(PC, ALUBRZ, INVERT, SOURCE_AC);
+    branch(PC, ALUZ, INVERT, SOURCE_AC);
     endInstruction();
     showCntlMemory(BRNZ);
 
+    startInstruction(BR16Z);
+    loadNextInstruction();
+    initCurrentLine();
+    //setSignal("-AC-RD");
+    branch(PC, ALU16Z, NOINVERT, SOURCE_AC);
+    endInstruction();
+    showCntlMemory(BR16Z);
+
+    startInstruction(BR16NZ);
+    loadNextInstruction();
+    initCurrentLine();
+    //setSignal("-AC-RD");
+    branch(PC, ALU16Z, INVERT, SOURCE_AC);
+    endInstruction();
+    showCntlMemory(BR16NZ);
+    
     startInstruction(BRC);
     loadNextInstruction();
     initCurrentLine();
@@ -207,7 +223,7 @@ void branchInstructions() {
     endInstruction();
     showCntlMemory(BRGT);
 
-    //
+    // ORIG JSR one increment PC removed
     // JSR
     //
     startInstruction(JSR); //try as one instruction *** possible two writeCurrentLine needed see below
@@ -229,10 +245,11 @@ void branchInstructions() {
     //writeCurrentLine(); step 6//reg up is rising edge??? are you sure
     clearSignal("-MEM-RD");
     incrementReg(PC);
-    incrementReg(PC);
+    //incrementReg(PC);
 
 #define noret 1
 #ifdef noret
+    
     setSignal("-REG-FUNC-RD");
     setRdId(PC);
     //writeCurrentLine(); //???
@@ -270,6 +287,227 @@ void branchInstructions() {
     endInstruction();
     showCntlMemory(JSR);
 
+
+    
+#ifdef NEWJSR    
+    //
+    // JSR
+    //
+    startInstruction(JSR); //try as one instruction *** possible two writeCurrentLine needed see below
+    loadNextInstruction();
+    initCurrentLine();
+
+    setAddrId(PC);
+    setSignal("-VMA");
+    setSignal("-MEM-RD");
+    writeCurrentLine();
+    
+    setSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    
+    setRdId(PC);
+    setSignal("-REG-FUNC-RD");
+    
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine();
+    
+    setSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine();
+    
+    setRdId(PC);
+    //writeCurrentLine(); //???
+    setSignal("-HL-SWAP");
+    putBustoRegMem(SP, "-REG-RD-HI");
+    
+    setRdId(SP);
+    writeCurrentLine();
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    writeCurrentLine();
+
+    setRdId(PC);
+    clearSignal("-HL-SWAP");
+    putBustoRegMem(SP, "-REG-RD-LO");
+
+    setRdId(SP);
+    setSignal("-REG-FUNC-RD");
+    writeCurrentLine();
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    
+    setSignal("-BRANCH-RD-LO"); //output branch register
+    setSignal("-BRANCH-RD-HI");
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+
+    writeCurrentLine();
+
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    writeCurrentLine();  //ken oct 5  maybe not needed 
+
+    endInstruction();
+    showCntlMemory(JSR);
+#endif
+
+    //
+    // JSRUR
+    //
+#define JSRURDEF    
+#ifdef JSRURDEF    
+    startInstruction(JSRUR); 
+    
+    //loadNextInstruction();
+
+#define custom
+#ifdef custom //load next instruciton
+    
+    //putMemAtRegOnBus(PC);
+    setAddrId(PC);
+    setSignal("-VMA");
+    setSignal("-MEM-RD");
+    setRdId(PC);
+    setSignal("-REG-FUNC-RD");
+    writeCurrentLine(); // not needed if if reg loads on rising edge?
+    setSignal("LD-INS-REG"); // rising or falling?
+    writeCurrentLine();
+    clearSignal("LD-INS-REG");
+    writeCurrentLine(); // -reg-up is rising edge
+    
+    //incrementReg(PC); // load next instruction
+   
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    clearSignal("-REG-UP");
+    writeCurrentLine();
+#endif
+    
+    //initCurrentLine();
+
+    //putMemAtRegOnBus(PC); Hi 
+    
+    setSignal("OPERAND-CLK");
+    writeCurrentLine();
+    clearSignal("OPERAND-CLK");
+    writeCurrentLine();
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    //incrementReg(PC);  // increment over operand
+    setSignal("-REG-UP");
+    writeCurrentLine();
+    
+    clearSignal("-REG-UP");
+    setSignal("-2-BYTE-OPERAND-SEL");
+    setSignal("-REG-RD-HI");
+    setSignal("-HL-SWAP");
+    writeCurrentLine();
+    
+    setSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-HI"); 
+    writeCurrentLine();
+    
+    clearSignal("-REG-RD-HI");
+    clearSignal("-HL-SWAP");
+    setSignal("-REG-RD-LO");
+    writeCurrentLine();
+
+    setSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("-REG-RD-LO");
+    clearSignal("-2-BYTE-OPERAND-SEL");
+    writeCurrentLine();
+   
+    
+    //putBustoRegMem(SP, "-REG-RD-HI");
+    setSignal("-HL-SWAP");
+    setAddrId(SP);
+    setRdId(PC);
+    setSignal("-REG-RD-HI");
+    writeCurrentLine();
+    setSignal("-MEM-WR");
+    writeCurrentLine();
+    clearSignal("-MEM-WR");
+    writeCurrentLine();
+    
+    setRdId(SP);
+    clearSignal("-REG-RD-HI");
+    setSignal("-REG-FUNC-RD");
+    writeCurrentLine();
+    
+    //decrementReg(SP);
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    writeCurrentLine();
+    
+    setSignal("-REG-FUNC-RD");
+    setRdId(PC);
+    clearSignal("-HL-SWAP");
+
+    //putBustoRegMem(SP, "-REG-RD-LO");
+    setSignal("-REG-RD-LO");
+    writeCurrentLine();
+    setSignal("-MEM-WR");
+    writeCurrentLine();
+    clearSignal("-MEM-WR");
+    writeCurrentLine();
+    clearSignal("-REG-RD-LO");
+    setRdId(SP);
+    writeCurrentLine();
+
+    //decrementReg(SP);
+  
+    setSignal("-REG-DN");
+    writeCurrentLine();
+    clearSignal("-REG-DN");
+    clearSignal("-REG-FUNC-RD");
+    writeCurrentLine();
+    
+    setSignal("-BRANCH-RD-LO"); //output branch register
+    setSignal("-BRANCH-RD-HI");
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+
+    writeCurrentLine();
+
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    //writeCurrentLine(); //KEN OCT 6 removed untested
+
+    endInstruction();
+    showCntlMemory(JSRUR);
+#endif
 
     //
     //RET

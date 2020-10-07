@@ -211,7 +211,7 @@ void incrementReg(int reg) {
 void decrementReg(int reg) {
     setRdId(reg);
     setSignal("-REG-FUNC-RD");
-    //writeCurrentLine();
+    writeCurrentLine();
     setSignal("-REG-DN");
     writeCurrentLine();
     clearSignal("-REG-DN");
@@ -224,7 +224,7 @@ void putMemAtRegOnBus(int reg) {
     setAddrId(reg);
     setSignal("-VMA");
     setSignal("-MEM-RD");
-    writeCurrentLine(); // not needed if if reg loads on rising edge
+    writeCurrentLine(); // not needed if if reg loads on rising edge?
 
 }
 
