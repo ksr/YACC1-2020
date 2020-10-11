@@ -121,6 +121,7 @@ void startInstruction(int instruction) {
  * Called at the completion of processing an instruction
  */
 void endInstruction() {
+    writeCurrentLine();
     setSignal("UCODE-COUNT-RESET");
     writeCurrentLine();
     endUcodeBlock();
