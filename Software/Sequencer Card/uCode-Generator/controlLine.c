@@ -54,15 +54,30 @@ void clearCurrentLine() {
 
 void writeCurrentLine() {
     int lineToWrite;
+    int dup;
 #ifdef DEBUG
-    printf("Write line [%d]\n",ucodeLine);
+    printf("Write line [%d]\n", ucodeLine);
 #endif 
     lineToWrite = currentUcodeBlock * LINES_PER_INSTRUCTION * BYTES_PER_LINE + ucodeLine*BYTES_PER_LINE;
+
+    // if not first line if this line is same as previous them skip
+    if (ucodeLine != 0) {
+        dup = 1;
+        for (int i = 0; i < BYTES_PER_LINE; i++)
+            if (cntlMemory[lineToWrite + i - BYTES_PER_LINE] != currentLine[i])
+                dup = 0;
+        if (dup){
+            printf("dup found %d %d\n", currentUcodeBlock, ucodeLine);
+            return;
+        }
+    }
+
+
     for (int i = 0; i < BYTES_PER_LINE; i++)
         cntlMemory[lineToWrite + i] = currentLine[i];
     ucodeLine++;
     if (ucodeLine > LINES_PER_INSTRUCTION) {
-        printf("ucode lines overflow %02x",currentUcodeBlock);
+        printf("ucode lines overflow %02x", currentUcodeBlock);
         exit(1);
     }
 
