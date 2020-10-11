@@ -17,9 +17,14 @@ TIL311:       EQU 080H
 CNTL-PORT:    EQU "P0"
 DATAPORT:     EQU "P1"
 
+;
+; MONITOR MODES
+;
 NOMODE:       EQU 0
 EXAMINEMODE:  EQU 1
 DUMPMODE:     EQU 2
+BLOCKMODE:    EQU 3
+FILLMODE:     EQU 4
 
          ORG 0f000h
          BR eprom
@@ -44,33 +49,99 @@ eprom:
          OUTI  P0,(UARTA3!UARTCS)
          OUTI  P1,03H
 
-         JSR blink
+; Set intial monitor mode
 
          MVIB R6,NOMODE
 ;
 ; Main
 ;
-         MVIW R2,hello
-         JSR stringout
-
+          JSR blink
+          JSR blink
+          JSR blink
+          JSR blink
+          JSR blink
+          MVIW R2,hello
+          JSR stringout
 ;
-; proof of life
+; additional proof of life
+;
+; show first 16 bytes of ROM & REGISTERS
 ;
          MVIW R3,0f000h
          JSR showaddr
          JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+;
+; show test code addr to use with go command
+;
+         MVIW R3,tttt
+         JSR showaddr
+         MVIW R2,CRLF
+         JSR stringout
+;
+; if INPUT high start the monitor
+;
+         BRINH cmdloop
+;
+; else run test/code below at completetion blink OUT LED forever
+;
+tttt:
+        MVIW R2,TESTMSG
+        JSR stringout
 
-;
-; tests before entering monitor
-;
-         MVIW R3,shltest
-         halt
-         JSRUR R3
-;
-; enter monitor
-;
-         JSR cmdloop
+        LDAI 10
+        JSR nblink
 
+        JSR LONGDELAY
+
+        LDAI 10
+        MVIW R2,nblink
+        JSRUR R2
+
+        JSR LONGDELAY
+
+        MVIW R4,NODELAY
+        JSRUR R4
+
+        MVIW R4,blink
+        JSRUR R4
+        MVIW R5,blink
+        JSRUR R5
+        MVIW R2,blink
+        JSRUR R2
+
+
+        JSR shltest
+        JSRUR R3
+
+        MVIW R3,blink
+        JSRUR R3
+        MVIW R3,blink
+        JSRUR R3
+
+        MVIW R3,shltest
+        JSRUR R3
+        MVIW R3,ortest
+        JSRUR R3
+
+        JSR shltest
+        JSR shrtest
+
+        MVIW R3,blink
+        JSRUR R3
+        MVIW R3,blink
+        JSRUR R3
+        MVIW R3,blink
+        JSRUR R3
+        MVIW R3,blink
+        JSRUR R3
+        MVIW R3,blink
+        JSRUR R3
+        BR alltests
+
+alltests:
          jsr shltest
          JSR shrtest
          jsr rshltest
@@ -94,8 +165,13 @@ eprom:
          JSR orttest
          JSR additest
          JSR movrrtest
+
+testsdone:
+          JSR blink
+          BR testsdone
+
 ;
-; Tests
+; Individual Tests
 ;
 
 ;
@@ -115,8 +191,6 @@ movrrtest:
 
         JSR blink
 
-;        halt
-
         MOVRR R3,R4
 
         jsr showreg34
@@ -127,8 +201,6 @@ movrrtest:
 
         jsr showreg34
 
-;        halt
-;        on
 
         MVIW R2,1234h
         MVIW R3,5678h
@@ -202,6 +274,7 @@ showreg34:
 ;
 ; OR - OR accumulator immediate
 ;
+ORHELP: DB "OR tests - or input switches with 0x55 (5x)",0ah,0dh,0
 ortest:
          MVIW   R2,ORHELP
          JSR    stringout
@@ -347,10 +420,11 @@ accloop:
 ;
 ; Shift left
 ;
+SHIFT_LEFTHELP: DB "Shift Left - shift input switches (5x)",0ah,0dh,0
 shltest:
          MVIW   R2,SHIFT_LEFTHELP
          JSR    stringout
-         MVIB   R2,10
+         MVIB   R2,5
 shlloop:
          JSR blink
          JSR switchtoggle
@@ -366,10 +440,11 @@ shlloop:
 ;
 ; shift Right
 ;
+SHIFT_RIGHTHELP: DB "Shift Right - shift input switches (5x)",0ah,0dh,0
 shrtest:
           MVIW   R2,SHIFT_RIGHTHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R2,5
 shrloop:
           JSR blink
           JSR switchtoggle
@@ -545,16 +620,24 @@ cmpres:
 ;
 ; T      - Test menu
 ;
+; B AAAA - Show 256 bytes at address AAAA (16 byte aligned)
+;          followed by CR display next 256 bytes
+;
 ; D AAAA - Show 16 bytes at address AAAA (16 byte aligned)
-;          followed by CR disply next 16 bytes
+;          followed by CR display next 16 bytes
 ;
 ; E AAAA - show contents of location AAAA (Output AAAA:XX)
 ;          if followed by ASCII-HEX modify location with new value (and redisplay)
 ;          if followed by CR display next location
 ;
+; F AAAA - fill block with 0
+;          if followed by CR fill next location
+;
 ; G AAAA - Jump to (and execute) starting at AAAA
 ;          code could end in BR to 0xf000h to restart monitor or RET if called via JSR
-
+;
+; R      - SHOW REGISTERS
+;
 ;
 ; Output Prompt
 :
@@ -567,21 +650,32 @@ cmdloop:
       JSR toupper
       LDTI 'H'
       BRNEQ testexamine
+      MVIW R2,CRLF
+      JSR stringout
       MVIW R2,helpmenu
       JSR stringout
       BR cmdloop
 
 testexamine:
-      LDTI 'E'
-      BREQ examine
-      LDTI 'T'
-      BREQ tests
+      LDTI 'B'
+      BREQ dumpblock
       LDTI 'D'
       BREQ dump
-      LDTI 0Dh
-      BREQ continue
+      LDTI 'E'
+      BREQ examine
+      LDTI 'F'
+      BREQ fillblock
       LDTI 'G'
       BREQ go
+      LDTI 'R'
+      BREQ dumpreg
+      LDTI 'T'
+      BREQ tests
+      LDTI 0Dh
+      BREQ continue
+
+      MVIW R2,CRLF
+      JSR stringout
       MVIW R2,ERROR
       JSR stringout
       MVIW R2,helpmenu
@@ -589,24 +683,58 @@ testexamine:
       BR cmdloop
 ;
 continue:
-;      MVIW R2,CONTMSG
-;      JSR stringout
-
        MVRLA R6
-       LDTI EXAMINEMODE
-       BREQ examinecont
+
+       LDTI BLOCKMODE
+       BREQ dumpblockcont
+
        LDTI DUMPMODE
        BREQ dumpcont
+
+       LDTI EXAMINEMODE
+       BREQ examinecont
+
+       LDTI FILLMODE
+       BREQ fillcont
+       BR cmdloop
 ;
 ;      ERROR
 ;
-        MVIW   R2,CONTINUEERROR
+       MVIW R2,CONTINUEERROR
+       JSR stringout
+       BR cmdloop
+
 stop:   BR stop
 
+dumpblock:
+       MVIB R6,BLOCKMODE
+       MVIW R2,DUMPBLOCKMSG
+       JSR stringout
+       jsr getaddress
+       MVIW R2,CRLF
+       JSR stringout
+
+dumpblockcont:
+       jsr show256
+       BR cmdloop
+
+dump:
+       MVIB R6,DUMPMODE
+       MVIW R2,DUMPMSG
+       JSR stringout
+       jsr getaddress
+       MVIW R2,CRLF
+       JSR stringout
+
+dumpcont:
+       jsr showaddr
+       jsr show16
+       BR cmdloop
+
 examine:
+       MVIB R6,EXAMINEMODE
        MVIW R2,EXAMINEMSG
        JSR stringout
-       MVIB R6,EXAMINEMODE
        jsr getaddress
        MVIW R2,CRLF
        JSR stringout
@@ -646,18 +774,32 @@ examdone:
       JSR stringout
       BR cmdloop
 
-dump:
-      MVIW R2,DUMPMSG
-      JSR stringout
-      MVIB R6,DUMPMODE
-      jsr getaddress
+fillblock:
+       MVIB R6,FILLMODE
+       MVIW R2,FILLMSG
+       JSR stringout
+       jsr getaddress
+       MVIW R2,CRLF
+       JSR stringout
+
+fillcont:
+      jsr showaddr
       MVIW R2,CRLF
       JSR stringout
 
-dumpcont:
-      jsr showaddr
-      jsr show16
+morefill:
+      LDAI 0
+      STAVR R3
+      INCR R3
+      MVRLA R3
+      ANDI  0FFH
+      BRNZ morefill
+      LDAI 0ah
+      JSR uartout
+      LDAI 0dh
+      JSR uartout
       BR cmdloop
+
 
 go:
       MVIW R2,GOMSG
@@ -665,31 +807,39 @@ go:
       jsr getaddress
       BRVR R3
 
+dumpreg:
+      JSR showregs
+      MVIB R6,NOMODE
+      BR cmdloop
+
 tests:
+      MVIB R6,NOMODE
       MVIW R2,CRLF
       JSR stringout
       MVIW R3,testmenu
-      MVIW R4,0
+      MVIW R4,0000h
 
 testsloop:
-      MVRLA R4
-      JSR showbytea
-      LDAI  ' '
-      JSR uartout
+
       INCR R3
       INCR R3
       LDAVR R3
       MVARH R2
-      INCR R3
+      INCR  R3
       LDAVR R3
       MVARL R2
-      LDAVR R2
       INCR R3
+      LDAVR R2
       LDTI '-'
       BREQ testsloopdone
+      MVRLA R4
+      JSR showbytea
+      LDAI  '-'
+      JSR uartout
       JSR stringout
       MVIW R2,CRLF
       JSR stringout
+      INCR R4
       BR testsloop
 
 testsloopdone:
@@ -697,6 +847,9 @@ testsloopdone:
 ; multiple by 4 and add to test list base
 ; JSR via register holding info
 ;
+      MVIW R2,gettestpromopt
+      JSR stringout
+
       JSR getnibble
       SHL
       SHL
@@ -707,25 +860,30 @@ testsloopdone:
       MVAT
       Pop
       ORT
-      SHL
-      SHL
+; calculate test address
+      shl
+      shl
+      JSR TIL311out
       MVAT
       MVIW R3,testmenu
       MVRLA R3
       ADDT
       MVARL R3
+      JSR TIL311out
       BRC menucarry
       BR dotest
 
 menucarry:
-      LDTI 0
-      MVRHA R3
-      ADDT
-      MVARH R3
-dotest:
-      JSRUR R3
-      RET
+      incr r3
 
+dotest:
+      LDAVR R3
+      MVARH R4
+      INCR  R3
+      LDAVR R3
+      MVARL R4
+      JSRUR R4
+      BR cmdloop
 
 getaddress:
 ;
@@ -813,7 +971,33 @@ showaddr:   Push
             POP
             RET
 ;
-; display 16 bytes point to by R3
+;
+;
+showregs:
+            MVIW R2,CRLF
+            JSR stringout
+            MOVRR r0,r3
+            jsr showaddr
+            MOVRR r1,r3
+            jsr showaddr
+            MOVRR r2,r3
+            jsr showaddr
+            MOVRR r3,r3
+            jsr showaddr
+            MOVRR r4,r3
+            jsr showaddr
+            MOVRR r5,r3
+            jsr showaddr
+            MOVRR r6,r3
+            jsr showaddr
+            MOVRR r7,r3
+            jsr showaddr
+
+            MVIW R2,CRLF
+            JSR stringout
+            RET
+;
+; display upto 16 bytes point to by R3, stops on a 16 byte boundry, increments R3
 ;
 show16:     JSR showbyte
             INCR R3
@@ -828,23 +1012,48 @@ show16:     JSR showbyte
             JSR uartout
             RET
 ;
+; display upto 256 bytes point to by R3, stops on a 256 byte boundry, increments R3
+show256:
+          jsr showaddr
+          jsr show16
+;          MVIW R2,CRLF
+;          JSR stringout
+          MVRLA R3
+          ANDI  0FFH
+          BRNZ show256
+          LDAI 0ah
+          JSR uartout
+          LDAI 0dh
+          JSR uartout
+          RET
+;
 ; Output ASCII representation of a BYTE pointed to by R3
-; or use showbyte in accumulator
+; or use showbytea in accumulator
 ; both destructive for accumulator - no longer true with push/pop?
 :
 showbyte:   PUSH
             LDAVR R3
-            BR doshowbyte
 
-showbytea:  Push
-
-doshowbyte:
             SHR
             SHR
             SHR
             SHR
             JSR shownibble
             LDAVR R3
+            ANDI 0FH
+            JSR shownibble
+            POP
+            RET
+;
+showbytea:  PUSH
+            PUSH
+
+            SHR
+            SHR
+            SHR
+            SHR
+            JSR shownibble
+            POP
             ANDI 0FH
             JSR shownibble
             POP
@@ -886,6 +1095,7 @@ TIL311out:
         RET
 ;
 ; Output null terminated string pointed to by R2 to UART then send CR and LF
+; Advances R2 to end of string
 ;
 stringout:
         Push
@@ -946,6 +1156,40 @@ uartin:
         JSR uartout
         RET
 ;
+; long delay (approx 5 seconds)
+;
+LONGDELAY:
+        ON
+        MVIW R7,0FFFFh
+longdelayloop:
+        DECR R7
+        MVRHA R7
+        BRNZ longdelayloop
+        OFF
+        RET
+;
+; short delay (approx 1 second)
+;
+SHORTDELAY:
+        ON
+        MVIW R7,033FFh
+shortdelayloop:
+        DECR R7
+        MVRHA R7
+        BRNZ shortdelayloop
+        OFF
+        RET
+
+noDELAY:
+      ON
+      MVIW R7,00FFh
+nodelayloop:
+      DECR R7
+      MVRHA R7
+      BRNZ nodelayloop
+      OFF
+      RET
+;
 ; toggle input switch
 ;
 switchtoggle:
@@ -988,6 +1232,21 @@ offloop:
         BRNZ offloop
         Pop
         RET
+;
+; blink n times in accumulator
+;
+nblink:
+        push
+nblinkloop:
+        BRZ nblinkdone
+        JSR blink
+        LDTI 1
+        subt
+        BR nblinkloop
+nblinkdone:
+        POP
+        RET
+
 
 ;
 ; MONITOR STRINGS
@@ -998,25 +1257,33 @@ CRLF: DB 0ah,0dh,0
 ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
 CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0
 DUMPMSG: DB 0ah,0dh,"DUMP ADDRESS:",0
+DUMPBLOCKMSG: DB 0ah,0dh,"DUMP BLOCK ADDRESS:",0
+FILLMSG: DB 0ah,0dh,"FILL BLOCK ADDRESS:",0
 GOMSG: DB 0ah,0dh,"GO ADDRESS:",0
 EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
 CONTMSG: DB "CONTINUE MODE",0
+gettestpromopt: DB "Enter Test number:",0
+;
 helpmenu:
 DB "H      - Display help menu",0ah,0dh
-DB "T      - Test menu",0ah,0DH
-DB "D AAAA - Show 16 bytes at address AAAA (16 byte aligned) followed by CR display next 16 bytes",0ah,0dh
+DB "B AAAA - Show 256 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
+DB "         followed by CR display next 256 bytes",0ah,0dh
+DB "D AAAA - Show 16 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
+DB "         followed by CR display next 16 bytes",0ah,0dh
 DB "E AAAA - show contents of location AAAA (Output AAAA:XX)",0ah,0dh
 DB "         if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
 DB "         if followed by CR display next location",0ah,0dh
+DB "F AAAA   Fill contents 256 bytes of memory at address AAAA with 0(16 byte aligned) with 0",0ah,0dh
+DB "         if followed by CR fill next 256 bytes",0ah,0dh
 DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
-DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh,0
-
+DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
+DB "R      - Show registers",0ah,0dh
+DB "T      - Test menu",0ah,0DH
+DB 0
 ;
 ; TEST HELP MESSAGES
 ;
 COMPAREHELP: DB "Compare Tests",0ah,0dh,0
-SHIFT_LEFTHELP: DB "Shift Left",0ah,0dh,0
-SHIFT_RIGHTHELP: DB "Shift Right",0ah,0dh,0
 RSHIFT_LEFTHELP: DB "Ring Shift Left",0ah,0dh,0
 RSHIFT_RIGHTHELP: DB "Ring Shift Right",0ah,0dh,0
 PSHIFT_LEFTHELP: DB "PROP Shift Left",0ah,0dh,0
@@ -1025,17 +1292,18 @@ CSHIFT_RIGHTHELP: DB "CARRY Shift Right",0ah,0dh,0
 SUBHELP: DB "SUBTRACT",0ah,0dh,0
 accumhelp: DB "accumulator test",0ah,0dh,0
 PUSHPOPHELP: DB "Push Pop enter 3 numbers",0ah,0dh,0
-ORHELP: DB "OR tests",0ah,0dh,0
 ORTHELP: DB "OR Tmp register tests",0ah,0dh,0
 ADDIHELP: DB "Add immediate 02h to input number",0ah,0dh,0
 ADDICHELP: DB "Add immediate with carry 02h to input number",0ah,0dh,0
 MOVRRHELP: DB "MOVERR TEST",0ah,0dh,0
+TESTMSG: DB "Run test code",0ah,0dh,0
 
 ;
 ; TEST MENU
 ;
+      DB "AAAAAAAAAAAAAAAAAAAAAAAAA"
 testmenu:
-      DW ortest,ortmenu
+      DW ortest,ormenu
       DW orttest,ortmenu
       DW pushpoptest,pushpopmenu
       DW accumtest,accummenu
