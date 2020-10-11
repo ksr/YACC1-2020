@@ -281,8 +281,8 @@ int main(int argc, char** argv) {
             //printf("Instruction [%d] found\n", i);
         }
     }
-    processInstruction(0xe2);
-    processInstruction(0xe3);
+    processInstruction(0x04);
+    processInstruction(0x06);
     return (EXIT_SUCCESS);
 }
 
