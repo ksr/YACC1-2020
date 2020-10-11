@@ -367,7 +367,7 @@ void accumulatorInstructions() {
 
     aluOp(ALUSUB);
 
-    incrementReg(PC);
+    //incrementReg(PC);
 
     endInstruction();
     showCntlMemory(ins);
