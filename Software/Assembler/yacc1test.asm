@@ -55,11 +55,7 @@ eprom:
 ;
 ; Main
 ;
-          JSR blink
-          JSR blink
-          JSR blink
-          JSR blink
-          JSR blink
+          JSR lblink
           MVIW R2,hello
           JSR stringout
 ;
@@ -91,55 +87,9 @@ tttt:
         MVIW R2,TESTMSG
         JSR stringout
 
-        LDAI 10
-        JSR nblink
-
-        JSR LONGDELAY
-
-        LDAI 10
+        LDAI 5
         MVIW R2,nblink
         JSRUR R2
-
-        JSR LONGDELAY
-
-        MVIW R4,NODELAY
-        JSRUR R4
-
-        MVIW R4,blink
-        JSRUR R4
-        MVIW R5,blink
-        JSRUR R5
-        MVIW R2,blink
-        JSRUR R2
-
-
-        JSR shltest
-        JSRUR R3
-
-        MVIW R3,blink
-        JSRUR R3
-        MVIW R3,blink
-        JSRUR R3
-
-        MVIW R3,shltest
-        JSRUR R3
-        MVIW R3,ortest
-        JSRUR R3
-
-        JSR shltest
-        JSR shrtest
-
-        MVIW R3,blink
-        JSRUR R3
-        MVIW R3,blink
-        JSRUR R3
-        MVIW R3,blink
-        JSRUR R3
-        MVIW R3,blink
-        JSRUR R3
-        MVIW R3,blink
-        JSRUR R3
-        BR alltests
 
 alltests:
          jsr shltest
@@ -167,7 +117,7 @@ alltests:
          JSR movrrtest
 
 testsdone:
-          JSR blink
+          JSR lblink
           BR testsdone
 
 ;
@@ -184,42 +134,29 @@ movrrtest:
         MVIW R3,1234h
         MVIW R4,5678h
 
-        JSR blink
-
         jsr showreg34
-
-
-        JSR blink
 
         MOVRR R3,R4
 
         jsr showreg34
 
-        JSR blink
-
         MVIW R3,4321h
 
         jsr showreg34
 
-
         MVIW R2,1234h
         MVIW R3,5678h
-        JSR blink
 
         jsr showreg23
 
-        JSR blink
         MOVRR R2,R3
 
         jsr showreg23
 
-        JSR blink
+
         MVIW R2,4321h
 
         jsr showreg23
-
-        jsr blink
-        jsr blink
 
         ret
 
@@ -280,7 +217,6 @@ ortest:
          JSR    stringout
          MVIB   R2,5
 orloop:
-         JSR blink
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
@@ -300,7 +236,6 @@ additest:
        JSR    stringout
        MVIB   R2,5
 addiloop:
-       JSR blink
        JSR switchtoggle
        OUTI P0,(SWITCHLED)
        INP P1
@@ -320,7 +255,6 @@ addictest:
       JSR    stringout
       MVIB   R2,5
 addicloop:
-      JSR blink
       JSR switchtoggle
       OUTI P0,(SWITCHLED)
       INP P1
@@ -340,7 +274,6 @@ orttest:
         JSR    stringout
         MVIB   R2,5
 ortloop:
-        JSR blink
         JSR switchtoggle
         OUTI P0,(SWITCHLED)
         INP P1
@@ -364,7 +297,6 @@ pushpoptest:
 
          MVIB   R2,3
 ppenterloop:
-         JSR blink
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
@@ -376,7 +308,6 @@ ppenterloop:
 
          MVIB   R2,3
 ppdisloop:
-        JSR blink
         JSR switchtoggle
         OUTI P0,(SWITCHLED)
         POP
@@ -395,7 +326,6 @@ accumtest:
          JSR    stringout
          MVIB   R2,10
 accloop:
-         JSR blink
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
@@ -426,7 +356,6 @@ shltest:
          JSR    stringout
          MVIB   R2,5
 shlloop:
-         JSR blink
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
@@ -446,7 +375,6 @@ shrtest:
           JSR    stringout
           MVIB   R2,5
 shrloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -465,7 +393,6 @@ rshltest:
          JSR    stringout
          MVIB   R2,10
 rshlloop:
-         JSR blink
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
@@ -484,7 +411,6 @@ rshrtest:
           JSR    stringout
           MVIB   R2,10
 rshrloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -503,7 +429,6 @@ pshltest:
           JSR    stringout
           MVIB   R2,10
 pshlloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -522,7 +447,6 @@ cshltest:
           JSR    stringout
           MVIB   R2,10
 cshlloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -541,7 +465,6 @@ cshrtest:
           JSR    stringout
           MVIB   R2,10
 cshrloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -560,7 +483,6 @@ subtest:
           JSR    stringout
           MVIB   R2,10
 subloop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -580,7 +502,6 @@ cmptest:
           MVIB   R2,10
           LDTI   055H
 cmploop:
-          JSR blink
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -1159,38 +1080,38 @@ uartin:
 ; long delay (approx 5 seconds)
 ;
 LONGDELAY:
-        ON
+        PUSH
         MVIW R7,0FFFFh
 longdelayloop:
         DECR R7
         MVRHA R7
         BRNZ longdelayloop
-        OFF
+        POP
         RET
 ;
 ; short delay (approx 1 second)
 ;
 SHORTDELAY:
-        ON
+        PUSH
         MVIW R7,033FFh
 shortdelayloop:
         DECR R7
         MVRHA R7
         BRNZ shortdelayloop
-        OFF
+        POP
         RET
 
-noDELAY:
-      ON
+NODELAY:
+      PUSH
       MVIW R7,00FFh
 nodelayloop:
       DECR R7
       MVRHA R7
       BRNZ nodelayloop
-      OFF
+      POP
       RET
 ;
-; toggle input switch
+; toggle input switch (with debounce)
 ;
 switchtoggle:
         Push
@@ -1203,7 +1124,7 @@ delaya:
         ON
 
 onw:    BRINH onw
-        MVIW R7,0102h
+        MVIW R7,01FFh
 delayb:
         DECR R7
         MVRHA R7
@@ -1212,24 +1133,43 @@ delayb:
         Pop
         RET
 ;
-; blink LED
+; quick blink LED
 ;
 blink:
         Push
         ON
-;
-        MVIW R7,04FFh
+        MVIW R7,03FFh
 onloop:
         DECR R7
         MVRHA R7
         BRNZ onloop
 
         OFF
-        MVIW R7,04FFh
+        MVIW R7,003FFh
 offloop:
         DECR R7
         MVRHA R7
         BRNZ offloop
+        Pop
+        RET
+;
+; long blink LED
+;
+lblink:
+        Push
+        ON
+        MVIW R7,018FFh
+lonloop:
+        DECR R7
+        MVRHA R7
+        BRNZ lonloop
+
+        OFF
+        MVIW R7,018FFh
+loffloop:
+        DECR R7
+        MVRHA R7
+        BRNZ loffloop
         Pop
         RET
 ;
@@ -1238,10 +1178,10 @@ offloop:
 nblink:
         push
 nblinkloop:
+        JSR TIL311out
         BRZ nblinkdone
         JSR blink
-        LDTI 1
-        subt
+        subi 1
         BR nblinkloop
 nblinkdone:
         POP
