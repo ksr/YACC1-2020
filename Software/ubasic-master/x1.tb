@@ -1,0 +1,14 @@
+1 print "start"
+10 gosub 100
+20 for i = 1 to 10
+30 print i
+25 print "before"
+40 next i
+50 print "end"
+60 end
+100 print "subroutine"
+105 print 2+3*4+5
+106 print 2
+107 print ( 2 + 3 ) * ( 4 + 5 ) 
+108 print 3
+110 return
