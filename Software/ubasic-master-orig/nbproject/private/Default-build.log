@@ -1,0 +1,8 @@
+cc    -c -o tests.o tests.c
+tests.c:100:3: warning: implicit declaration of function 'ubasic_init_peek_poke' is invalid in C99 [-Wimplicit-function-declaration]
+  ubasic_init_peek_poke(program, &peek, &poke);
+  ^
+1 warning generated.
+cc    -c -o ubasic.o ubasic.c
+cc    -c -o tokenizer.o tokenizer.c
+cc   tests.o ubasic.o tokenizer.o   -o tests
