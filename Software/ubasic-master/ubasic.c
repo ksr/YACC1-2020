@@ -90,6 +90,15 @@ ubasic_init(const char *program) {
     ended = 0;
 }
 
+void
+new_ubasic_init(int ptr) {
+    program_ptr = ptr;
+    for_stack_ptr = gosub_stack_ptr = 0;
+    index_free();
+    new_tokenizer_init(ptr);
+    ended = 0;
+}
+
 /*---------------------------------------------------------------------------*/
 void
 ubasic_init_peek_poke(const char *program, peek_func peek, poke_func poke) {
@@ -321,7 +330,7 @@ index_add(int linenum, char const* sourcepos) {
 /*---------------------------------------------------------------------------*/
 static void
 jump_linenum_slow(int linenum) {
-    tokenizer_init(program_ptr);
+    new_tokenizer_init(program_ptr);
     while (tokenizer_num() != linenum) {
         do {
             do {
@@ -342,7 +351,7 @@ jump_linenum(int linenum) {
     char const* pos = index_find(linenum);
     if (pos != NULL) {
         DEBUG_PRINTF("jump_linenum: Going to line %d.\n", linenum);
-        tokenizer_goto(pos);
+        new_tokenizer_goto(pos);
     } else {
         /* We'll try to find a yet-unindexed line to jump to. */
         DEBUG_PRINTF("jump_linenum: Calling jump_linenum_slow.\n", linenum);
@@ -439,6 +448,7 @@ gosub_statement(void) {
     linenum = tokenizer_num(); // KEN can this be expr for computed gossub
     accept(TOKENIZER_NUMBER);
     accept(TOKENIZER_CR);
+    DEBUG_PRINTF("-- %d --\n",tokenizer_num());
     if (gosub_stack_ptr < MAX_GOSUB_STACK_DEPTH) {
         gosub_stack[gosub_stack_ptr] = tokenizer_num();
         gosub_stack_ptr++;
@@ -454,6 +464,7 @@ return_statement(void) {
     accept(TOKENIZER_RETURN);
     if (gosub_stack_ptr > 0) {
         gosub_stack_ptr--;
+        DEBUG_PRINTF("-- %d --\n",gosub_stack[gosub_stack_ptr]);
         jump_linenum(gosub_stack[gosub_stack_ptr]);
     } else {
         DEBUG_PRINTF("return_statement: non-matching return\n");

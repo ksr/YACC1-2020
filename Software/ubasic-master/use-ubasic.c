@@ -80,11 +80,16 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
     } else {
-        printf("No File\n");
+        printf("Interactive mode");
+        while(1){
+        putchar (getchar());
+            
+        }
         exit(1);
     }
 
     size_t newLen = fread(source, sizeof (char), MAX_FILE_SIZE, fptr);
+    
     if (ferror(fptr) != 0) {
         fputs("Error reading file", stderr);
     } else {
@@ -92,16 +97,23 @@ int main(int argc, char *argv[]) {
     }
     fclose(fptr);
 
-    printf(" load done\n");
+    printf("Load file done\n");
     
-    printf("File\n%s\n done \n",source);
+    printf("---File start---\n%s\n---File end---\n",source);
     
+    tokenizer_tokenize();
     
-    tokenize(source);
-    ubasic_init(source);
- 
-    //ubasic_init(program);
-   
+    char *buff = tokenize(source);
+    
+    tokenizer_run();
+    
+    printf("tokening done\n");
+    
+    //new_ubasic_init(buff); //probably should be 0
+    
+    new_ubasic_init(0);
+    //ubasic_init(program); orignal code
+    
     do {
         ubasic_run();
     } while (!ubasic_finished());

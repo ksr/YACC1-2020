@@ -43,6 +43,14 @@
 
 static char const *ptr, *nextptr;
 
+unsigned char tokenBuffer[2000];
+int tokenBufferPtr;
+
+#define MODE_TOKENIZE 1
+#define MODE_RUN 2
+
+int mode = MODE_TOKENIZE;
+
 #define MAX_NUMLEN 6
 
 struct keyword_token {
@@ -51,6 +59,7 @@ struct keyword_token {
 };
 
 static int current_token = TOKENIZER_ERROR;
+
 
 static const struct keyword_token keywords[] = {
     {"let", TOKENIZER_LET},
@@ -72,43 +81,55 @@ static const struct keyword_token keywords[] = {
     {NULL, TOKENIZER_ERROR}
 };
 
+void tokenizer_run() {
+    mode = MODE_RUN;
+}
+
+void tokenizer_tokenize() {
+    mode = MODE_TOKENIZE;
+}
+
 /*---------------------------------------------------------------------------*/
 static int
 singlechar(void) {
-    if (*ptr == '\n') {
-        return TOKENIZER_CR;
-    } else if (*ptr == ',') {
-        return TOKENIZER_COMMA;
-    } else if (*ptr == ';') {
-        return TOKENIZER_SEMICOLON;
-    } else if (*ptr == '+') {
-        return TOKENIZER_PLUS;
-    } else if (*ptr == '-') {
-        return TOKENIZER_MINUS;
-    } else if (*ptr == '&') {
-        return TOKENIZER_AND;
-    } else if (*ptr == '|') {
-        return TOKENIZER_OR;
-    } else if (*ptr == '*') {
-        return TOKENIZER_ASTR;
-    } else if (*ptr == '/') {
-        return TOKENIZER_SLASH;
-    } else if (*ptr == '%') {
-        return TOKENIZER_MOD;
-    } else if (*ptr == '(') {
-        return TOKENIZER_LEFTPAREN;
-    } else if (*ptr == '#') {
-        return TOKENIZER_HASH;
-    } else if (*ptr == ')') {
-        return TOKENIZER_RIGHTPAREN;
-    } else if (*ptr == '<') {
-        return TOKENIZER_LT;
-    } else if (*ptr == '>') {
-        return TOKENIZER_GT;
-    } else if (*ptr == '=') {
-        return TOKENIZER_EQ;
+    if (mode == MODE_TOKENIZE) {
+        if (*ptr == '\n') {
+            return TOKENIZER_CR;
+        } else if (*ptr == ',') {
+            return TOKENIZER_COMMA;
+        } else if (*ptr == ';') {
+            return TOKENIZER_SEMICOLON;
+        } else if (*ptr == '+') {
+            return TOKENIZER_PLUS;
+        } else if (*ptr == '-') {
+            return TOKENIZER_MINUS;
+        } else if (*ptr == '&') {
+            return TOKENIZER_AND;
+        } else if (*ptr == '|') {
+            return TOKENIZER_OR;
+        } else if (*ptr == '*') {
+            return TOKENIZER_ASTR;
+        } else if (*ptr == '/') {
+            return TOKENIZER_SLASH;
+        } else if (*ptr == '%') {
+            return TOKENIZER_MOD;
+        } else if (*ptr == '(') {
+            return TOKENIZER_LEFTPAREN;
+        } else if (*ptr == '#') {
+            return TOKENIZER_HASH;
+        } else if (*ptr == ')') {
+            return TOKENIZER_RIGHTPAREN;
+        } else if (*ptr == '<') {
+            return TOKENIZER_LT;
+        } else if (*ptr == '>') {
+            return TOKENIZER_GT;
+        } else if (*ptr == '=') {
+            return TOKENIZER_EQ;
+        }
+        return 0;
+    } else {
+        return (tokenBuffer[tokenBufferPtr]);
     }
-    return 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -119,54 +140,56 @@ get_next_token(void) {
 
     DEBUG_PRINTF("get_next_token(): '%s'\n", ptr);
 
-    if (*ptr == 0) {
-        return TOKENIZER_ENDOFINPUT;
-    }
+    if (mode == MODE_TOKENIZE) {
+        if (*ptr == 0) {
+            return TOKENIZER_ENDOFINPUT;
+        }
 
-    if (isdigit(*ptr)) {
-        for (i = 0; i < MAX_NUMLEN; ++i) {
-            if (!isdigit(ptr[i])) {
-                if (i > 0) {
-                    nextptr = ptr + i;
-                    return TOKENIZER_NUMBER;
-                } else {
-                    DEBUG_PRINTF("get_next_token: error due to too short number\n");
+        if (isdigit(*ptr)) {
+            for (i = 0; i < MAX_NUMLEN; ++i) {
+                if (!isdigit(ptr[i])) {
+                    if (i > 0) {
+                        nextptr = ptr + i;
+                        return TOKENIZER_NUMBER;
+                    } else {
+                        DEBUG_PRINTF("get_next_token: error due to too short number\n");
+                        return TOKENIZER_ERROR;
+                    }
+                }
+                if (!isdigit(ptr[i])) {
+                    DEBUG_PRINTF("get_next_token: error due to malformed number\n");
                     return TOKENIZER_ERROR;
                 }
             }
-            if (!isdigit(ptr[i])) {
-                DEBUG_PRINTF("get_next_token: error due to malformed number\n");
-                return TOKENIZER_ERROR;
-            }
-        }
-        DEBUG_PRINTF("get_next_token: error due to too long number\n");
-        return TOKENIZER_ERROR;
-    } else if (singlechar()) {
-        nextptr = ptr + 1;
-        return singlechar();
-    } else if (*ptr == '"') {
-        nextptr = ptr;
-        do {
+            DEBUG_PRINTF("get_next_token: error due to too long number\n");
+            return TOKENIZER_ERROR;
+        } else if (singlechar()) {
+            nextptr = ptr + 1;
+            return singlechar();
+        } else if (*ptr == '"') {
+            nextptr = ptr;
+            do {
+                ++nextptr;
+            } while (*nextptr != '"');
             ++nextptr;
-        } while (*nextptr != '"');
-        ++nextptr;
-        return TOKENIZER_STRING;
-    } else {
-        for (kt = keywords; kt->keyword != NULL; ++kt) {
-            if (strncmp(ptr, kt->keyword, strlen(kt->keyword)) == 0) {
-                nextptr = ptr + strlen(kt->keyword);
-                return kt->token;
+            return TOKENIZER_STRING;
+        } else {
+            for (kt = keywords; kt->keyword != NULL; ++kt) {
+                if (strncmp(ptr, kt->keyword, strlen(kt->keyword)) == 0) {
+                    nextptr = ptr + strlen(kt->keyword);
+                    return kt->token;
+                }
             }
         }
+
+        if (*ptr >= 'a' && *ptr <= 'z') {
+            nextptr = ptr + 1;
+            return TOKENIZER_VARIABLE;
+        }
+        return TOKENIZER_ERROR;
+    } else {
+        return (tokenBuffer[tokenBufferPtr]);
     }
-
-    if (*ptr >= 'a' && *ptr <= 'z') {
-        nextptr = ptr + 1;
-        return TOKENIZER_VARIABLE;
-    }
-
-
-    return TOKENIZER_ERROR;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -178,6 +201,14 @@ tokenizer_goto(const char *program) {
     DEBUG_PRINTF("tokenizer_goto %d\n", current_token);
 }
 
+void
+new_tokenizer_goto(int ptr) {
+    DEBUG_PRINTF("new_tokenizer_goto %d\n",ptr);
+    tokenBufferPtr = ptr;
+    current_token = get_next_token();
+    DEBUG_PRINTF("new_tokenizer_goto %d\n", current_token);
+}
+
 /*---------------------------------------------------------------------------*/
 void
 tokenizer_init(const char *program) {
@@ -187,10 +218,21 @@ tokenizer_init(const char *program) {
     DEBUG_PRINTF("tokenizer_init %d\n", current_token);
 }
 
+void
+new_tokenizer_init(int ptr) {
+    DEBUG_PRINTF("new_tokenizer_init %d\n",ptr);
+    new_tokenizer_goto(ptr);
+    current_token = get_next_token();
+    DEBUG_PRINTF("new_tokenizer_init %d\n", current_token);
+}
+
 /*---------------------------------------------------------------------------*/
 int
 tokenizer_token(void) {
-    return current_token;
+    if (mode == MODE_TOKENIZE)
+        return current_token;
+    else
+        return tokenBuffer[tokenBufferPtr];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -201,32 +243,65 @@ tokenizer_next(void) {
         return;
     }
 
-    DEBUG_PRINTF("tokenizer_next: %p\n", nextptr);
-    ptr = nextptr;
+    
 
-    while (*ptr == ' ') {
-        ++ptr;
-    }
-    current_token = get_next_token();
+    if (mode == MODE_TOKENIZE) {
+        DEBUG_PRINTF("tokenizer_next: %p\n", nextptr);
+        ptr = nextptr;
 
-    if (current_token == TOKENIZER_REM) {
-        while (!(*nextptr == '\n' || tokenizer_finished())) {
-            ++nextptr;
+        while (*ptr == ' ') {
+            ++ptr;
         }
-        if (*nextptr == '\n') {
-            ++nextptr;
-        }
-        tokenizer_next();
-    }
+        current_token = get_next_token();
 
-    DEBUG_PRINTF("tokenizer_next: '%s' %d\n", ptr, current_token);
-    return;
+        if (current_token == TOKENIZER_REM) {
+            while (!(*nextptr == '\n' || tokenizer_finished())) {
+                ++nextptr;
+            }
+            if (*nextptr == '\n') {
+                ++nextptr;
+            }
+            tokenizer_next();
+        }
+
+        DEBUG_PRINTF("tokenizer_next: '%s' %d\n", ptr, current_token);
+        return;
+    } else {
+        DEBUG_PRINTF("tokenizer_next run: %d\n", tokenBufferPtr);
+        switch (tokenBuffer[tokenBufferPtr]) {
+            case TOKENIZER_NUMBER:
+                tokenBufferPtr += 3;
+                break;
+            case TOKENIZER_STRING:
+                DEBUG_PRINTF("-ptr = %d\n", tokenBufferPtr);
+                tokenBufferPtr += (strlen(&tokenBuffer[tokenBufferPtr]) + 1);
+                DEBUG_PRINTF("--ptr = %d\n", tokenBufferPtr);
+                break;
+            case TOKENIZER_VARIABLE:
+                tokenBufferPtr += 3;
+                break;
+            default:
+                tokenBufferPtr++;
+                break;
+        }
+
+    }
 }
 
 /*---------------------------------------------------------------------------*/
 VARIABLE_TYPE
 tokenizer_num(void) {
-    return atoi(ptr);
+    VARIABLE_TYPE tmp;
+
+    if (mode == MODE_TOKENIZE)
+        return atoi(ptr);
+    else {
+        memcpy(&tmp, &tokenBuffer[tokenBufferPtr +1 ], 2);
+        //printf("tn=[%d] %d %d \n",tmp,tokenBuffer[tokenBufferPtr + 1],tokenBuffer[tokenBufferPtr + 2]);
+       
+        return tmp;
+    }
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -235,19 +310,24 @@ tokenizer_string(char *dest, int len) {
     char *string_end;
     int string_len;
 
-    if (tokenizer_token() != TOKENIZER_STRING) {
-        return;
+    if (mode == MODE_TOKENIZE) {
+        if (tokenizer_token() != TOKENIZER_STRING) {
+            return;
+        }
+        string_end = strchr(ptr + 1, '"');
+        if (string_end == NULL) {
+            return;
+        }
+        string_len = string_end - ptr - 1;
+        if (len < string_len) {
+            string_len = len;
+        }
+        memcpy(dest, ptr + 1, string_len);
+        dest[string_len] = 0;
+    } else {
+        memcpy(dest, &tokenBuffer[tokenBufferPtr], strlen(&tokenBuffer[tokenBufferPtr]));
+        dest[strlen(&tokenBuffer[tokenBufferPtr])]=0;
     }
-    string_end = strchr(ptr + 1, '"');
-    if (string_end == NULL) {
-        return;
-    }
-    string_len = string_end - ptr - 1;
-    if (len < string_len) {
-        string_len = len;
-    }
-    memcpy(dest, ptr + 1, string_len);
-    dest[string_len] = 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -259,20 +339,39 @@ tokenizer_error_print(void) {
 /*---------------------------------------------------------------------------*/
 int
 tokenizer_finished(void) {
-    return *ptr == 0 || current_token == TOKENIZER_ENDOFINPUT;
+    if (mode == MODE_TOKENIZE)
+        return *ptr == 0 || current_token == TOKENIZER_ENDOFINPUT;
+    else
+        return (tokenBuffer[tokenBufferPtr] == TOKENIZER_ENDOFINPUT);
 }
 
 /*---------------------------------------------------------------------------*/
 int
 tokenizer_variable_num(void) {
-    return *ptr - 'a';
+    VARIABLE_TYPE tmp;
+    
+    if (mode == MODE_TOKENIZE)
+        return *ptr - 'a';
+    else{
+        memcpy(&tmp, &tokenBuffer[tokenBufferPtr + 1], 2);
+        //printf("tvn=[%d] %d %d \n",tmp,tokenBuffer[tokenBufferPtr +1 ],tokenBuffer[tokenBufferPtr + 2]);
+        return tmp;
+        //return (tokenBuffer[tokenBufferPtr]);
+    }
+        
 }
 
 /*---------------------------------------------------------------------------*/
 char const *
 tokenizer_pos(void) {
-    return ptr;
+    if (mode == MODE_TOKENIZE)
+        return (ptr);
+    else
+        return (tokenBufferPtr);
 }
+
+
+// NEW NEW NEW
 
 #define MAX_TOKENS_PER_LINE 100
 
@@ -283,16 +382,20 @@ struct tokenizedLine {
 
 struct tokenizedLine workLine;
 
-void
-tokenize(char *program) {
+const char *tokenize(char *program) {
     int tokencounter;
     char string[50];
+    int bufferptr = 0;
+    int firstLine = 1;
+    VARIABLE_TYPE tmp;
 
     printf("\n");
     tokenizer_init(program);
     while (tokenizer_token() != TOKENIZER_ENDOFINPUT) {
+
         workLine.lineNumber = tokenizer_num();
         //workLine.lineTokens=string;
+
         tokencounter = 0;
         tokenizer_next();
         while (tokenizer_token() != TOKENIZER_CR) {
@@ -300,107 +403,92 @@ tokenize(char *program) {
             switch (tokenizer_token()) {
                 case TOKENIZER_NUMBER:
                     //workLine.lineTokens[tokencounter].val = tokenizer_num();
-                    workLine.lineTokens[tokencounter] = tokenizer_num();
+                    //printf("in tnum [%d]",tokenizer_num());
+                    tmp = tokenizer_num();
+                    //printf("tmp=%d %d\n", tmp, sizeof (tmp));
+                    memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                    //workLine.lineTokens[tokencounter] = tokenizer_num();
                     tokencounter += 2;
                     break;
                 case TOKENIZER_STRING:
                     tokenizer_string(string, sizeof (string));
                     strcpy(&workLine.lineTokens[tokencounter], string);
-                    tokencounter += (strlen(string) + 1);
+                    tokencounter += (strlen(string) );
+                    workLine.lineTokens[tokencounter++] = 0;
                     break;
                 case TOKENIZER_VARIABLE:
-                     workLine.lineTokens[tokencounter++] = tokenizer_variable_num();
+                    tmp = tokenizer_variable_num();
+                    memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                    tokencounter += 2;
                     break;
             }
             tokenizer_next();
-            //tokencounter++;
         }
-
-
-        printf("Line [%d]Tokens: ", workLine.lineNumber);
+        tokenizer_next();
+        
+        DEBUG_PRINTF("tokencounter=[%d]\n",tokencounter);
+        
+        DEBUG_PRINTF("Line[%d] Tokens: ", workLine.lineNumber);
         for (int i = 0; i < tokencounter;) {
-            printf("%02x ", workLine.lineTokens[i]);
+            DEBUG_PRINTF(" T-%02d ", workLine.lineTokens[i]);
             switch (workLine.lineTokens[i++]) {
                 case TOKENIZER_NUMBER:
-                    printf("val=[%04x] ", workLine.lineTokens[i]);
+                    memcpy(&tmp, &workLine.lineTokens[i], 2);
+                    DEBUG_PRINTF("number=[%04xH] [%d] ", tmp, tmp);
                     i += 2;
                     break;
                 case TOKENIZER_STRING:
-                    printf("string=[%s]", &workLine.lineTokens[i]);
-                    i += (strlen(&workLine.lineTokens[i]) + 1);
+                    DEBUG_PRINTF("string=[%s] ", &workLine.lineTokens[i]);
+                    i += (strlen(&workLine.lineTokens[i]) );
                     break;
                 case TOKENIZER_VARIABLE:
-                    printf("var [%d] ",workLine.lineTokens[i++]);
+                    memcpy(&tmp, &workLine.lineTokens[i], 2);
+                    DEBUG_PRINTF("var_id=[%04xH] [%d] ", tmp, tmp);
+                    i += 2;
+                    //printf("var_id=[%d] ", workLine.lineTokens[i++]);
                     break;
                 default:
                     break;
             }
         }
-        printf("\n");
-        tokenizer_next();
+
+        DEBUG_PRINTF("\n");
+
+        tokenBuffer[bufferptr++] = TOKENIZER_NUMBER;
+        memcpy(&tokenBuffer[bufferptr], &workLine.lineNumber, 2);
+
+        bufferptr += 2;
+
+        memcpy(&tokenBuffer[bufferptr], &workLine.lineTokens[0], tokencounter);
+
+        bufferptr += tokencounter;
+
+        tokenBuffer[bufferptr++ ] = TOKENIZER_CR;//   kkk
+
+        //dumpBuffer(0, bufferptr);
     }
+    tokenBuffer[bufferptr] = TOKENIZER_ENDOFINPUT;
+    //dumpBuffer(0, bufferptr + 5);
+    return (tokenBuffer);
 }
-#ifdef test1
-#define MAX_TOKENS_PER_LINE 100
+int line = 0;
 
-struct tokenized {
-    int token;
-    int val;
-    char *string;
-};
+dumpBuffer(int start, int end) {
 
-struct tokenizedLine {
-    int lineNumber;
-    struct tokenized lineTokens[MAX_TOKENS_PER_LINE];
-};
+    printf("dump buffer\n");
 
-struct tokenizedLine workLine;
-
-void
-tokenize(char *program) {
-    int tokencounter;
-    char string[50];
-
-    tokenizer_init(program);
-    while (tokenizer_token() != TOKENIZER_ENDOFINPUT) {
-        workLine.lineNumber = tokenizer_num();
-        tokencounter = 0;
-        tokenizer_next();
-        while (tokenizer_token() != TOKENIZER_CR) {
-            workLine.lineTokens[tokencounter].token = tokenizer_token();
-            switch (tokenizer_token()) {
-                case TOKENIZER_NUMBER:
-                    //workLine.lineTokens[tokencounter].val = tokenizer_num();
-                    workLine.lineTokens[tokencounter].val = tokenizer_num();
-                    break;
-                case TOKENIZER_STRING:
-                    workLine.lineTokens[tokencounter].string = malloc(sizeof (string));
-                    tokenizer_string(workLine.lineTokens[tokencounter].string, sizeof (string));
-                    break;
-                case TOKENIZER_VARIABLE:
-                    break;
-            }
-            tokenizer_next();
-            tokencounter++;
-        }
-
-
-        printf("Line [%d]Tokens: ", workLine.lineNumber);
-        for (int i = 0; i < tokencounter; i++) {
-            printf("%d ", workLine.lineTokens[i].token);
-            switch (workLine.lineTokens[i].token) {
-                case TOKENIZER_NUMBER:
-                    printf("val=[%d] ", workLine.lineTokens[i].val);
-                    break;
-                case TOKENIZER_STRING:
-                    printf("string=[%s]", workLine.lineTokens[i].string);
-                    break;
-                case TOKENIZER_VARIABLE:
-                    break;
-            }
-        }
-        printf("\n");
-        tokenizer_next();
-    }
+    for (int i = start; i < end; i++)
+        printf("%d-[%d]\n", i,tokenBuffer[i]);
 }
-#endif
+
+void addline(){
+    
+}
+
+int removeLine(int lineNumber){
+    
+}
+
+void findLine(){
+    
+}

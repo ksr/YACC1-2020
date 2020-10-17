@@ -42,6 +42,6 @@ int ubasic_finished(void);
 VARIABLE_TYPE ubasic_get_variable(int varnum);
 void ubasic_set_variable(int varum, VARIABLE_TYPE value);
 
-void tokenize(const char *program);
+char *tokenize(const char *program);
 
 #endif /* __UBASIC_H__ */

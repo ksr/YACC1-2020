@@ -31,6 +31,6 @@
 #ifndef __VARTYPE_H__
 #define __VARTYPE_H__
 
-#define VARIABLE_TYPE char
+#define VARIABLE_TYPE short
 
 #endif /* __VARTYPE_H__ */

@@ -1,16 +1,20 @@
-1 print "start"
-4 b=55
+2 print "start"
+4 b=50
+5 gosub 100
 6 z=100
 10 let a=1
-11 for c = 1 to 10
+11 for c = 1000 to 1010
 13 print c
 15 next c
 20 print a
 30 let b=2
 40 print b
-50 print 2+3*4+5
+50 print 2+3*4+5+1,777,"pp"
 55 let c = ( 2 + 2)*(4+5)
 56 print ( 2 + 3)*(4+5)
 60 print c 
 70 print "end"
-99 end 
+80 goto 150
+100 print "sub"
+110 return
+150 end
