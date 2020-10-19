@@ -1,0 +1,6138 @@
+Load file done
+---File start---
+2 print "start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+
+---File end---
+
+tokenizer_init
+tokenizer_goto
+get_next_token(): '2 print "start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_goto 2
+get_next_token(): '2 print "start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_init 2
+tokenizer_next: 0x7ffee103c3c1
+get_next_token(): 'print "start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print "start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c3c7
+get_next_token(): '"start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '"start"
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 3
+tokenizer_next: 0x7ffee103c3cf
+get_next_token(): '
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c3d0
+get_next_token(): '4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '4 b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[8]
+Line[2] Tokens:  T-06  T-03 string=[start]  T-00 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+tokenizer_next: 0x7ffee103c3d1
+get_next_token(): 'b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'b=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c3d3
+get_next_token(): '=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '=50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c3d4
+get_next_token(): '50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '50
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c3d6
+get_next_token(): '
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c3d7
+get_next_token(): '5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '5 gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[7]
+Line[4] Tokens:  T-04 var_id=[0001H] [1]  T-35  T-02 number=[0032H] [50] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+tokenizer_next: 0x7ffee103c3d8
+get_next_token(): 'gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'gosub 100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 14
+tokenizer_next: 0x7ffee103c3de
+get_next_token(): '100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '100
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c3e2
+get_next_token(): '
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c3e3
+get_next_token(): '6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '6 z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[5] Tokens:  T-14  T-02 number=[0064H] [100] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+tokenizer_next: 0x7ffee103c3e4
+get_next_token(): 'z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'z=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c3e6
+get_next_token(): '=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '=100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c3e7
+get_next_token(): '100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '100
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c3ea
+get_next_token(): '
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c3eb
+get_next_token(): '10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '10 let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[7]
+Line[6] Tokens:  T-04 var_id=[0019H] [25]  T-35  T-02 number=[0064H] [100] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+tokenizer_next: 0x7ffee103c3ed
+get_next_token(): 'let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'let a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 5
+tokenizer_next: 0x7ffee103c3f1
+get_next_token(): 'a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'a=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c3f3
+get_next_token(): '=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '=1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c3f4
+get_next_token(): '1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '1
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c3f5
+get_next_token(): '
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c3f6
+get_next_token(): '11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '11 for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[8]
+Line[10] Tokens:  T-05  T-04 var_id=[0000H] [0]  T-35  T-02 number=[0001H] [1] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+tokenizer_next: 0x7ffee103c3f8
+get_next_token(): 'for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'for c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 10
+tokenizer_next: 0x7ffee103c3fc
+get_next_token(): 'c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'c = 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c3fe
+get_next_token(): '= 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '= 1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c400
+get_next_token(): '1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '1000 to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c405
+get_next_token(): 'to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'to 1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 11
+tokenizer_next: 0x7ffee103c408
+get_next_token(): '1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '1010
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c40d
+get_next_token(): '
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c40e
+get_next_token(): '13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '13 print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[12]
+Line[11] Tokens:  T-10  T-04 var_id=[0002H] [2]  T-35  T-02 number=[03e8H] [1000]  T-11  T-02 number=[03f2H] [1010] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+tokenizer_next: 0x7ffee103c410
+get_next_token(): 'print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c416
+get_next_token(): 'c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'c
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c418
+get_next_token(): '
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c419
+get_next_token(): '15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '15 next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[13] Tokens:  T-06  T-04 var_id=[0002H] [2] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+tokenizer_next: 0x7ffee103c41b
+get_next_token(): 'next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'next c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 12
+tokenizer_next: 0x7ffee103c420
+get_next_token(): 'c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'c
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c422
+get_next_token(): '
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c423
+get_next_token(): '20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '20 print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[15] Tokens:  T-12  T-04 var_id=[0002H] [2] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+tokenizer_next: 0x7ffee103c425
+get_next_token(): 'print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c42b
+get_next_token(): 'a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'a
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c42d
+get_next_token(): '
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c42e
+get_next_token(): '30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '30 let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[20] Tokens:  T-06  T-04 var_id=[0000H] [0] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+tokenizer_next: 0x7ffee103c430
+get_next_token(): 'let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'let b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 5
+tokenizer_next: 0x7ffee103c434
+get_next_token(): 'b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'b=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c436
+get_next_token(): '=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '=2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c437
+get_next_token(): '2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '2
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c438
+get_next_token(): '
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c439
+get_next_token(): '40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '40 print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[8]
+Line[30] Tokens:  T-05  T-04 var_id=[0001H] [1]  T-35  T-02 number=[0002H] [2] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+tokenizer_next: 0x7ffee103c43b
+get_next_token(): 'print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c441
+get_next_token(): 'b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'b
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c443
+get_next_token(): '
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c444
+get_next_token(): '50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '50 print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[40] Tokens:  T-06  T-04 var_id=[0001H] [1] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+tokenizer_next: 0x7ffee103c446
+get_next_token(): 'print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print 2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c44c
+get_next_token(): '2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '2+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c44e
+get_next_token(): '+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c44f
+get_next_token(): '3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '3*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c450
+get_next_token(): '*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '*4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 27
+tokenizer_next: 0x7ffee103c451
+get_next_token(): '4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '4+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c452
+get_next_token(): '+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c453
+get_next_token(): '5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '5+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c454
+get_next_token(): '+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c455
+get_next_token(): '1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '1,777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c456
+get_next_token(): ',777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ',777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 21
+tokenizer_next: 0x7ffee103c457
+get_next_token(): '777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '777,"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c45a
+get_next_token(): ',"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ',"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 21
+tokenizer_next: 0x7ffee103c45b
+get_next_token(): '"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '"pp"
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 3
+tokenizer_next: 0x7ffee103c45f
+get_next_token(): '
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c460
+get_next_token(): '55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '55 let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[29]
+Line[50] Tokens:  T-06  T-02 number=[0002H] [2]  T-23  T-02 number=[0003H] [3]  T-27  T-02 number=[0004H] [4]  T-23  T-02 number=[0005H] [5]  T-23  T-02 number=[0001H] [1]  T-21  T-02 number=[0309H] [777]  T-21  T-03 string=[pp]  T-00 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+tokenizer_next: 0x7ffee103c462
+get_next_token(): 'let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'let c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 5
+tokenizer_next: 0x7ffee103c466
+get_next_token(): 'c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'c = ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c468
+get_next_token(): '= ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '= ( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 35
+tokenizer_next: 0x7ffee103c46a
+get_next_token(): '( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '( 2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 31
+tokenizer_next: 0x7ffee103c46c
+get_next_token(): '2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '2 + 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c46e
+get_next_token(): '+ 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+ 2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c470
+get_next_token(): '2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '2)*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c472
+get_next_token(): ')*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ')*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 32
+tokenizer_next: 0x7ffee103c473
+get_next_token(): '*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '*(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 27
+tokenizer_next: 0x7ffee103c474
+get_next_token(): '(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '(4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 31
+tokenizer_next: 0x7ffee103c475
+get_next_token(): '4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '4+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c476
+get_next_token(): '+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c477
+get_next_token(): '5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '5)
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c478
+get_next_token(): ')
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ')
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 32
+tokenizer_next: 0x7ffee103c479
+get_next_token(): '
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c47a
+get_next_token(): '56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '56 print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[24]
+Line[55] Tokens:  T-05  T-04 var_id=[0002H] [2]  T-35  T-31  T-02 number=[0002H] [2]  T-23  T-02 number=[0002H] [2]  T-32  T-27  T-31  T-02 number=[0004H] [4]  T-23  T-02 number=[0005H] [5]  T-32 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+tokenizer_next: 0x7ffee103c47c
+get_next_token(): 'print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print ( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c482
+get_next_token(): '( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '( 2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 31
+tokenizer_next: 0x7ffee103c484
+get_next_token(): '2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '2 + 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c486
+get_next_token(): '+ 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+ 3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c488
+get_next_token(): '3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '3)*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c48a
+get_next_token(): ')*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ')*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 32
+tokenizer_next: 0x7ffee103c48b
+get_next_token(): '*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '*(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 27
+tokenizer_next: 0x7ffee103c48c
+get_next_token(): '(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '(4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 31
+tokenizer_next: 0x7ffee103c48d
+get_next_token(): '4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '4+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c48e
+get_next_token(): '+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '+5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 23
+tokenizer_next: 0x7ffee103c48f
+get_next_token(): '5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '5)
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c490
+get_next_token(): ')
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: ')
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 32
+tokenizer_next: 0x7ffee103c491
+get_next_token(): '
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c492
+get_next_token(): '60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '60 print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[20]
+Line[56] Tokens:  T-06  T-31  T-02 number=[0002H] [2]  T-23  T-02 number=[0003H] [3]  T-32  T-27  T-31  T-02 number=[0004H] [4]  T-23  T-02 number=[0005H] [5]  T-32 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+tokenizer_next: 0x7ffee103c494
+get_next_token(): 'print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c49a
+get_next_token(): 'c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'c 
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 4
+tokenizer_next: 0x7ffee103c49c
+get_next_token(): '
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c49e
+get_next_token(): '70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '70 print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[60] Tokens:  T-06  T-04 var_id=[0002H] [2] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+tokenizer_next: 0x7ffee103c4a0
+get_next_token(): 'print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print "end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c4a6
+get_next_token(): '"end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '"end"
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 3
+tokenizer_next: 0x7ffee103c4ac
+get_next_token(): '
+80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+80 goto 150
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c4ad
+get_next_token(): '80 goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '80 goto 150
+100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[6]
+Line[70] Tokens:  T-06  T-03 string=[end]  T-00 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+237-[37]
+238-[70]
+239-[0]
+240-[0]
+241-[0]
+242-[6]
+243-[3]
+244-[101]
+245-[110]
+246-[100]
+247-[0]
+248-[36]
+tokenizer_next: 0x7ffee103c4af
+get_next_token(): 'goto 150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'goto 150
+100 print "sub"
+110 return
+150 end
+' 13
+tokenizer_next: 0x7ffee103c4b4
+get_next_token(): '150
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '150
+100 print "sub"
+110 return
+150 end
+' 2
+tokenizer_next: 0x7ffee103c4b8
+get_next_token(): '
+100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '
+100 print "sub"
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c4b9
+get_next_token(): '100 print "sub"
+110 return
+150 end
+'
+tokenizer_next: '100 print "sub"
+110 return
+150 end
+' 2
+tokencounter=[4]
+Line[80] Tokens:  T-13  T-02 number=[0096H] [150] 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+237-[37]
+238-[70]
+239-[0]
+240-[0]
+241-[0]
+242-[6]
+243-[3]
+244-[101]
+245-[110]
+246-[100]
+247-[0]
+248-[36]
+249-[37]
+250-[80]
+251-[0]
+252-[0]
+253-[0]
+254-[13]
+255-[2]
+256-[150]
+257-[0]
+258-[36]
+tokenizer_next: 0x7ffee103c4bc
+get_next_token(): 'print "sub"
+110 return
+150 end
+'
+tokenizer_next: 'print "sub"
+110 return
+150 end
+' 6
+tokenizer_next: 0x7ffee103c4c2
+get_next_token(): '"sub"
+110 return
+150 end
+'
+tokenizer_next: '"sub"
+110 return
+150 end
+' 3
+tokenizer_next: 0x7ffee103c4c8
+get_next_token(): '
+110 return
+150 end
+'
+tokenizer_next: '
+110 return
+150 end
+' 36
+tokenizer_next: 0x7ffee103c4c9
+get_next_token(): '110 return
+150 end
+'
+tokenizer_next: '110 return
+150 end
+' 2
+tokencounter=[6]
+Line[100] Tokens:  T-06  T-03 string=[sub]  T-00 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+237-[37]
+238-[70]
+239-[0]
+240-[0]
+241-[0]
+242-[6]
+243-[3]
+244-[101]
+245-[110]
+246-[100]
+247-[0]
+248-[36]
+249-[37]
+250-[80]
+251-[0]
+252-[0]
+253-[0]
+254-[13]
+255-[2]
+256-[150]
+257-[0]
+258-[36]
+259-[37]
+260-[100]
+261-[0]
+262-[0]
+263-[0]
+264-[6]
+265-[3]
+266-[115]
+267-[117]
+268-[98]
+269-[0]
+270-[36]
+tokenizer_next: 0x7ffee103c4cc
+get_next_token(): 'return
+150 end
+'
+tokenizer_next: 'return
+150 end
+' 15
+tokenizer_next: 0x7ffee103c4d3
+get_next_token(): '
+150 end
+'
+tokenizer_next: '
+150 end
+' 36
+tokenizer_next: 0x7ffee103c4d4
+get_next_token(): '150 end
+'
+tokenizer_next: '150 end
+' 2
+tokencounter=[1]
+Line[110] Tokens:  T-15 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+237-[37]
+238-[70]
+239-[0]
+240-[0]
+241-[0]
+242-[6]
+243-[3]
+244-[101]
+245-[110]
+246-[100]
+247-[0]
+248-[36]
+249-[37]
+250-[80]
+251-[0]
+252-[0]
+253-[0]
+254-[13]
+255-[2]
+256-[150]
+257-[0]
+258-[36]
+259-[37]
+260-[100]
+261-[0]
+262-[0]
+263-[0]
+264-[6]
+265-[3]
+266-[115]
+267-[117]
+268-[98]
+269-[0]
+270-[36]
+271-[37]
+272-[110]
+273-[0]
+274-[0]
+275-[0]
+276-[15]
+277-[36]
+tokenizer_next: 0x7ffee103c4d7
+get_next_token(): 'end
+'
+tokenizer_next: 'end
+' 20
+tokenizer_next: 0x7ffee103c4db
+get_next_token(): '
+'
+tokenizer_next: '
+' 36
+tokenizer_next: 0x7ffee103c4dc
+get_next_token(): ''
+tokenizer_next: '' 1
+tokencounter=[1]
+Line[150] Tokens:  T-20 
+dump buffer
+0-[37]
+1-[2]
+2-[0]
+3-[0]
+4-[0]
+5-[6]
+6-[3]
+7-[115]
+8-[116]
+9-[97]
+10-[114]
+11-[116]
+12-[0]
+13-[36]
+14-[37]
+15-[4]
+16-[0]
+17-[0]
+18-[0]
+19-[4]
+20-[1]
+21-[0]
+22-[35]
+23-[2]
+24-[50]
+25-[0]
+26-[36]
+27-[37]
+28-[5]
+29-[0]
+30-[0]
+31-[0]
+32-[14]
+33-[2]
+34-[100]
+35-[0]
+36-[36]
+37-[37]
+38-[6]
+39-[0]
+40-[0]
+41-[0]
+42-[4]
+43-[25]
+44-[0]
+45-[35]
+46-[2]
+47-[100]
+48-[0]
+49-[36]
+50-[37]
+51-[10]
+52-[0]
+53-[0]
+54-[0]
+55-[5]
+56-[4]
+57-[0]
+58-[0]
+59-[35]
+60-[2]
+61-[1]
+62-[0]
+63-[36]
+64-[37]
+65-[11]
+66-[0]
+67-[0]
+68-[0]
+69-[10]
+70-[4]
+71-[2]
+72-[0]
+73-[35]
+74-[2]
+75-[232]
+76-[3]
+77-[11]
+78-[2]
+79-[242]
+80-[3]
+81-[36]
+82-[37]
+83-[13]
+84-[0]
+85-[0]
+86-[0]
+87-[6]
+88-[4]
+89-[2]
+90-[0]
+91-[36]
+92-[37]
+93-[15]
+94-[0]
+95-[0]
+96-[0]
+97-[12]
+98-[4]
+99-[2]
+100-[0]
+101-[36]
+102-[37]
+103-[20]
+104-[0]
+105-[0]
+106-[0]
+107-[6]
+108-[4]
+109-[0]
+110-[0]
+111-[36]
+112-[37]
+113-[30]
+114-[0]
+115-[0]
+116-[0]
+117-[5]
+118-[4]
+119-[1]
+120-[0]
+121-[35]
+122-[2]
+123-[2]
+124-[0]
+125-[36]
+126-[37]
+127-[40]
+128-[0]
+129-[0]
+130-[0]
+131-[6]
+132-[4]
+133-[1]
+134-[0]
+135-[36]
+136-[37]
+137-[50]
+138-[0]
+139-[0]
+140-[0]
+141-[6]
+142-[2]
+143-[2]
+144-[0]
+145-[23]
+146-[2]
+147-[3]
+148-[0]
+149-[27]
+150-[2]
+151-[4]
+152-[0]
+153-[23]
+154-[2]
+155-[5]
+156-[0]
+157-[23]
+158-[2]
+159-[1]
+160-[0]
+161-[21]
+162-[2]
+163-[9]
+164-[3]
+165-[21]
+166-[3]
+167-[112]
+168-[112]
+169-[0]
+170-[36]
+171-[37]
+172-[55]
+173-[0]
+174-[0]
+175-[0]
+176-[5]
+177-[4]
+178-[2]
+179-[0]
+180-[35]
+181-[31]
+182-[2]
+183-[2]
+184-[0]
+185-[23]
+186-[2]
+187-[2]
+188-[0]
+189-[32]
+190-[27]
+191-[31]
+192-[2]
+193-[4]
+194-[0]
+195-[23]
+196-[2]
+197-[5]
+198-[0]
+199-[32]
+200-[36]
+201-[37]
+202-[56]
+203-[0]
+204-[0]
+205-[0]
+206-[6]
+207-[31]
+208-[2]
+209-[2]
+210-[0]
+211-[23]
+212-[2]
+213-[3]
+214-[0]
+215-[32]
+216-[27]
+217-[31]
+218-[2]
+219-[4]
+220-[0]
+221-[23]
+222-[2]
+223-[5]
+224-[0]
+225-[32]
+226-[36]
+227-[37]
+228-[60]
+229-[0]
+230-[0]
+231-[0]
+232-[6]
+233-[4]
+234-[2]
+235-[0]
+236-[36]
+237-[37]
+238-[70]
+239-[0]
+240-[0]
+241-[0]
+242-[6]
+243-[3]
+244-[101]
+245-[110]
+246-[100]
+247-[0]
+248-[36]
+249-[37]
+250-[80]
+251-[0]
+252-[0]
+253-[0]
+254-[13]
+255-[2]
+256-[150]
+257-[0]
+258-[36]
+259-[37]
+260-[100]
+261-[0]
+262-[0]
+263-[0]
+264-[6]
+265-[3]
+266-[115]
+267-[117]
+268-[98]
+269-[0]
+270-[36]
+271-[37]
+272-[110]
+273-[0]
+274-[0]
+275-[0]
+276-[15]
+277-[36]
+278-[37]
+279-[150]
+280-[0]
+281-[0]
+282-[0]
+283-[20]
+284-[36]
+tokening done
+new_tokenizer_init 0
+new_tokenizer_goto 0
+get_next_token(): ''
+new_tokenizer_goto 37
+get_next_token(): ''
+new_tokenizer_init 37
+----------- Line number 2 ---------
+index_add: Adding index for line 2: 0.
+Expected 37, got it
+tokenizer_next run: 0
+Expected 6, got it
+tokenizer_next run: 5
+Print loop
+starttokenizer_next run: 6
+-ptr = 6
+--ptr = 13
+
+End of print
+tokenizer_next run: 13
+----------- Line number 4 ---------
+index_find: Returning NULL.
+index_add: Adding index for line 4: 14.
+Expected 37, got it
+tokenizer_next run: 14
+Expected 4, got it
+tokenizer_next run: 19
+Expected 35, got it
+tokenizer_next run: 22
+factor: token 2
+factor: number 50
+Expected 2, got it
+tokenizer_next run: 23
+term: token 36
+term: 50
+expr: token 36
+expr: 50
+let_statement: assign 50 to 1
+Expected 36, got it
+tokenizer_next run: 26
+----------- Line number 5 ---------
+index_find: Step   0. Found index for line 4: 14.
+index_find: Returning NULL.
+index_add: Adding index for line 5: 27.
+Expected 37, got it
+tokenizer_next run: 27
+Expected 14, got it
+tokenizer_next run: 32
+Expected 2, got it
+tokenizer_next run: 33
+Expected 36, got it
+tokenizer_next run: 36
+-- 6 --
+index_find: Step   0. Found index for line 4: 14.
+index_find: Step   1. Found index for line 5: 27.
+index_find: Returning NULL.
+jump_linenum: Calling jump_linenum_slow.
+new_tokenizer_init 0
+new_tokenizer_goto 0
+get_next_token(): ''
+new_tokenizer_goto 37
+get_next_token(): ''
+new_tokenizer_init 37
+tokenizer_next run: 0
+tokenizer_next run: 5
+tokenizer_next run: 6
+-ptr = 6
+--ptr = 13
+tokenizer_next run: 13
+tokenizer_next run: 14
+tokenizer_next run: 19
+tokenizer_next run: 22
+tokenizer_next run: 23
+tokenizer_next run: 26
+tokenizer_next run: 27
+tokenizer_next run: 32
+tokenizer_next run: 33
+tokenizer_next run: 36
+tokenizer_next run: 37
+tokenizer_next run: 42
+tokenizer_next run: 45
+tokenizer_next run: 46
+tokenizer_next run: 49
+tokenizer_next run: 50
+tokenizer_next run: 55
+tokenizer_next run: 56
+tokenizer_next run: 59
+tokenizer_next run: 60
+tokenizer_next run: 63
+tokenizer_next run: 64
+tokenizer_next run: 69
+tokenizer_next run: 70
+tokenizer_next run: 73
+tokenizer_next run: 74
+tokenizer_next run: 77
+tokenizer_next run: 78
+tokenizer_next run: 81
+tokenizer_next run: 82
+tokenizer_next run: 87
+tokenizer_next run: 88
+tokenizer_next run: 91
+tokenizer_next run: 92
+tokenizer_next run: 97
+tokenizer_next run: 98
+tokenizer_next run: 101
+tokenizer_next run: 102
+tokenizer_next run: 107
+tokenizer_next run: 108
+tokenizer_next run: 111
+tokenizer_next run: 112
+tokenizer_next run: 117
+tokenizer_next run: 118
+tokenizer_next run: 121
+tokenizer_next run: 122
+tokenizer_next run: 125
+tokenizer_next run: 126
+tokenizer_next run: 131
+tokenizer_next run: 132
+tokenizer_next run: 135
+tokenizer_next run: 136
+tokenizer_next run: 141
+tokenizer_next run: 142
+tokenizer_next run: 145
+tokenizer_next run: 146
+tokenizer_next run: 149
+tokenizer_next run: 150
+tokenizer_next run: 153
+tokenizer_next run: 154
+tokenizer_next run: 157
+tokenizer_next run: 158
+tokenizer_next run: 161
+tokenizer_next run: 162
+tokenizer_next run: 165
+tokenizer_next run: 166
+-ptr = 166
+--ptr = 170
+tokenizer_next run: 170
+tokenizer_next run: 171
+tokenizer_nex

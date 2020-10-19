@@ -7,6 +7,9 @@
 13 print c
 15 next c
 20 print a
+22 a=a+1
+24 if a < 4 then goto 20
+26 print "to be deleted"
 30 let b=2
 40 print b
 50 print 2+3*4+5+1,777,"pp"

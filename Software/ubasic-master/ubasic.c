@@ -340,7 +340,7 @@ jump_linenum_slow(int linenum) {
             if (tokenizer_token() == TOKENIZER_CR) {
                 tokenizer_next();
             }
-        } while (tokenizer_token() != TOKENIZER_NUMBER);
+        } while (tokenizer_token() != TOKENIZER_LINENUM);
         DEBUG_PRINTF("jump_linenum_slow: Found line %d\n", tokenizer_num());
     }
 }
@@ -617,7 +617,7 @@ static void
 line_statement(void) {
     DEBUG_PRINTF("----------- Line number %d ---------\n", tokenizer_num());
     index_add(tokenizer_num(), tokenizer_pos());
-    accept(TOKENIZER_NUMBER);
+    accept(TOKENIZER_LINENUM);
     statement();
     return;
 }
