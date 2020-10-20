@@ -31,6 +31,15 @@
 #include "ubasic.h"
 #include <stdio.h>
 
+#define DEBUG 0
+
+#if DEBUG
+#define DEBUG_PRINTF(...)  printf(__VA_ARGS__)
+#else
+#define DEBUG_PRINTF(...)
+#endif
+
+
 static const char program[] =
         "1 print \"start\"\n\
 10 gosub 100\n\
@@ -69,6 +78,9 @@ int main(int argc, char *argv[]) {
 
     char *input, *filename;
     FILE *fptr;
+    char linebuff[1000];
+    int i;
+    char c;
 
     char source[MAX_FILE_SIZE + 1];
 
@@ -78,46 +90,97 @@ int main(int argc, char *argv[]) {
         if ((fptr = fopen(filename, "r")) == NULL) {
             printf("Error! opening file");
             exit(1);
+        } else {
+            tokenizer_tokenize(); // set mode
+            do {
+                i = 0;
+                do {
+                    c = fgetc(fptr);
+                    linebuff[i++] = c;
+                } while ((c != '\n') && (c != -1));
+                if (c != -1) {
+                    linebuff[i++] = 0;
+                    DEBUG_PRINTF("line=[%s] [%d]\n", linebuff, c);
+                    char *buff = tokenizeLine(linebuff);
+                }
+            } while (c != EOF);
+
+            fclose(fptr);
+
+            printf("Load file done\n");
+            tokenizer_tokenize(); // set mode
+
+            //char *buff = tokenizeLine(linebuff);
+
+            printf("tokening done\n");
+
+            //new_ubasic_init(buff); //probably should be 0
+            tokenizer_run(); // set mode
+            new_ubasic_init(0);
+
+            //ubasic_init(program); orignal code
+
+            do {
+                ubasic_run();
+            } while (!ubasic_finished());
+
+            return 0;
+            exit(0);
         }
     } else {
-        printf("Interactive mode");
-        while(1){
-        putchar (getchar());
-            
+        printf("Interactive mode\n");
+        while (1) {
+            tokenizer_tokenize(); // set mode
+
+            i = 0;
+            do {
+                c = fgetc(stdin);
+                linebuff[i++] = c;
+            } while ((c != '\n') && (c != -1));
+
+            DEBUG_PRINTF("input line=[%s]\n", linebuff);
+
+            if (strncmp(linebuff, "run", 3) == 0) {
+                DEBUG_PRINTF(" found run \n");
+                tokenizer_run(); // set mode
+                new_ubasic_init(0);
+                do {
+                    ubasic_run();
+                } while (!ubasic_finished());
+                DEBUG_PRINTF("run done\n");
+            } else if (strncmp(linebuff, "list", 4) == 0) {
+                DEBUG_PRINTF(" do list\n");
+                detokenize();
+            }  else if (strncmp(linebuff, "dump", 4) == 0) {
+                DEBUG_PRINTF(" do list\n");
+                dumpBuffer(0,350);
+            }else {
+                tokenizeLine(linebuff);
+            }
+
         }
-        exit(1);
     }
 
-    size_t newLen = fread(source, sizeof (char), MAX_FILE_SIZE, fptr);
-    
-    if (ferror(fptr) != 0) {
-        fputs("Error reading file", stderr);
-    } else {
-        source[newLen++] = '\0'; /* Just to be safe. */
-    }
-    fclose(fptr);
 
-    printf("Load file done\n");
-    
-    printf("---File start---\n%s\n---File end---\n",source);
-    
-    tokenizer_tokenize();
-    
-    char *buff = tokenize(source);
-    
-    tokenizer_run();
-    
-    printf("tokening done\n");
-    
-    //new_ubasic_init(buff); //probably should be 0
-    
-    new_ubasic_init(0);
-    //ubasic_init(program); orignal code
-    
-    do {
-        ubasic_run();
-    } while (!ubasic_finished());
+#ifdef OLD
+tokenizer_tokenize(); // set mode
 
-    return 0;
+char *buff = tokenize(source);
+
+tokenizer_run();
+
+printf("tokening done\n");
+
+//new_ubasic_init(buff); //probably should be 0
+
+new_ubasic_init(0);
+//ubasic_init(program); orignal code
+
+do {
+    ubasic_run();
+} while (!ubasic_finished());
+
+return 0;
+#endif
 }
 

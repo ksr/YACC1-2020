@@ -46,6 +46,7 @@ static char const *ptr, *nextptr;
 #define TOKEN_BUFFER_SIZE 2000
 unsigned char tokenBuffer[TOKEN_BUFFER_SIZE];
 int tokenBufferPtr;
+int endOfBuffer=0;
 
 #define MODE_TOKENIZE 1
 #define MODE_RUN 2
@@ -395,7 +396,7 @@ const char *tokenize(char *program) {
     VARIABLE_TYPE tmp;
     char newLine[20];
 
-    printf("\n");
+    printf(" tokenize \n");
     tokenizer_init(program);
     while (tokenizer_token() != TOKENIZER_ENDOFINPUT) {
 
@@ -502,16 +503,118 @@ const char *tokenize(char *program) {
     newLine[13] = 36;
 
     addLine(newLine);
+#if DEBUG
     dumpBuffer(0, bufferptr);
-
+#endif
 
     //dumpBuffer(0, bufferptr + 5);
+    return (tokenBuffer);
+}
+
+const char *tokenizeLine(char *line) {
+    int tokencounter;
+    char string[50];
+    int bufferptr = 0;
+    int firstLine = 1;
+    VARIABLE_TYPE tmp;
+    char newLine[20];
+    char buff[100];
+
+    DEBUG_PRINTF("tl start[%s]\n", line);
+    tokenizer_init(line);
+
+    workLine.lineNumber = tokenizer_num();
+    DEBUG_PRINTF("lineNumber=[%d]\n", workLine.lineNumber);
+    tokencounter = 0;
+    tokenizer_next();
+    while (tokenizer_token() != TOKENIZER_CR) {
+        workLine.lineTokens[tokencounter++] = tokenizer_token();
+        switch (tokenizer_token()) {
+            case TOKENIZER_NUMBER:
+                tmp = tokenizer_num();
+                memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                tokencounter += 2;
+                break;
+            case TOKENIZER_STRING:
+                tokenizer_string(string, sizeof (string));
+                strcpy(&workLine.lineTokens[tokencounter], string);
+                tokencounter += (strlen(string));
+                workLine.lineTokens[tokencounter++] = 0;
+                break;
+            case TOKENIZER_VARIABLE:
+                tmp = tokenizer_variable_num();
+                memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                tokencounter += 2;
+                break;
+        }
+        tokenizer_next();
+    }
+    //tokenizer_next();
+
+    DEBUG_PRINTF("tokencounter=[%d]\n", tokencounter);
+
+    DEBUG_PRINTF("Line[%d] Tokens: ", workLine.lineNumber);
+    for (int i = 0; i < tokencounter;) {
+        DEBUG_PRINTF(" T-%02d ", workLine.lineTokens[i]);
+        switch (workLine.lineTokens[i++]) {
+            case TOKENIZER_NUMBER:
+                memcpy(&tmp, &workLine.lineTokens[i], 2);
+                DEBUG_PRINTF("number=[%04xH] [%d] ", tmp, tmp);
+                i += 2;
+                break;
+            case TOKENIZER_STRING:
+                DEBUG_PRINTF("string=[%s] ", &workLine.lineTokens[i]);
+                i += (strlen(&workLine.lineTokens[i]));
+                break;
+            case TOKENIZER_VARIABLE:
+                memcpy(&tmp, &workLine.lineTokens[i], 2);
+                DEBUG_PRINTF("var_id=[%04xH] [%d] ", tmp, tmp);
+                i += 2;
+                //DEBUG_PRINTF("var_id=[%d] ", workLine.lineTokens[i++]);
+                break;
+            case TOKENIZER_LINENUM:
+                memcpy(&tmp, &workLine.lineTokens[i], 2);
+                DEBUG_PRINTF("number=[%04xH] [%d] ", tmp, tmp);
+                i += 4;
+                break;
+            default:
+                break;
+        }
+    }
+
+    DEBUG_PRINTF("\n--\n");
+
+    buff[bufferptr++] = TOKENIZER_LINENUM;
+    memcpy(&buff[bufferptr], &workLine.lineNumber, 2);
+    DEBUG_PRINTF("\n--1\n");
+
+    int tmp1 = tokencounter + 6;
+    DEBUG_PRINTF("\n--1.5 [%d]\n", tmp1);
+    memcpy(&buff[bufferptr + 2], &tmp1, 2);
+    DEBUG_PRINTF("\n--2\n");
+
+    bufferptr += 4;
+
+    memcpy(&buff[bufferptr], &workLine.lineTokens[0], tokencounter);
+    DEBUG_PRINTF("\n--3\n");
+    bufferptr += tokencounter;
+
+    buff[bufferptr++ ] = TOKENIZER_CR; //   kkk
+
+    //tokenBuffer[bufferptr] = TOKENIZER_ENDOFINPUT;
+
+    addLine(buff);
+
+#if DEBUG
+    dumpBuffer(0, 350);
+#endif
     return (tokenBuffer);
 }
 int line = 0;
 
 dumpBuffer(int start, int end) {
     int i;
+
 
     printf("dump buffer start=%d end=%d\n", start, end);
 
@@ -522,48 +625,75 @@ dumpBuffer(int start, int end) {
         printf("%02d ", tokenBuffer[i]);
     }
     printf("\n");
+
 }
 
+int firstLineOut = 1;
+
 void addLine(char *buff) {
-    int newLineNum, newLineLen, ptr;
-    int existingLineNum, existingLineLen, insertPtr;
+    VARIABLE_TYPE newLineNum, newLineLen, ptr;
+    VARIABLE_TYPE existingLineNum, existingLineLen;
+    int insertPtr;
     int src, dest;
 
+    for (int i = 0; i < 20; i++)
+        DEBUG_PRINTF("%d=[%d]\n", i, buff[i]);
+    DEBUG_PRINTF("\n");
+
     memcpy(&newLineNum, &buff[1], 2);
+
     memcpy(&newLineLen, &buff[3], 2);
+
     DEBUG_PRINTF("add line newLineNum=%d  newLineLen=%d\n", newLineNum, newLineLen);
 
-    if (findLine(newLineNum) != -1) {
-        DEBUG_PRINTF("addLine remove %d\n", newLineNum);
-        removeLine(newLineNum);
-    }
+    if (firstLineOut == 0) {
+        if (findLine(newLineNum) != -1) {
+            DEBUG_PRINTF("addLine remove %d\n", newLineNum);
+            removeLine(newLineNum);
+            if(newLineLen==6) // blank line
+                return;
+                
+        }
 
-    // Find insertion location
+        // Find insertion location
 
-    insertPtr = ptr = 0;
-    memcpy(&existingLineNum, &tokenBuffer[ptr + 1], 2);
-    memcpy(&existingLineLen, &tokenBuffer[ptr + 3], 2);
-    DEBUG_PRINTF("existingLineNum=%d existingLineLen=%d\n", existingLineNum, existingLineLen);
-
-    while (newLineNum > existingLineNum) {
+        insertPtr = ptr = 0;
         memcpy(&existingLineNum, &tokenBuffer[ptr + 1], 2);
         memcpy(&existingLineLen, &tokenBuffer[ptr + 3], 2);
         DEBUG_PRINTF("existingLineNum=%d existingLineLen=%d\n", existingLineNum, existingLineLen);
-        insertPtr = ptr;
-        ptr += existingLineLen;
+
+        while ((newLineNum > existingLineNum) && (existingLineNum != 0)) {
+            memcpy(&existingLineNum, &tokenBuffer[ptr + 1], 2);
+            memcpy(&existingLineLen, &tokenBuffer[ptr + 3], 2);
+            DEBUG_PRINTF("existingLineNum=%d existingLineLen=%d\n", existingLineNum, existingLineLen);
+            insertPtr = ptr;
+            ptr += existingLineLen;
+        }
+
+        // make room
+        src = insertPtr;
+        dest = insertPtr + newLineLen;
+        DEBUG_PRINTF("src=%d dest=%d len=%d\n", src, dest, newLineLen);
+
+        for (int i = TOKEN_BUFFER_SIZE; i >= src; i--)
+            tokenBuffer[i] = tokenBuffer[i - newLineLen];
+#if DEBUG
+        dumpBuffer(0, 350);
+#endif
+
+    } else {
+        insertPtr = ptr = 0;
+        firstLineOut = 0;
     }
-
-    // make room
-    src = insertPtr;
-    dest = insertPtr + newLineLen;
-    DEBUG_PRINTF("src=%d dest=%d len=%d\n", src, dest, newLineLen);
-
-    for (int i = TOKEN_BUFFER_SIZE; i >= src; i--)
-        tokenBuffer[i] = tokenBuffer[i - newLineLen];
-    dumpBuffer(0, 350);
     for (int i = 0; i < newLineLen; i++)
         tokenBuffer[i + insertPtr] = buff[i];
+    endOfBuffer+=newLineLen;
+    tokenBuffer[endOfBuffer]=TOKENIZER_ENDOFINPUT;
+
+#if DEBUG
     dumpBuffer(0, 350);
+#endif
+
 }
 
 void removeLine(int lineNumber) {
@@ -584,6 +714,8 @@ void removeLine(int lineNumber) {
     DEBUG_PRINTF("dest=%d src=%d length=%d\n", dest, src, removeLength);
     for (i = dest; i < TOKEN_BUFFER_SIZE; i++)
         tokenBuffer[i] = tokenBuffer[i + removeLength];
+    endOfBuffer-=removeLength;
+    tokenBuffer[endOfBuffer]=TOKENIZER_ENDOFINPUT;
 }
 
 int findLine(int lineNumber) {
@@ -601,4 +733,175 @@ int findLine(int lineNumber) {
         i = i + len;
     }
     return (-1);
+}
+
+void detokenize() {
+    int i;
+    VARIABLE_TYPE var;
+
+    i = 0;
+    while (tokenBuffer[i] != 0) {
+        DEBUG_PRINTF("token=[%d]\n", tokenBuffer[i]);
+        switch (tokenBuffer[i]) {
+            case TOKENIZER_ERROR:
+                printf("detokinze TOKENIZER_ERROR - should not happen\n");
+                exit(0);
+                break;
+            case TOKENIZER_ENDOFINPUT:
+                return;
+                break;
+            case TOKENIZER_NUMBER:
+                memcpy(&var, &tokenBuffer[i + 1], 2);
+                printf("%d ", var);
+                i += 3;
+                break;
+            case TOKENIZER_STRING:
+                printf("\"");
+                i++;
+                while (tokenBuffer[i] != 0) {
+                    printf("%c", tokenBuffer[i++]);
+                }
+                printf("\" ");
+                i++;
+                break;
+            case TOKENIZER_VARIABLE: memcpy(&var, &tokenBuffer[1 + 1], 2);
+                char varname = 'a' + var;
+                printf("%c ", varname);
+                i += 3;
+                break;
+                break;
+            case TOKENIZER_LET:
+                printf("let ");
+                i++;
+                break;
+            case TOKENIZER_PRINT:
+                printf("print ");
+                i++;
+                break;
+            case TOKENIZER_IF:
+                printf("if ");
+                i++;
+                break;
+            case TOKENIZER_THEN:
+                printf("then ");
+                i++;
+                break;
+            case TOKENIZER_ELSE:
+                printf("else ");
+                i++;
+                break;
+            case TOKENIZER_FOR:
+                printf("for ");
+                i++;
+                break;
+            case TOKENIZER_TO:
+                printf("to ");
+                i++;
+                break;
+            case TOKENIZER_NEXT:
+                printf("next ");
+                i++;
+                break;
+            case TOKENIZER_GOTO:
+                printf("goto ");
+                i++;
+                break;
+            case TOKENIZER_GOSUB:
+                printf("gosub ");
+                i++;
+                break;
+            case TOKENIZER_RETURN:
+                printf("return ");
+                i++;
+                break;
+            case TOKENIZER_CALL:
+                break;
+            case TOKENIZER_REM:
+                printf("rem ");
+                i++;
+                break;
+            case TOKENIZER_PEEK:
+                printf("peek ");
+                i++;
+                break;
+            case TOKENIZER_POKE:
+                printf("poke ");
+                i++;
+                break;
+            case TOKENIZER_END:
+                printf("end\n");
+                return;
+                i++; // not needed
+                break;
+            case TOKENIZER_COMMA:
+                printf(", ");
+                i++;
+                break;
+            case TOKENIZER_SEMICOLON:
+                printf("; ");
+                i++;
+                break;
+            case TOKENIZER_PLUS:
+                printf("+ ");
+                i++;
+                break;
+            case TOKENIZER_MINUS:
+                printf("- ");
+                i++;
+                break;
+            case TOKENIZER_AND:
+                printf("& ");
+                i++;
+                break;
+            case TOKENIZER_OR:
+                printf("| ");
+                i++;
+                break;
+            case TOKENIZER_ASTR:
+                printf("* ");
+                i++;
+                break;
+            case TOKENIZER_SLASH:
+                printf("/ ");
+                i++;
+                break;
+            case TOKENIZER_MOD:
+                printf("%% ");
+                i++;
+                break;
+            case TOKENIZER_HASH:
+                printf("#");
+                i++;
+                break;
+            case TOKENIZER_LEFTPAREN:
+                printf("( ");
+                i++;
+                break;
+            case TOKENIZER_RIGHTPAREN:
+                printf(") ");
+                i++;
+                break;
+            case TOKENIZER_LT:
+                printf("< ");
+                i++;
+                break;
+            case TOKENIZER_GT:
+                printf("< ");
+                i++;
+                break;
+            case TOKENIZER_EQ:
+                printf("= ");
+                i++;
+                break;
+            case TOKENIZER_CR:
+                printf("\n");
+                i++;
+                break;
+            case TOKENIZER_LINENUM:
+                memcpy(&var, &tokenBuffer[i + 1], 2);
+                printf("%d ", var);
+                i += 5;
+                break;
+        }
+    }
 }
