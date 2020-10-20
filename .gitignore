@@ -15,3 +15,6 @@
 /Software/tinybasic-c/build/
 /Software/tinybasic-c/dist/
 /Software/Tiny-Basic-master/build/
+Software/ubasic-master/tokenizer.o
+Software/ubasic-master/use-ubasic.o
+Software/ubasic-master/tokenizer.o
