@@ -18,7 +18,7 @@ CNTL-PORT:    EQU "P0"
 DATAPORT:     EQU "P1"
 
 TOKENIZER_ERROR: EQU 00
-TOKENIZER_EOF: EQU 01
+TOKENIZER_ENDOFINPUT: EQU 01
 TOKENIZER_NUMBER: EQU 02
 TOKENIZER_STRING: EQU 03
 TOKENIZER_VARIABLE: EQU 04
@@ -48,8 +48,8 @@ TOKENIZER_ASTR: EQU 27
 TOKENIZER_SLASH: EQU 28
 TOKENIZER_MOD: EQU 29
 TOKENIZER_HASH: EQU 30
-TOKENIZER_LEFTP: EQU 31
-TOKENIZER_RIGHTP: EQU 32
+TOKENIZER_LEFTPAREN: EQU 31
+TOKENIZER_RIGHTPAREN: EQU 32
 TOKENIZER_LT: EQU 33
 TOKENIZER_GT: EQU 34
 TOKENIZER_EQ: EQU 35
@@ -65,8 +65,6 @@ DUMPMODE:     EQU 2
 BLOCKMODE:    EQU 3
 FILLMODE:     EQU 4
 
-STACK: EQU 01000h
-
          ORG 0f000h
          BR eprom
          ORG 0f003h
@@ -74,15 +72,7 @@ eprom:
 ;
 ; Setup Stack
 ;
-         MVIW R1,STACK
-;
-; BASIC variables
-;
-BASIC_VARS: EQU 0100h
-;BASIC variables
-bas_ended: EQU 0200h
-    db 0
-
+         : EQU 00 R1,2000h
 ;
 ; SERIAL OUT SETUP
 ;
@@ -1463,11 +1453,11 @@ exe_factor:
     RET
 
 exe_factor1:
-    LDTI TOKENIZER_LEFTP
+    LDTI TOKENIZER_LEFTPAREN
     BRNEQ exe_factor2
     JSR exe_accept
     JSR exe_expr
-    LDAI TOKENIZER_RIGHTP
+    LDAI TOKENIZER_RIGHTPAREN
     JSR exe_accept
     RET
 
@@ -1639,7 +1629,7 @@ exe_print_stmt3:
     BREQ exe_print_stmt4
     ldti TOKENIZER_NUMBER
     breq exe_print_stmt4
-    ldai  TOKENIZER_LEFTP
+    ldai  TOKENIZER_LEFTPAREN
     breq exe_print_stmt4
 
     br exe_print_stmt_done
@@ -1652,7 +1642,7 @@ exe_print_stmt_test:
     jsr tok_token
     LDTI TOKENIZER_CR
     breq exe_print_stmt_done
-    LDTI TOKENIZER_EOF
+    LDTI TOKENIZER_ENDOFINPUT
     breq exe_print_stmt_done
     br exe_print_stmt_loop
 
@@ -1699,51 +1689,16 @@ exe_run:
   on
 
 exe_finished:
-  MVIW R2,bas_ended
-  LDAVR R2
-  LDTI 1
-  BREQ exe_finished_yes
-  JSR tok_finished
-  LDTI 1
-  BREQ exe_finished_yes
-  LDAI 0
-  RET
-exe_finished_yes:
-  LDAI 1
-  ret
+  on
 
-;
-; R7 value (only using low byte)
-; ACCUMULATOR Variable ref number
-;
 exe_set_variable:
-; set var numbers
-  MVIW R2,BASIC_VARS
-  MVARL R2
-;
-  MVRLA R7
-  STAVR R2
-  RET
-;
-; ACCUMULATOR HOLDS VARIABLE REF NUMBER, VALUE RETURN IN R7
-; HACK for now BASIC_VARS needs to be 256 byte 0xAA00 aligned
-; and only 0-25 (var names a-z) supported
-; for now values are 1 byte
-;
+  on
+
 exe_get_variable:
-; set var numbers
-  MVIW R2,BASIC_VARS
-  MVARL R2
-;
-  LDAVR R2
-  MVARL R7
-  LDAI 0
-  MVARH R7
-  RET
+  on
 
 tok_token:
 tok_next:
 tok_num:
 tok_variable_num:
 tok_string:
-tok_finished:
