@@ -1,5 +1,6 @@
-2 print "start"
-4 b=50
+1 print "start"
+2 b=50
+3 print "before gosub"
 5 gosub 100
 6 z=100
 10 let a=1

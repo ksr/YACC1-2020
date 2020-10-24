@@ -277,7 +277,8 @@ tokenizer_next(void) {
                 break;
             case TOKENIZER_STRING:
                 DEBUG_PRINTF("-ptr = %d\n", tokenBufferPtr);
-                tokenBufferPtr += (strlen(&tokenBuffer[tokenBufferPtr]) + 1);
+                // oct 21 tokenBufferPtr += (strlen(&tokenBuffer[tokenBufferPtr]) + 1);
+                tokenBufferPtr += (strlen(&tokenBuffer[tokenBufferPtr]) + 1); // + 2 null and token_string
                 DEBUG_PRINTF("--ptr = %d\n", tokenBufferPtr);
                 break;
             case TOKENIZER_VARIABLE:
@@ -331,7 +332,8 @@ tokenizer_string(char *dest, int len) {
         memcpy(dest, ptr + 1, string_len);
         dest[string_len] = 0;
     } else {
-        memcpy(dest, &tokenBuffer[tokenBufferPtr], strlen(&tokenBuffer[tokenBufferPtr]));
+        // orig oct 21 memcpy(dest, &tokenBuffer[tokenBufferPtr], strlen(&tokenBuffer[tokenBufferPtr]));
+        memcpy(dest, &tokenBuffer[tokenBufferPtr+1], strlen(&tokenBuffer[tokenBufferPtr+1])); //added +1 to skip over token_string
         dest[strlen(&tokenBuffer[tokenBufferPtr])] = 0;
     }
 }
@@ -716,6 +718,11 @@ void removeLine(int lineNumber) {
         tokenBuffer[i] = tokenBuffer[i + removeLength];
     endOfBuffer-=removeLength;
     tokenBuffer[endOfBuffer]=TOKENIZER_ENDOFINPUT;
+}
+
+int tokenizer_find(int lineNum){
+    
+    return(findLine(lineNum));
 }
 
 int findLine(int lineNumber) {

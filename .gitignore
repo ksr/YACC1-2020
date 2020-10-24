@@ -18,3 +18,5 @@
 Software/ubasic-master/tokenizer.o
 Software/ubasic-master/use-ubasic.o
 Software/ubasic-master/tokenizer.o
+/Software/emulator/dist/
+/Software/emulator/build/

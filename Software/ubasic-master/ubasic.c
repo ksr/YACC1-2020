@@ -85,7 +85,9 @@ void
 ubasic_init(const char *program) {
     program_ptr = program;
     for_stack_ptr = gosub_stack_ptr = 0;
+#ifdef unused
     index_free();
+#endif
     tokenizer_init(program);
     ended = 0;
 }
@@ -94,7 +96,9 @@ void
 new_ubasic_init(int ptr) {
     program_ptr = ptr;
     for_stack_ptr = gosub_stack_ptr = 0;
+#ifdef unused
     index_free();
+#endif
     new_tokenizer_init(ptr);
     ended = 0;
 }
@@ -104,7 +108,9 @@ void
 ubasic_init_peek_poke(const char *program, peek_func peek, poke_func poke) {
     program_ptr = program;
     for_stack_ptr = gosub_stack_ptr = 0;
+#ifdef unused
     index_free();
+#endif
     peek_function = peek;
     poke_function = poke;
     tokenizer_init(program);
@@ -258,6 +264,7 @@ relation(void) {
 }
 
 /*---------------------------------------------------------------------------*/
+#ifdef unused
 static void
 index_free(void) {
     if (line_index_head != NULL) {
@@ -271,10 +278,17 @@ index_free(void) {
         line_index_head = NULL;
     }
 }
-
+#endif
 /*---------------------------------------------------------------------------*/
+
+int index_find(int linenum){
+    return(tokenizer_find(linenum));
+}
+
+#ifdef unused
 static char const*
 index_find(int linenum) {
+
     struct line_index *lidx;
     lidx = line_index_head;
 
@@ -301,8 +315,10 @@ index_find(int linenum) {
     DEBUG_PRINTF("index_find: Returning NULL.\n", linenum);
     return NULL;
 }
+#endif
 
 /*---------------------------------------------------------------------------*/
+#ifdef unused
 static void
 index_add(int linenum, char const* sourcepos) {
     if (line_index_head != NULL && index_find(linenum)) {
@@ -326,8 +342,10 @@ index_add(int linenum, char const* sourcepos) {
     DEBUG_PRINTF("index_add: Adding index for line %d: %d.\n", linenum,
             sourcepos);
 }
+#endif
 
 /*---------------------------------------------------------------------------*/
+#ifdef unused
 static void
 jump_linenum_slow(int linenum) {
     new_tokenizer_init(program_ptr);
@@ -344,16 +362,22 @@ jump_linenum_slow(int linenum) {
         DEBUG_PRINTF("jump_linenum_slow: Found line %d\n", tokenizer_num());
     }
 }
-
+#endif
 /*---------------------------------------------------------------------------*/
 static void
 jump_linenum(int linenum) {
-    char const* pos = index_find(linenum);
-    if (pos != NULL) {
+    int pos = index_find(linenum);
+    if (pos != -1) {
         DEBUG_PRINTF("jump_linenum: Going to line %d.\n", linenum);
         new_tokenizer_goto(pos);
     } else {
         /* We'll try to find a yet-unindexed line to jump to. */
+        printf("Line not found %d\n",linenum);
+        accept(TOKENIZER_CR);
+        ended=1;
+        //tokenizer_next();
+        return;
+        //KEN what happens when line not found
         DEBUG_PRINTF("jump_linenum: Calling jump_linenum_slow.\n", linenum);
         jump_linenum_slow(linenum);
     }
@@ -616,7 +640,9 @@ statement(void) {
 static void
 line_statement(void) {
     DEBUG_PRINTF("----------- Line number %d ---------\n", tokenizer_num());
+#ifdef unused
     index_add(tokenizer_num(), tokenizer_pos());
+#endif
     accept(TOKENIZER_LINENUM);
     statement();
     return;
