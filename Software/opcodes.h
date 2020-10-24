@@ -31,6 +31,8 @@ extern "C" {
 #define        JSR      0X04
 #define        RET      0x05
 #define        JSRUR    0x06
+#define        PUSHR    0x07
+#define        POR      0x08
 #define        PUSH     0x09
 #define        POP      0x0A
 #define        MVAT     0x0B

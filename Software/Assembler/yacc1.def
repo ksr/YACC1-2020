@@ -16,6 +16,10 @@ RET
 05
 JSRUR \{regs}
 06 \1
+PUSHR \{regs}
+07 1
+POPR \{regs}
+08 1<<4
 PUSH
 09
 POP

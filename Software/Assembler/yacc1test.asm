@@ -1,4 +1,6 @@
 
+;
+; Hardware info
 UARTA0:       EQU 000h
 UARTA1:       EQU 008h
 UARTA2:       EQU 010h
@@ -17,6 +19,9 @@ TIL311:       EQU 080H
 CNTL-PORT:    EQU "P0"
 DATAPORT:     EQU "P1"
 
+;
+; Basic interpreter tokens
+;
 TOKENIZER_ERROR: EQU 00
 TOKENIZER_EOF: EQU 01
 TOKENIZER_NUMBER: EQU 02
@@ -65,8 +70,14 @@ DUMPMODE:     EQU 2
 BLOCKMODE:    EQU 3
 FILLMODE:     EQU 4
 
+;
+; Setup Stack, use R1
+;
 STACK: EQU 01000h
 
+;
+; remap eprom from 0x0000 to 0xf000 by initial access to 0xf003 via BRanch
+;
          ORG 0f000h
          BR eprom
          ORG 0f003h
@@ -75,13 +86,49 @@ eprom:
 ; Setup Stack
 ;
          MVIW R1,STACK
+
 ;
-; BASIC variables
+; BASIC interpreter user variables area
+; currently 26 1-byte variables
+; for now must be 0xAA00 (256 byte) aligned
 ;
 BASIC_VARS: EQU 0100h
-;BASIC variables
+
+;
+; Basic interpreter internal variables
+;
 bas_ended: EQU 0200h
-    db 0
+
+;
+; for next statement stack ptr
+;
+bas_forstackptr: EQU 0202h
+
+;
+; for next stack data
+; format
+;   2 bytes ptr to line after for instruction (format HL)
+;   2 bytes for variable id (only first byte used for now)
+;   2 bytes to value (upper value) (format HL) (only first byte used for now)
+; later add step amount
+;
+bas_forstack: EQU 0204h
+
+;
+; gosub stack ptr
+;
+bas_gosubptr: EQU 0240
+
+;
+; gosub STACK
+; format
+;   2 bytes return location ptr
+;
+bas_gosubstack: EQU 0242h
+
+;
+; basic interpreter, add IO and peek/poke
+;
 
 ;
 ; SERIAL OUT SETUP
@@ -643,11 +690,19 @@ testexamine:
       BREQ tests
       LDTI 0Dh
       BREQ continue
+;
+; add for emulator
+;
+      LDTI 0ah
+      BREQ continue
 
       MVIW R2,CRLF
+
       JSR stringout
+
       MVIW R2,ERROR
       JSR stringout
+
       MVIW R2,helpmenu
       JSR stringout
       BR cmdloop
@@ -941,6 +996,34 @@ showaddr:   Push
             POP
             RET
 ;
+; display R7 followed by a ":" and " "
+;
+showr7:   Push
+            MVRHA R7
+            SHR
+            SHR
+            SHR
+            SHR
+            JSR shownibble
+            MVRHA R7
+            ANDI 0FH
+            JSR shownibble
+            MVRLA R7
+            SHR
+            SHR
+            SHR
+            SHR
+            JSR shownibble
+            MVRLA R7
+            ANDI 0FH
+            JSR shownibble
+            LDAI ':'
+            JSR uartout
+            LDAI ' '
+            JSR uartout
+            POP
+            RET
+;
 ;
 ;
 showregs:
@@ -1086,6 +1169,12 @@ sloopdone:
 ;
 charout:
 uartout:
+;
+; add for emulator
+;
+        outa p2
+        ret
+;
         PUSH
         push
 ; doubt 2nd push pop is needed, to be tested
@@ -1118,6 +1207,12 @@ uartoutw:
 ; input UART to accumulator
 ;
 uartin:
+;
+; add for emulator
+;
+        inp p2
+        ret
+;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
         ANDI  01h
@@ -1407,17 +1502,58 @@ endmenu: DB "-",0
 ;     XORI  055H
 ;     OUTA  P1
       JSRUR R2
-
-bas1: dw "unexpected token"
-
-exe:
-  on
-
-exe_init:
-  on
+;
+; basic interpreter messages
+;
+bas_msg1: db "unexpected token",0,0ah,0dh
+bas_msg2: db "line not found",0,0ah,0dh
+bas_msg3: db "Basic instruction not found",0ah,0dh
 
 ;
-; compare and eat token in accumulator to current token in buffer
+; Basic interpreter - execution engine
+; Register Usage
+; R0 - Program Counter
+; R1 - Stack Pointer
+; R2 - Used to send strings for output - assume destructive
+; R3 - Basic Interpreter Token Buffer ptr
+; R4 - working register
+; R5 - working register
+; R6 - Working register
+; R7 - return value
+;
+exe:
+
+;
+; void ubasic_init()
+;
+; Setup basic interpreter execution engine
+;
+; destorys R4 and accumulator
+;
+exe_init:
+    MVIW R4,bas_gosubptr
+    LDAI 0
+    STAVR R4
+    INCR R4
+    STAVR R4
+    MVIW R4,bas_forstackptr
+    LDAI 0
+    STAVR R4
+    INCR R4
+    STAVR R4
+    MVIW R4,bas_ended
+    LDAI 0
+    STAVR R4
+;
+; initialize tokenbufferptr to start of tokenBuffer (actual memory address)
+    JSR tok_init
+    RET
+
+;
+; void accept(int)
+;
+; compare accumulator with current token then advance to next token in buffer
+; assume accumulator destroyed
 ;
 exe_accept:
     push
@@ -1428,26 +1564,36 @@ exe_accept:
     MVAT
     POP
     BREQ exe_accept_done
-    mviw r2,bas1
+    mviw r2,bas_msg1
+    JSR bas_error
 exe_accept_done:
     jsr tok_next
     RET
 
 ;
-; get variable value pointed to by tok_variable_num in token stream (this is not a value but a variable id)
-; return value in r7
+; int varfactor()
+;
+; get variable id pointed to by tok_variable_num in token stream
+; (this is not a value but a variable id)
+; value returned by exe_get_variable in r7
+;
+; return value in R7
 ;
 exe_varfactor:
 ; get variable number id (one byte for now a-z) into accumulator
 ;
-  jsr tok_variable_num
+    jsr tok_variable_num
 ;
-; variable name in accumulator, return in r7
-  jsr exe_get_variable
-  RET
+; variable id in accumulator, return in r7
+;
+    jsr exe_get_variable
+    LDAI TOKENIZER_VARIABLE
+    JSR exe_accept
+    RET
 
 ;
-; return value in r7
+; int factor()
+; return value in R7
 ;
 exe_factor:
 ;
@@ -1476,54 +1622,83 @@ exe_factor2:
     ret
 
 ;
-;
+; int term()
+; R5 = F1
+; R6 = F2
+; R7 = return value
 ;
 exe_term:
+    pushr r5
+    pushr r6
+
     jsr exe_factor
+    MOVRR r7,r5
 
 exe_term_loop:
-    MOVRR r7,r6
     jsr tok_token
-    LDAI TOKENIZER_ASTR
+    ldti TOKENIZER_ASTR
     BREQ exe_term_astr
-    LDAI TOKENIZER_SLASH
+    LDTI TOKENIZER_SLASH
     breq exe_term_slash
-    ldai TOKENIZER_MOD
+    ldti TOKENIZER_MOD
     breq exe_term_mod
     br exe_term_done
 
 exe_term_astr:
     jsr tok_next
     jsr exe_factor
+    movrr r7,r6
+;
+; do mulitply f1 = f1 * f2
+;
     BR exe_term_loop
 
 exe_term_slash:
     jsr tok_next
     jsr exe_factor
+    movrr r7,r6
+;
+; do divide f1 = f1 / f2
+;
     BR exe_term_loop
 
 exe_term_mod:
     jsr tok_next
     jsr exe_factor
+    movrr r7,r6
+;
+; f1 = f1 % f2
+;
     BR exe_term_loop
 
 exe_term_done:
+    MOVRR r5,r7
+    popr r6
+    popr r5
     ret
-
+;
+; static VARIABLE_TYPE expr()
+;
+; R5 = t1
+; R6 = t2
+; R7 = return value
+;
 exe_expr:
+    pushr r5
+    pushr r6
+
     jsr exe_term
+    MOVRR r7,r5
 
 exe_expr_loop:
-    MOVRR r7,r6
     jsr tok_token
-
-    LDAI TOKENIZER_PLUS
+    ldtI TOKENIZER_PLUS
     BREQ exe_expr_plus
-    LDAI TOKENIZER_MINUS
+    ldtI TOKENIZER_MINUS
     breq exe_expr_minus
-    LDAI TOKENIZER_AND
+    ldtI TOKENIZER_AND
     breq exe_expr_and
-    ldai TOKENIZER_OR
+    ldti TOKENIZER_OR
     breq exe_expr_or
 
     br exe_expr_done
@@ -1531,38 +1706,66 @@ exe_expr_loop:
 exe_expr_plus:
     jsr tok_next
     jsr exe_term
+    movrr r7,r6
+;
+; t1 = t1 + t2
+;
     BR exe_expr_loop
 
 exe_expr_minus:
     jsr tok_next
     jsr exe_term
+    movrr r7,r6
+;
+; t1 = t1 - t2
+;
     BR exe_expr_loop
 
 exe_expr_and:
     jsr tok_next
     jsr exe_term
+    movrr r7,r6
+;
+; t1 = t1 & t2
+;
     BR exe_expr_loop
 
 exe_expr_or:
     jsr tok_next
     jsr exe_term
+    movrr r7,r6
+;
+; t1 = t1 | t2
+;
     BR exe_expr_loop
 
 exe_expr_done:
+    MOVRR r5,r7
+    popr r6
+    popr r5
     ret
+;
+; int relation ()
+;
+; R5 = r1
+; R6 = r2
+; R7 = return value
+;
 
 exe_relation:
+    pushr r5
+    pushr r6
+
     jsr exe_expr
+    MOVRR r7,r5
 
 exe_relation_loop:
-    MOVRR r7,r6
     jsr tok_token
-
-    ldai TOKENIZER_LT
+    LDTI TOKENIZER_LT
     BREQ exe_relation_lt
-    LDAI TOKENIZER_GT
+    ldti TOKENIZER_GT
     breq exe_relation_gt
-    ldai TOKENIZER_EQ
+    ldti TOKENIZER_EQ
     breq exe_relation_eq
 
     br exe_relation_done
@@ -1570,82 +1773,129 @@ exe_relation_loop:
 exe_relation_lt:
     jsr tok_next
     jsr exe_expr
+    movrr r7,r6
+;
+; r1 = r1 < r2
+;
     BR exe_relation_loop
 
 exe_relation_gt:
     jsr tok_next
     jsr exe_expr
+    movrr r7,r6
+;
+; r1 = r1 > r2
+;
+
     BR exe_relation_loop
 
 exe_relation_eq:
     jsr tok_next
     jsr exe_expr
+    movrr r7,r6
+;
+; r1 = r1 == r2
+;
     BR exe_relation_loop
 
 exe_relation_done:
+    MOVRR r5,r7
+    popr r6
+    popr r5
     ret
 
-exe_index_free:
-  on
-
+;
+; char * index_find (int linenum)
+;
+; call with line in R7
+; return with val in R7 - tokenbuffer ptr
+;
 exe_index_find:
-  on
+    JSR tok_find
+    RET
 
-exe_index_add:
-  on
-
-exe_jump_line_low:
-  on
-
+;
+; void jump_linenum(linenum)
+;
+; Linenum in R7
+;
 exe_jump_line:
-  on
+    JSR exe_index_find
+    MVRHA R7
+    BRNZ exe_jump_line1
+    MVRLA R7
+    BRNZ exe_jump_line1
+;
+; returned 0 line not found
+;
+    LDAI TOKENIZER_CR
+    JSR exe_accept
+    MVIW r4,bas_ended
+    LDAI 1
+    STAVR R4
+    ret
 
+exe_jump_line1:
+    ret
+
+;
+; void goto_statement()
+;
 exe_goto_stmt:
-  on
-
+    LDAI TOKENIZER_GOTO
+    JSR exe_accept
+    JSR exe_expr
+    JSR exe_jump_line
+    RET
+;
+; void print_statment()
+;
 exe_print_stmt:
-  LDAI TOKENIZER_PRINT
-  jsr exe_accept
+    LDAI TOKENIZER_PRINT
+    jsr exe_accept
 
 exe_print_stmt_loop:
-  jsr tok_token
-  LDAI TOKENIZER_STRING
-  BRNEQ exe_print_stmt1
+    jsr tok_token
+    LDTI TOKENIZER_STRING
+    BRNEQ exe_print_stmt1
 ;
 ; this should return string to print in r2
+; tok_string may not be needed tokenbufferptr is at string ?
 ;
-  jsr tok_string
-  jsr stringout
-  jsr tok_next
-  br exe_print_stmt_test
+    jsr tok_string
+    movrr r4,r2
+    jsr stringout
+    jsr tok_next
+    br exe_print_stmt_test
 
 exe_print_stmt1:
 
-  ldti TOKENIZER_COMMA
-  BRNEQ exe_print_stmt2
-  LDAI ' '
-  JSR charout
-  jsr tok_next
-  br exe_print_stmt_test
+    ldti TOKENIZER_COMMA
+    BRNEQ exe_print_stmt2
+    LDAI ' '
+    JSR charout
+    jsr tok_next
+    br exe_print_stmt_test
 
 exe_print_stmt2:
-  ldti TOKENIZER_SEMICOLON
-  BRNEQ exe_print_stmt3
-  jsr tok_next
-  br exe_print_stmt_test
+    ldti TOKENIZER_SEMICOLON
+    BRNEQ exe_print_stmt3
+    jsr tok_next
+    br exe_print_stmt_test
 
 exe_print_stmt3:
-    ldai TOKENIZER_VARIABLE
+    ldti TOKENIZER_VARIABLE
     BREQ exe_print_stmt4
     ldti TOKENIZER_NUMBER
     breq exe_print_stmt4
-    ldai  TOKENIZER_LEFTP
+    ldti  TOKENIZER_LEFTP
     breq exe_print_stmt4
 
     br exe_print_stmt_done
 
 exe_print_stmt4:
     jsr exe_expr
+    JSR showr7
 ;   br exe_print_stmt_test // falls through
 
 exe_print_stmt_test:
@@ -1662,68 +1912,227 @@ exe_print_stmt_done:
     jsr tok_next
     ret
 
+;
+; void if_statement()
+;
 exe_if_stmt:
-  on
+    halt
+    LDAI TOKENIZER_IF
+    JSR exe_accept
 
-exe_let_statement:
-  on
+    JSR exe_relation
+    LDAI TOKENIZER_THEN
+    JSR exe_accept
+    LDTI 1
+    BRNEQ exe_if_stmt1
+    JSR exe_stmt
+exe_if_stmt1:
+    jsr TOKENIZER_NEXT
+;    ////////
 
-exe_gosub_statement:
-  on
-
-exe_return:
-  on
-
-exe_next_statement:
-  on
-
-exe_for_statement:
-  on
-
-exe_peek_statement:
-  on
-
-exe_poke_statement:
-  on
-
-exe_end_statement:
-  on
-
-exe_statement:
-  on
-
-exe_line_statement:
-  on
-
-exe_run:
-  on
-
-exe_finished:
-  MVIW R2,bas_ended
-  LDAVR R2
-  LDTI 1
-  BREQ exe_finished_yes
-  JSR tok_finished
-  LDTI 1
-  BREQ exe_finished_yes
-  LDAI 0
-  RET
-exe_finished_yes:
-  LDAI 1
+;
+; void let_statement()
+;
+exe_let_stmt:
+  jsr tok_variable_num
+  movrr r7,r5
+  ldai TOKENIZER_VARIABLE
+  jsr exe_accept
+  ldai TOKENIZER_EQ
+  jsr exe_accept
+  jsr exe_expr
+  mvrla r5
+  JSR exe_set_variable
   ret
 
+;
+; void gosub_statement()
+;
+exe_gosub_stmt:
+  halt
+
+;
+; void return_statment()
+;
+exe_return_stmt:
+  halt
+
+;
+; void next_statement()
+;
+exe_next_stmt:
+  halt
+
+;
+; void for_statement()
+;
+exe_for_stmt:
+  halt
+
+;
+; void peek_statment()
+;
+exe_peek_stmt:
+  halt
+
+;
+; void poke_statement()
+;
+exe_poke_stmt:
+  halt
+
+;
+; void end_statement()
+;
+exe_end_stmt:
+  mviw r4,bas_ended
+  LDAI 1
+  STAVR r4
+  ret
+;
+; void statment()
+;
+exe_stmt:
+    jsr tok_token
+
+    LDTI TOKENIZER_PRINT
+    BRNEQ exe_stmt1
+    JSR exe_print_stmt
+    ret
+
+exe_stmt1:
+    LDTI TOKENIZER_IF
+    BRNEQ exe_stmt2
+    JSR exe_if_stmt
+    ret
+
+exe_stmt2:
+    LDTI TOKENIZER_GOTO
+    BRNEQ exe_stmt3
+    JSR exe_goto_stmt
+    ret
+
+exe_stmt3:
+    LDTI TOKENIZER_GOSUB
+    BRNEQ exe_stmt4
+    JSR exe_gosub_stmt
+    ret
+
+exe_stmt4:
+    LDTI TOKENIZER_RETURN
+    BRNEQ exe_stmt5
+    JSR exe_return_stmt
+    ret
+
+exe_stmt5:
+    LDTI TOKENIZER_FOR
+    BRNEQ exe_stmt6
+    JSR exe_for_stmt
+    ret
+
+exe_stmt6:
+    LDTI TOKENIZER_PEEK
+    BRNEQ exe_stmt7
+    JSR exe_peek_stmt
+    ret
+
+exe_stmt7:
+    LDTI TOKENIZER_POKE
+    BRNEQ exe_stmt8
+    JSR exe_poke_stmt
+    ret
+
+exe_stmt8:
+    LDTI TOKENIZER_NEXT
+    BRNEQ exe_stmt9
+    JSR exe_next_stmt
+    ret
+
+exe_stmt9:
+    LDTI TOKENIZER_END
+    BRNEQ exe_stmt10
+    JSR exe_end_stmt
+    ret
+
+exe_stmt10:
+    LDTI TOKENIZER_LET
+    BRNEQ exe_stmt11
+    LDTI TOKENIZER_LET
+    JSR exe_accept
+    JSR exe_let_stmt
+    ret
+
+exe_stmt11:
+    LDTI TOKENIZER_VARIABLE
+    BRNEQ exe_stmt12
+    JSR exe_let_stmt
+    ret
+
+exe_stmt12:
+    MVIW R2,bas_msg3
+    jsr stringout
+    jsr bas_error
+
+;
+; void line_statement
+;
+exe_line_stmt:
+;line_statement(void) {
+;    DEBUG_PRINTF("----------- Line number %d ---------\n", tokenizer_num());
+;#ifdef unused
+;    index_add(tokenizer_num(), tokenizer_pos());
+;#endif
+;    accept(TOKENIZER_LINENUM);
+;    statement();
+;    return;
+    halt
+
+;
+; void ubasic_run()
+;
+exe_run:
+    jsr tok_finished
+    LDTI 1
+    BRNEQ exe_run_cont
+    ret
+
+exe_run_cont:
+    jsr exe_line_stmt
+    ret
+
+;
+; int ubasic_finished()
+;
+exe_finished:
+    MVIW R2,bas_ended
+    LDAVR R2
+    LDTI 1
+    BREQ exe_finished_yes
+    JSR tok_finished
+    LDTI 1
+    BREQ exe_finished_yes
+    LDAI 0
+    RET
+exe_finished_yes:
+    LDAI 1
+    ret
+
+;
+; void ubasic_set_variable(int varnum, VARIABLE_TYPE value)
 ;
 ; R7 value (only using low byte)
 ; ACCUMULATOR Variable ref number
 ;
 exe_set_variable:
-; set var numbers
-  MVIW R2,BASIC_VARS
-  MVARL R2
+;   set var numbers
+    MVIW R2,BASIC_VARS
+    MVARL R2
 ;
-  MVRLA R7
-  STAVR R2
-  RET
+    MVRLA R7
+    STAVR R2
+    RET
+;
+; VARIABLE_TYPE ubasic_get_variable(int varnum)
 ;
 ; ACCUMULATOR HOLDS VARIABLE REF NUMBER, VALUE RETURN IN R7
 ; HACK for now BASIC_VARS needs to be 256 byte 0xAA00 aligned
@@ -1731,19 +2140,24 @@ exe_set_variable:
 ; for now values are 1 byte
 ;
 exe_get_variable:
-; set var numbers
-  MVIW R2,BASIC_VARS
-  MVARL R2
+;   set var numbers
+    MVIW R2,BASIC_VARS
+    MVARL R2
 ;
-  LDAVR R2
-  MVARL R7
-  LDAI 0
-  MVARH R7
-  RET
+    LDAVR R2
+    MVARL R7
+    LDAI 0
+    MVARH R7
+    RET
+
+
+bas_error:
 
 tok_token:
+tok_init:
 tok_next:
 tok_num:
 tok_variable_num:
 tok_string:
 tok_finished:
+tok_find:
