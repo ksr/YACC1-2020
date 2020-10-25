@@ -151,10 +151,13 @@ int main(int argc, char *argv[]) {
             } else if (strncmp(linebuff, "list", 4) == 0) {
                 DEBUG_PRINTF(" do list\n");
                 detokenize();
-            }  else if (strncmp(linebuff, "dump", 4) == 0) {
+            } else if (strncmp(linebuff, "dump", 4) == 0) {
                 DEBUG_PRINTF(" do list\n");
-                dumpBuffer(0,350);
-            }else {
+                dumpBuffer(0, 350);
+            } else if (strncmp(linebuff, "dhex", 4) == 0) {
+                DEBUG_PRINTF(" do list\n");
+                dumpBufferHex(0, 350);
+            } else {
                 tokenizeLine(linebuff);
             }
 
@@ -163,24 +166,24 @@ int main(int argc, char *argv[]) {
 
 
 #ifdef OLD
-tokenizer_tokenize(); // set mode
+    tokenizer_tokenize(); // set mode
 
-char *buff = tokenize(source);
+    char *buff = tokenize(source);
 
-tokenizer_run();
+    tokenizer_run();
 
-printf("tokening done\n");
+    printf("tokening done\n");
 
-//new_ubasic_init(buff); //probably should be 0
+    //new_ubasic_init(buff); //probably should be 0
 
-new_ubasic_init(0);
-//ubasic_init(program); orignal code
+    new_ubasic_init(0);
+    //ubasic_init(program); orignal code
 
-do {
-    ubasic_run();
-} while (!ubasic_finished());
+    do {
+        ubasic_run();
+    } while (!ubasic_finished());
 
-return 0;
+    return 0;
 #endif
 }
 

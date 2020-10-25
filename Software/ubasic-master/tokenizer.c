@@ -630,6 +630,23 @@ dumpBuffer(int start, int end) {
 
 }
 
+dumpBufferHex(int start, int end) {
+    int i;
+
+
+    printf("dump buffer hex start=%d end=%d\n", start, end);
+
+    for (i = start; i < end; i++) {
+        if ((i & 0x0000f) == 0) {
+            printf("\n\tDB   %02xh", tokenBuffer[i]);
+            i++;
+        }
+        printf(", %02xh", tokenBuffer[i]);
+    }
+    printf("\n");
+
+}
+
 int firstLineOut = 1;
 
 void addLine(char *buff) {
