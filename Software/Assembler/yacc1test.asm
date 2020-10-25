@@ -188,29 +188,29 @@ tttt:
         JSRUR R2
 
 alltests:
-         jsr shltest
-         JSR shrtest
-         jsr rshltest
-         jsr rshrtest
-         jsr cshltest
-         JSR cshrtest
-         JSR pshltest
-         JSR additest
-         JSR addictest
-         JSR subtest
-         JSR cmptest
-         JSR shrtest
-         JSR shltest
-         JSR rshrtest
-         JSR rshltest
-         JSR cshltest
-         JSR cshrtest
-         JSR accumtest
-         JSR pushpoptest
-         JSR ortest
-         JSR orttest
-         JSR additest
-         JSR movrrtest
+;         jsr shltest
+;         JSR shrtest
+;         jsr rshltest
+;         jsr rshrtest
+;         jsr cshltest
+;         JSR cshrtest
+;         JSR pshltest
+;         JSR additest
+;         JSR addictest
+;         JSR subtest
+;         JSR cmptest
+;         JSR shrtest
+;         JSR shltest
+;         JSR rshrtest
+;         JSR rshltest
+;         JSR cshltest
+;         JSR cshrtest
+;         JSR accumtest
+;         JSR pushpoptest
+;         JSR ortest
+;         JSR orttest
+;         JSR additest
+;         JSR movrrtest
 
 testsdone:
           JSR lblink
@@ -655,6 +655,7 @@ cmpres:
 ;
 ; R      - SHOW REGISTERS
 ;
+; Z      - Basic Interpreter
 ;
 ; Output Prompt
 :
@@ -665,6 +666,12 @@ cmdloop:
 
       JSR uartin
       JSR toupper
+;
+; added for emulator eat cr next 3 lines
+;
+;      push
+;      JSR uartin
+;      pop
       LDTI 'H'
       BRNEQ testexamine
       MVIW R2,CRLF
@@ -674,6 +681,8 @@ cmdloop:
       BR cmdloop
 
 testexamine:
+      LDTI 'Z'
+      BREQ cmd_basic
       LDTI 'B'
       BREQ dumpblock
       LDTI 'D'
@@ -730,6 +739,10 @@ continue:
        BR cmdloop
 
 stop:   BR stop
+
+cmd_basic:
+       jsr do_basic
+       BR cmdloop
 
 dumpblock:
        MVIB R6,BLOCKMODE
@@ -1172,8 +1185,8 @@ uartout:
 ;
 ; add for emulator
 ;
-        outa p2
-        ret
+;        outa p2
+;        ret
 ;
         PUSH
         push
@@ -1210,8 +1223,8 @@ uartin:
 ;
 ; add for emulator
 ;
-        inp p2
-        ret
+;        inp p2
+;        ret
 ;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
@@ -1281,6 +1294,10 @@ delayb:
 ; quick blink LED
 ;
 blink:
+;
+; added for emulator
+;
+;        ret
         Push
         ON
         MVIW R7,03FFh
@@ -1301,6 +1318,10 @@ offloop:
 ; long blink LED
 ;
 lblink:
+;
+; emulator change
+;
+;        ret
         Push
         ON
         MVIW R7,018FFh
@@ -1320,6 +1341,10 @@ loffloop:
 ;
 ; blink n times in accumulator
 ;
+;
+; emulator change
+;
+;    ret
 nblink:
         push
 nblinkloop:
@@ -1341,9 +1366,9 @@ PROMPT: DB ">>",0
 CRLF: DB 0ah,0dh,0
 ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
 CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0
-DUMPMSG: DB 0ah,0dh,"DUMP ADDRESS:",0
-DUMPBLOCKMSG: DB 0ah,0dh,"DUMP BLOCK ADDRESS:",0
-FILLMSG: DB 0ah,0dh,"FILL BLOCK ADDRESS:",0
+DUMPMSG: DB 0ah,0dh,"DUMP ADDR:",0
+DUMPBLOCKMSG: DB 0ah,0dh,"DUMP BLOCK ADDR:",0
+FILLMSG: DB 0ah,0dh,"FILL BLOCK ADDR:",0
 GOMSG: DB 0ah,0dh,"GO ADDRESS:",0
 EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
 CONTMSG: DB "CONTINUE MODE",0
@@ -1364,6 +1389,7 @@ DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
 DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
 DB "R      - Show registers",0ah,0dh
 DB "T      - Test menu",0ah,0DH
+DB "Z      - Run Basic interpreter",0ah,0DH
 DB 0
 ;
 ; TEST HELP MESSAGES
@@ -1386,7 +1412,6 @@ TESTMSG: DB "Run test code",0ah,0dh,0
 ;
 ; TEST MENU
 ;
-      DB "AAAAAAAAAAAAAAAAAAAAAAAAA"
 testmenu:
       DW ortest,ormenu
       DW orttest,ortmenu
@@ -1507,7 +1532,7 @@ endmenu: DB "-",0
 ;
 bas_msg1: db "unexpected token",0,0ah,0dh
 bas_msg2: db "line not found",0,0ah,0dh
-bas_msg3: db "Basic instruction not found",0ah,0dh
+bas_msg3: db "Basic ins not found ",0ah,0dh
 
 ;
 ; Basic interpreter - execution engine
@@ -1529,6 +1554,7 @@ exe:
 ; Setup basic interpreter execution engine
 ;
 ; destorys R4 and accumulator
+; ?? Should these pointers be zero based or actual address in memory
 ;
 exe_init:
     MVIW R4,bas_gosubptr
@@ -1546,6 +1572,7 @@ exe_init:
     STAVR R4
 ;
 ; initialize tokenbufferptr to start of tokenBuffer (actual memory address)
+;
     JSR tok_init
     RET
 
@@ -1863,7 +1890,7 @@ exe_print_stmt_loop:
 ; tok_string may not be needed tokenbufferptr is at string ?
 ;
     jsr tok_string
-    movrr r4,r2
+    movrr r7,r2
     jsr stringout
     jsr tok_next
     br exe_print_stmt_test
@@ -2071,10 +2098,12 @@ exe_stmt11:
 exe_stmt12:
     MVIW R2,bas_msg3
     jsr stringout
+    jsr showaddr
+    jsr showbyte
     jsr bas_error
 
 ;
-; void line_statement
+; void line_statement (void)
 ;
 exe_line_stmt:
 ;line_statement(void) {
@@ -2085,11 +2114,17 @@ exe_line_stmt:
 ;    accept(TOKENIZER_LINENUM);
 ;    statement();
 ;    return;
-    halt
+    LDAI TOKENIZER_LINENUM
+    jsr exe_accept
+    jsr exe_stmt
+    ret
 
 ;
 ; void ubasic_run()
 ;
+do_basic:
+    JSR exe_init
+
 exe_run:
     jsr tok_finished
     LDTI 1
@@ -2098,7 +2133,7 @@ exe_run:
 
 exe_run_cont:
     jsr exe_line_stmt
-    ret
+    BR exe_run
 
 ;
 ; int ubasic_finished()
@@ -2123,8 +2158,9 @@ exe_finished_yes:
 ; R7 value (only using low byte)
 ; ACCUMULATOR Variable ref number
 ;
+; Destroys R2 and accumulator, could be fixed with a push/pop
+;
 exe_set_variable:
-;   set var numbers
     MVIW R2,BASIC_VARS
     MVARL R2
 ;
@@ -2135,12 +2171,14 @@ exe_set_variable:
 ; VARIABLE_TYPE ubasic_get_variable(int varnum)
 ;
 ; ACCUMULATOR HOLDS VARIABLE REF NUMBER, VALUE RETURN IN R7
+;
 ; HACK for now BASIC_VARS needs to be 256 byte 0xAA00 aligned
 ; and only 0-25 (var names a-z) supported
-; for now values are 1 byte
+; for now values are 1 byte, upper byte of R7 forced to 0
+;
+; Destroys R2 and accumulator, could be fixed with a push/pop
 ;
 exe_get_variable:
-;   set var numbers
     MVIW R2,BASIC_VARS
     MVARL R2
 ;
@@ -2152,12 +2190,108 @@ exe_get_variable:
 
 
 bas_error:
+  RET
 
+;
+; Tokenizer execute support code
+;
 tok_token:
+  LDAVR R3
+  RET
+
 tok_init:
+  MVIW r3,basic_test
+  RET
+
 tok_next:
+  ldavr r3
+  ldti TOKENIZER_NUMBER
+  BRNEQ tok_next1
+  incr r3
+  incr r3
+  incr r3
+  RET
+
+tok_next1:
+  ldti TOKENIZER_VARIABLE
+  BRNEQ tok_next2
+  incr r3
+  incr r3
+  incr r3
+  RET
+
+tok_next2:
+  ldti TOKENIZER_LINENUM
+  BRNEQ tok_next3
+  incr r3
+  incr r3
+  incr r3
+  incr r3
+  incr r3
+  RET
+
+tok_next3:
+  ldti TOKENIZER_STRING
+  BRNEQ tok_next4
+  incr r3
+
+tok_next3_loop:
+  LDAVR R3
+  BRZ tok_next3_done
+  incr r3
+  BR tok_next3_loop
+
+tok_next3_done:
+  incr r3
+  RET
+
+tok_next4:
+  incr r3
+  ret
+
+;
+; numbers stored low byte followed by high byte in memory
+
 tok_num:
+    incr r3
+    ldavr r3
+    mvarl r7
+    incr r3
+    ldavr r3
+    mvarh r7
+    decr r3
+    decr r3
+    ret
+
+;
+; hack only using low byte of id for now
+;
 tok_variable_num:
+    incr r
+    ldavr r3
+    decr r3
+    ret
+
 tok_string:
+    movrr r3,r7
+    incr r7
+    ret
+
 tok_finished:
+    ldavr r3
+    brnz tok_finished1
+    ldai 1
+    ret
+tok_finished1:
+    ldai 0
+    ret
+
 tok_find:
+
+basic_test:
+  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+  DB   00h,0dh,00h,04h,00h,00h,23h,02h,05h,00h,24h,25h,1eh,00h,0ah,00h
+  DB   06h,04h,00h,00h,24h,25h,28h,00h,07h,00h,14h,24h,01h,00h,00h,00h
+
+ZZZZ:
+  DB   0
