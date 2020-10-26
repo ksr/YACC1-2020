@@ -97,6 +97,9 @@ BASIC_VARS: EQU 0100h
 ;
 ; Basic interpreter internal variables
 ;
+emu_mode: EQU 01f0H
+;
+
 bas_ended: EQU 0200h
 
 ;
@@ -107,9 +110,9 @@ bas_forstackptr: EQU 0202h
 ;
 ; for next stack data
 ; format
-;   2 bytes ptr to line after for instruction (format HL)
 ;   2 bytes for variable id (only first byte used for now)
 ;   2 bytes to value (upper value) (format HL) (only first byte used for now)
+;   2 bytes ptr to line after for instruction (format HL)
 ; later add step amount
 ;
 bas_forstack: EQU 0204h
@@ -228,31 +231,31 @@ movrrtest:
         JSR    stringout
 
         MVIW R3,1234h
-        MVIW R4,5678h
+        MVIW R8,5678h
 
-        jsr showreg34
+        jsr showreg38
 
-        MOVRR R3,R4
+        MOVRR R3,R8
 
-        jsr showreg34
+        jsr showreg38
 
         MVIW R3,4321h
 
-        jsr showreg34
+        jsr showreg38
 
         MVIW R2,1234h
-        MVIW R3,5678h
+        MVIW R9,5678h
 
-        jsr showreg23
+        jsr showreg29
 
-        MOVRR R2,R3
+        MOVRR R2,R9
 
-        jsr showreg23
+        jsr showreg29
 
 
         MVIW R2,4321h
 
-        jsr showreg23
+        jsr showreg29
 
         ret
 
@@ -301,6 +304,51 @@ showreg34:
         LDAI 3h
         JSR ledout
         MVRLA r4
+        JSR TIL311out
+        JSR switchtoggle
+        ret
+
+showreg38:
+        LDAI 0h
+        JSR ledout
+        MVRHA r3
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 1h
+        JSR ledout
+        MVRLA r3
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 2h
+        JSR ledout
+        MVRHA r8
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 3h
+        JSR ledout
+        MVRLA r8
+        JSR TIL311out
+        JSR switchtoggle
+        ret
+showreg29:
+        LDAI 0h
+        JSR ledout
+        MVRHA r2
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 1h
+        JSR ledout
+        MVRLA r2
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 2h
+        JSR ledout
+        MVRHA r9
+        JSR TIL311out
+        JSR switchtoggle
+        LDAI 3h
+        JSR ledout
+        MVRLA r9
         JSR TIL311out
         JSR switchtoggle
         ret
@@ -669,9 +717,9 @@ cmdloop:
 ;
 ; added for emulator eat cr next 3 lines
 ;
-;      push
-;      JSR uartin
-;      pop
+     push
+     JSR uartin
+     pop
       LDTI 'H'
       BRNEQ testexamine
       MVIW R2,CRLF
@@ -981,7 +1029,7 @@ lower:
           SUBI 020h
           RET
 ;
-; display R3 followed by a ":" and " "
+; display R3 followed by a ":" and " " for showaddr and nothing for shownum
 ;
 showaddr:   Push
             MVRHA R3
@@ -1008,10 +1056,32 @@ showaddr:   Push
             JSR uartout
             POP
             RET
+
+shownum:   Push
+            MVRHA R3
+            SHR
+            SHR
+            SHR
+            SHR
+            JSR shownibble
+            MVRHA R3
+            ANDI 0FH
+            JSR shownibble
+            MVRLA R3
+            SHR
+            SHR
+            SHR
+            SHR
+            JSR shownibble
+            MVRLA R3
+            ANDI 0FH
+            JSR shownibble
+            POP
+            RET
 ;
 ; display R7 followed by a ":" and " "
 ;
-showr7:   Push
+showr7:     Push
             MVRHA R7
             SHR
             SHR
@@ -1030,10 +1100,6 @@ showr7:   Push
             MVRLA R7
             ANDI 0FH
             JSR shownibble
-            LDAI ':'
-            JSR uartout
-            LDAI ' '
-            JSR uartout
             POP
             RET
 ;
@@ -1185,8 +1251,8 @@ uartout:
 ;
 ; add for emulator
 ;
-;        outa p2
-;        ret
+      outa p2
+     ret
 ;
         PUSH
         push
@@ -1223,8 +1289,8 @@ uartin:
 ;
 ; add for emulator
 ;
-;        inp p2
-;        ret
+     inp p2
+     ret
 ;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
@@ -1297,7 +1363,7 @@ blink:
 ;
 ; added for emulator
 ;
-;        ret
+        ret
         Push
         ON
         MVIW R7,03FFh
@@ -1321,7 +1387,7 @@ lblink:
 ;
 ; emulator change
 ;
-;        ret
+       ret
         Push
         ON
         MVIW R7,018FFh
@@ -1344,7 +1410,7 @@ loffloop:
 ;
 ; emulator change
 ;
-;    ret
+    ret
 nblink:
         push
 nblinkloop:
@@ -1528,12 +1594,16 @@ endmenu: DB "-",0
 ;     OUTA  P1
       JSRUR R2
 ;
+; Basic Interpreter
+;
+      ORG 0e000h
+;
 ; basic interpreter messages
 ;
 bas_msg1: db "unexpected token",0,0ah,0dh
 bas_msg2: db "line not found",0,0ah,0dh
 bas_msg3: db "Basic ins not found ",0ah,0dh
-
+exe_stmt_msg: db "EXE STMT ",0
 ;
 ; Basic interpreter - execution engine
 ; Register Usage
@@ -1557,16 +1627,10 @@ exe:
 ; ?? Should these pointers be zero based or actual address in memory
 ;
 exe_init:
-    MVIW R4,bas_gosubptr
-    LDAI 0
-    STAVR R4
-    INCR R4
-    STAVR R4
-    MVIW R4,bas_forstackptr
-    LDAI 0
-    STAVR R4
-    INCR R4
-    STAVR R4
+    MVIW R6,bas_gosubstack
+    movrr r6,r9
+    MVIW R6,bas_forstack
+    movrr r6,r8
     MVIW R4,bas_ended
     LDAI 0
     STAVR R4
@@ -1840,7 +1904,6 @@ exe_relation_done:
 exe_index_find:
     JSR tok_find
     RET
-
 ;
 ; void jump_linenum(linenum)
 ;
@@ -1861,10 +1924,9 @@ exe_jump_line:
     LDAI 1
     STAVR R4
     ret
-
 exe_jump_line1:
+    jsr tok_goto
     ret
-
 ;
 ; void goto_statement()
 ;
@@ -1962,6 +2024,7 @@ exe_if_stmt1:
 ;
 exe_let_stmt:
   jsr tok_variable_num
+  mvarl r7
   movrr r7,r5
   ldai TOKENIZER_VARIABLE
   jsr exe_accept
@@ -1970,32 +2033,212 @@ exe_let_stmt:
   jsr exe_expr
   mvrla r5
   JSR exe_set_variable
+  ldai TOKENIZER_CR
+  jsr exe_accept
   ret
 
 ;
 ; void gosub_statement()
 ;
 exe_gosub_stmt:
-  halt
+    ldai TOKENIZER_GOSUB
+    jsr exe_accept
+    jsr tok_num
+    ldai TOKENIZER_NUMBER
+    jsr exe_accept
+    ldai TOKENIZER_CR
+    jsr exe_accept
+;
+; setup to use for storage area via R4
+;
+   movrr R9,R4
+;
+; save current token buffer ptr to gosub stack
+;
+   mvrla r3
+   stavr r4
+   incr r4
+   mvrha r3
+   stavr r4
+   incr  r4
+;
+; write new gosub stack ptr location back
+;
+   MOVRR R4,R9
+
+   JSR exe_jump_line
+   RET
 
 ;
 ; void return_statment()
 ;
 exe_return_stmt:
-  halt
+    ldai TOKENIZER_RETURN
+    jsr exe_accept
+;
+; setup to use for storage area via R4
+;
+   movrr R9,R4
+
+   decr r4
+   decr r4
+
+   ldavr r4
+   mvarl r3
+   incr r4
+   ldavr r4
+   mvarh r3
+
+   decr r4
+   movrr r4,r9
+
+   ret
 
 ;
 ; void next_statement()
 ;
 exe_next_stmt:
-  halt
+;
+; setup to use for storage area via R4
+;
+    movrr r8,r4
+; backup to the TO Value
+    decr r4
+    decr r4
+    decr r4
+    decr r4
+;
+; eat next
+;
+    ldai TOKENIZER_NEXT
+    jsr exe_accept
+;
+; get variable id (in accumulator) and hold in r5 lo
+;
+    jsr tok_variable_num
+    mvarl r5
+;
+; eat TOKENIZER_VARIABLE id
+;
+    ldai TOKENIZER_VARIABLE
+    jsr exe_accept
+;
+; get variable value, inc by 1 and store
+;
+    mvrla r5
+    jsr exe_get_variable
+    incr r7
+    mvrla r5
+    jsr exe_set_variable
+;
+; get TO value into R6
+    ldavr r4
+    mvarl r6
+    incr r4
+    ldavr r4
+    mvarh r6
+    incr r4
+;
+; for now only compare low byte hack
+;
+    mvrla r6
+    mvat
+    mvrla r7
+    brgt exe_next_done
+;
+    ldavr r4
+    mvarl r3
+    incr r4
+    ldavr r4
+    mvarh r3
+    ret
+
+exe_next_done:
+  decr r4
+  decr r4
+  decr r4
+  decr r4
+  decr r4
+  decr r4
+  movrr r4,r8
+  ldai TOKENIZER_CR
+  jsr exe_accept
+  ret
 
 ;
 ; void for_statement()
 ;
 exe_for_stmt:
-  halt
-
+;
+; setup to use for storage area via R4
+;
+    movrr r8,r4
+;
+; eat FOR
+;
+  ldai TOKENIZER_FOR
+  jsr exe_accept
+;
+; get variable id (in accumulator) and hold in r5 lo
+;
+  jsr tok_variable_num
+  mvarl r5
+;
+; store variable id in for storage hack only lo byte, hi byte 0
+;
+  stavr r4
+  incr r4
+  ldai 0
+  stavr r4
+  incr r4
+;
+; eat variable id and = then get starting value
+;
+  ldai TOKENIZER_VARIABLE
+  jsr exe_accept
+  ldai TOKENIZER_EQ
+  jsr exe_accept
+  jsr exe_expr
+;
+; set variable to starting value
+;
+  mvrla r5
+  JSR exe_set_variable
+;
+; eat TO and get to value
+;
+  ldai TOKENIZER_TO
+  jsr exe_accept
+  jsr exe_expr
+;
+; store to value in for storage area
+;
+  mvrla r7
+  stavr r4
+  incr r4
+  mvrha r7
+  stavr r4
+  incr r4
+;
+; EAT EOL
+;
+  ldai TOKENIZER_CR
+  jsr exe_accept
+;
+; store instruction after for in for storage area
+;
+    mvrla r3
+    stavr r4
+    incr r4
+    mvrha r3
+    stavr r4
+    incr r4
+;
+;   save for stackptr
+;
+    movrr r4,r8
+;
+    ret
 ;
 ; void peek_statment()
 ;
@@ -2020,7 +2263,15 @@ exe_end_stmt:
 ; void statment()
 ;
 exe_stmt:
+;    MVIW R2,exe_stmt_msg
+;    JSR stringout
+;    JSR showaddr
     jsr tok_token
+    PUSH
+;    JSR showbytea
+;    MVIW R2,CRLF
+;    JSR STRINGOUT
+    POP
 
     LDTI TOKENIZER_PRINT
     BRNEQ exe_stmt1
@@ -2084,7 +2335,7 @@ exe_stmt9:
 exe_stmt10:
     LDTI TOKENIZER_LET
     BRNEQ exe_stmt11
-    LDTI TOKENIZER_LET
+    LDAI TOKENIZER_LET
     JSR exe_accept
     JSR exe_let_stmt
     ret
@@ -2123,10 +2374,27 @@ exe_line_stmt:
 ; void ubasic_run()
 ;
 do_basic:
+;    mviw r7,000ah
+;    jsr tok_find
+;    jsr showr7
+;    mviw r2,CRLF
+;    jsr stringout
+
+;    mviw r7,0014h
+;    jsr tok_find
+;    jsr showr7
+;    mviw r2,CRLF
+;    jsr stringout
+
     JSR exe_init
 
+;    mviw r7,0080h
+;    jsr tok_find
+;    jsr showr7
+;    mviw r2,CRLF
+;    jsr stringout
 exe_run:
-    jsr tok_finished
+    jsr exe_finished
     LDTI 1
     BRNEQ exe_run_cont
     ret
@@ -2265,9 +2533,10 @@ tok_num:
 
 ;
 ; hack only using low byte of id for now
+; return in accumulator
 ;
 tok_variable_num:
-    incr r
+    incr r3
     ldavr r3
     decr r3
     ret
@@ -2279,19 +2548,110 @@ tok_string:
 
 tok_finished:
     ldavr r3
-    brnz tok_finished1
+    ldti 1
+    brneq tok_finished1
     ldai 1
     ret
 tok_finished1:
     ldai 0
     ret
 
+;
+; find linenum in r7
+;
 tok_find:
+;    jsr showr7
+    MVIW r5,basic_test
+
+tok_find_loop:
+    ldavr r5
+    ldti 01
+    brneq tok_find_loop1
+    mviw r7,0
+    mvrla r7
+    ret
+tok_find_loop1:
+    incr r5
+    mvrla r7
+    MVAT
+    ldavr r5
+    brneq tok_find1
+    incr r5
+    mvrha r7
+    MVAT
+    ldavr r5
+    brneq tok_find2
+    decr r5
+    decr r5
+    movrr r5,r7
+    ldai 1
+    ret
+
+tok_find1:
+    incr r5
+tok_find2:
+    incr r5
+    ldavr r5
+    mviw r6,0
+    mvarl r6
+    decr r6
+    decr r6
+    decr r6
+tok_find_moveptr:
+    incr r5
+    decr r6
+    mvrla r6
+    brnz tok_find_moveptr
+    br tok_find_loop
+
+tok_goto:
+    movrr r7,r3
+    ret
 
 basic_test:
-  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-  DB   00h,0dh,00h,04h,00h,00h,23h,02h,05h,00h,24h,25h,1eh,00h,0ah,00h
-  DB   06h,04h,00h,00h,24h,25h,28h,00h,07h,00h,14h,24h,01h,00h,00h,00h
+;  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+;  DB   00h,0dh,00h,04h,02h,00h,23h,02h,07h,00h,24h,25h,1eh,00h,0ah,00h
+;  DB   06h,04h,02h,00h,24h,25h,28h,00h,07h,00h,14h,24h,01h,00h,00h,00h
+
+;  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+;  DB   00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+;  DB   06h,04h,02h,00h,24h,25h,28h,00h,0ah,00h,0dh,02h,0ah,00h,24h,25h
+;  DB   32h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+
+;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
+;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
+;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,0dh,00h,04h,16h
+;    DB  00h,23h,02h,0ah,00h,24h,25h,46h,00h,0ah,00h,0dh,04h,16h,00h,24h
+;    DB  25h,50h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h
+
+;   DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+;  	DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+;  	DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
+;  	DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
+;  	DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
+;  	DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
+;  	DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
+;  	DB  5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
+;  	DB  24h,25h,64h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h
+
+    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
+    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
+    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
+    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
+    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
+    DB  51h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h,0dh,02h
+    DB  7dh,00h,24h,25h,5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h
+    DB  6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh,20h,67h
+    DB  6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h,6eh,20h
+    DB  73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h,25h,7dh
+    DB  00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h,00h,14h
+    DB  24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+
+
 
 ZZZZ:
   DB   0

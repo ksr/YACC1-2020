@@ -638,10 +638,10 @@ dumpBufferHex(int start, int end) {
 
     for (i = start; i < end; i++) {
         if ((i & 0x0000f) == 0) {
-            printf("\n\tDB   %02xh", tokenBuffer[i]);
+            printf("\n\tDB  %02xh", tokenBuffer[i]);
             i++;
         }
-        printf(", %02xh", tokenBuffer[i]);
+        printf(",%02xh", tokenBuffer[i]);
     }
     printf("\n");
 
@@ -788,7 +788,7 @@ void detokenize() {
                 printf("\" ");
                 i++;
                 break;
-            case TOKENIZER_VARIABLE: memcpy(&var, &tokenBuffer[1 + 1], 2);
+            case TOKENIZER_VARIABLE: memcpy(&var, &tokenBuffer[i + 1], 2);
                 char varname = 'a' + var;
                 printf("%c ", varname);
                 i += 3;

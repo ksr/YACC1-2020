@@ -23,7 +23,7 @@
 #endif
 
 #define MEMORY_SIZE 0x10000
-#define REGISTERS 8
+#define REGISTERS 12
 #define PC 0
 #define SP 1
 
