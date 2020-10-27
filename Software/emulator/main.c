@@ -180,30 +180,58 @@ unsigned char memory_read(int address) {
 }
 
 void memory_write(int address, unsigned char value) {
+    if(address > 0xdfff){
+        printf("Rom Write\n");
+        exit(0);
+    }
     memory[address] = value;
 }
 
 unsigned char register_read_lo(int registernum) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     return (registers[registernum].byte[0]);
 }
 
 unsigned char register_read_hi(int registernum) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     return (registers[registernum].byte[1]);
 }
 
 unsigned short register_read_word(int registernum) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     return (registers[registernum].word);
 }
 
 void register_write_lo(int registernum, unsigned char val) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     registers[registernum].byte[0] = val;
 }
 
 void register_write_hi(int registernum, unsigned char val) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     registers[registernum].byte[1] = val;
 }
 
 void register_write_word(int registernum, unsigned short val) {
+    if(registernum > 7){
+        printf("reg error\n");
+        exit(0);
+    }
     registers[registernum].word = val;
 }
 

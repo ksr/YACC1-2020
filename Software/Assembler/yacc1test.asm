@@ -73,7 +73,7 @@ FILLMODE:     EQU 4
 ;
 ; Setup Stack, use R1
 ;
-STACK: EQU 01000h
+STACK: EQU 0FFFh
 
 ;
 ; remap eprom from 0x0000 to 0xf000 by initial access to 0xf003 via BRanch
@@ -168,6 +168,54 @@ bas_gosubstack: EQU 0242h
          JSR showregs
          MVIW R2,CRLF
          JSR stringout
+;
+; pushr popr test
+;     
+         MVIW R3,0ff0h
+         movrr r1,r5
+         JSR showaddr
+         JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+
+         mviw r6,01234h
+         movrr r1,r5
+         MVIW R3,0ff0h
+         JSR showaddr
+         JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+
+         pushr r6
+         movrr r1,r5
+         MVIW R3,0ff0h
+         JSR showaddr
+         JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+
+         mviw r6,0h
+         movrr r1,r5
+         MVIW R3,0ff0h
+         JSR showaddr
+         JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+
+         popr r6
+         movrr r1,r5
+         MVIW R3,0ff0h
+         JSR showaddr
+         JSR show16
+         JSR showregs
+         MVIW R2,CRLF
+         JSR stringout
+
+
 ;
 ; show test code addr to use with go command
 ;
@@ -1251,8 +1299,8 @@ uartout:
 ;
 ; add for emulator
 ;
-      outa p2
-     ret
+;      outa p2
+;     ret
 ;
         PUSH
         push
@@ -1289,8 +1337,8 @@ uartin:
 ;
 ; add for emulator
 ;
-     inp p2
-     ret
+;     inp p2
+;     ret
 ;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
@@ -1363,7 +1411,7 @@ blink:
 ;
 ; added for emulator
 ;
-        ret
+;        ret
         Push
         ON
         MVIW R7,03FFh
@@ -1387,7 +1435,7 @@ lblink:
 ;
 ; emulator change
 ;
-       ret
+;       ret
         Push
         ON
         MVIW R7,018FFh
@@ -1410,7 +1458,7 @@ loffloop:
 ;
 ; emulator change
 ;
-    ret
+;    ret
 nblink:
         push
 nblinkloop:
@@ -1627,13 +1675,13 @@ exe:
 ; ?? Should these pointers be zero based or actual address in memory
 ;
 exe_init:
-    MVIW R6,bas_gosubstack
-    movrr r6,r9
-    MVIW R6,bas_forstack
-    movrr r6,r8
-    MVIW R4,bas_ended
+    MVIW R5,bas_gosubstack
+;    movrr r6,r9
+    MVIW R4,bas_forstack
+;    movrr r6,r8
+    MVIW R6,bas_ended
     LDAI 0
-    STAVR R4
+    STAVR R6
 ;
 ; initialize tokenbufferptr to start of tokenBuffer (actual memory address)
 ;
@@ -1920,9 +1968,9 @@ exe_jump_line:
 ;
     LDAI TOKENIZER_CR
     JSR exe_accept
-    MVIW r4,bas_ended
+    MVIW r6,bas_ended
     LDAI 1
-    STAVR R4
+    STAVR R6
     ret
 exe_jump_line1:
     jsr tok_goto
@@ -2025,13 +2073,13 @@ exe_if_stmt1:
 exe_let_stmt:
   jsr tok_variable_num
   mvarl r7
-  movrr r7,r5
+  movrr r7,r6
   ldai TOKENIZER_VARIABLE
   jsr exe_accept
   ldai TOKENIZER_EQ
   jsr exe_accept
   jsr exe_expr
-  mvrla r5
+  mvrla r6
   JSR exe_set_variable
   ldai TOKENIZER_CR
   jsr exe_accept
@@ -2051,20 +2099,20 @@ exe_gosub_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-   movrr R9,R4
+;   movrr R9,R4
 ;
 ; save current token buffer ptr to gosub stack
 ;
    mvrla r3
-   stavr r4
-   incr r4
+   stavr r5
+   incr r5
    mvrha r3
-   stavr r4
-   incr  r4
+   stavr r5
+   incr  r5
 ;
 ; write new gosub stack ptr location back
 ;
-   MOVRR R4,R9
+;   MOVRR R4,R9
 
    JSR exe_jump_line
    RET
@@ -2078,19 +2126,19 @@ exe_return_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-   movrr R9,R4
+;   movrr R9,R4
 
-   decr r4
-   decr r4
+   decr r5
+   decr r5
 
-   ldavr r4
+   ldavr r5
    mvarl r3
-   incr r4
-   ldavr r4
+   incr r5
+   ldavr r5
    mvarh r3
 
-   decr r4
-   movrr r4,r9
+   decr r5
+;   movrr r4,r9
 
    ret
 
@@ -2101,7 +2149,7 @@ exe_next_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-    movrr r8,r4
+;    movrr r8,r4
 ; backup to the TO Value
     decr r4
     decr r4
@@ -2113,10 +2161,10 @@ exe_next_stmt:
     ldai TOKENIZER_NEXT
     jsr exe_accept
 ;
-; get variable id (in accumulator) and hold in r5 lo
+; get variable id (in accumulator) and hold in r6 lo
 ;
     jsr tok_variable_num
-    mvarl r5
+    mvarl r6
 ;
 ; eat TOKENIZER_VARIABLE id
 ;
@@ -2125,10 +2173,10 @@ exe_next_stmt:
 ;
 ; get variable value, inc by 1 and store
 ;
-    mvrla r5
+    mvrla r6
     jsr exe_get_variable
     incr r7
-    mvrla r5
+    mvrla r6
     jsr exe_set_variable
 ;
 ; get TO value into R6
@@ -2151,6 +2199,7 @@ exe_next_stmt:
     incr r4
     ldavr r4
     mvarh r3
+    incr r4
     ret
 
 exe_next_done:
@@ -2160,7 +2209,7 @@ exe_next_done:
   decr r4
   decr r4
   decr r4
-  movrr r4,r8
+;  movrr r4,r8
   ldai TOKENIZER_CR
   jsr exe_accept
   ret
@@ -2172,17 +2221,17 @@ exe_for_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-    movrr r8,r4
+;    movrr r8,r4
 ;
 ; eat FOR
 ;
   ldai TOKENIZER_FOR
   jsr exe_accept
 ;
-; get variable id (in accumulator) and hold in r5 lo
+; get variable id (in accumulator) and hold in r6 lo
 ;
   jsr tok_variable_num
-  mvarl r5
+  mvarl r6
 ;
 ; store variable id in for storage hack only lo byte, hi byte 0
 ;
@@ -2202,7 +2251,7 @@ exe_for_stmt:
 ;
 ; set variable to starting value
 ;
-  mvrla r5
+  mvrla r6
   JSR exe_set_variable
 ;
 ; eat TO and get to value
@@ -2236,7 +2285,7 @@ exe_for_stmt:
 ;
 ;   save for stackptr
 ;
-    movrr r4,r8
+;    movrr r4,r8
 ;
     ret
 ;
@@ -2255,23 +2304,24 @@ exe_poke_stmt:
 ; void end_statement()
 ;
 exe_end_stmt:
-  mviw r4,bas_ended
+  mviw r6,bas_ended
   LDAI 1
-  STAVR r4
+  STAVR r6
   ret
 ;
 ; void statment()
 ;
 exe_stmt:
-;    MVIW R2,exe_stmt_msg
-;    JSR stringout
-;    JSR showaddr
+    MVIW R2,exe_stmt_msg
+    JSR stringout
+    JSR showaddr
     jsr tok_token
     PUSH
-;    JSR showbytea
-;    MVIW R2,CRLF
-;    JSR STRINGOUT
+    JSR showbytea
+    MVIW R2,CRLF
+    JSR STRINGOUT
     POP
+    halt
 
     LDTI TOKENIZER_PRINT
     BRNEQ exe_stmt1
@@ -2285,9 +2335,9 @@ exe_stmt1:
     ret
 
 exe_stmt2:
-    LDTI TOKENIZER_GOTO
+    LDTI TOKENIZER_VARIABLE
     BRNEQ exe_stmt3
-    JSR exe_goto_stmt
+    JSR exe_let_stmt
     ret
 
 exe_stmt3:
@@ -2341,9 +2391,9 @@ exe_stmt10:
     ret
 
 exe_stmt11:
-    LDTI TOKENIZER_VARIABLE
+    LDTI TOKENIZER_GOTO
     BRNEQ exe_stmt12
-    JSR exe_let_stmt
+    JSR exe_goto_stmt
     ret
 
 exe_stmt12:
@@ -2561,6 +2611,7 @@ tok_finished1:
 ;
 tok_find:
 ;    jsr showr7
+    pushr r5
     MVIW r5,basic_test
 
 tok_find_loop:
@@ -2569,6 +2620,8 @@ tok_find_loop:
     brneq tok_find_loop1
     mviw r7,0
     mvrla r7
+    popr r5
+
     ret
 tok_find_loop1:
     incr r5
@@ -2585,6 +2638,7 @@ tok_find_loop1:
     decr r5
     movrr r5,r7
     ldai 1
+    popr r5
     ret
 
 tok_find1:
@@ -2643,13 +2697,14 @@ basic_test:
     DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
     DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
     DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
-    DB  51h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h,0dh,02h
-    DB  7dh,00h,24h,25h,5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h
-    DB  6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh,20h,67h
-    DB  6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h,6eh,20h
-    DB  73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h,25h,7dh
-    DB  00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h,00h,14h
-    DB  24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
+    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
+    DB  0dh,02h,7dh,00h,24h,25h,5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h
+    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
+    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
+    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
+    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
+    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
 
 
 
