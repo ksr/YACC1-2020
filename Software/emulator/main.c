@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define DEBUG 0
 
@@ -40,10 +41,10 @@ unsigned char acc;
 unsigned char treg;
 int out;
 int in;
-int carry;
 int jsrdepth;
 int pushpopdepth;
 int pushpoprdepth;
+bool carry;
 
 
 /* Intel HEX read/write functions, Paul Stoffregen, paul@ece.orst.edu */
@@ -180,7 +181,7 @@ unsigned char memory_read(int address) {
 }
 
 void memory_write(int address, unsigned char value) {
-    if(address > 0xdfff){
+    if (address > 0xdfff) {
         printf("Rom Write\n");
         exit(0);
     }
@@ -188,7 +189,7 @@ void memory_write(int address, unsigned char value) {
 }
 
 unsigned char register_read_lo(int registernum) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -196,7 +197,7 @@ unsigned char register_read_lo(int registernum) {
 }
 
 unsigned char register_read_hi(int registernum) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -204,7 +205,7 @@ unsigned char register_read_hi(int registernum) {
 }
 
 unsigned short register_read_word(int registernum) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -212,7 +213,7 @@ unsigned short register_read_word(int registernum) {
 }
 
 void register_write_lo(int registernum, unsigned char val) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -220,7 +221,7 @@ void register_write_lo(int registernum, unsigned char val) {
 }
 
 void register_write_hi(int registernum, unsigned char val) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -228,7 +229,7 @@ void register_write_hi(int registernum, unsigned char val) {
 }
 
 void register_write_word(int registernum, unsigned short val) {
-    if(registernum > 7){
+    if (registernum > 7) {
         printf("reg error\n");
         exit(0);
     }
@@ -278,8 +279,9 @@ int main(int argc, char** argv) {
     int portaddr;
     unsigned char hi, lo;
     int src, dest;
+    bool tmpCarry;
 
-    in = 1;
+    in = 0;
     registers[PC].word = 0xf000;
     int singleStep = 0;
     int breakAddress = 0;
@@ -359,7 +361,7 @@ int main(int argc, char** argv) {
             case 0x08:
                 reg = (memory_read(register_read_word(PC)) >> 4) & 0x07;
                 register_inc(PC);
-                 DEBUG_PRINTF("POPR reg=%d pc=%04x pre-sp=%04x\n",reg, (register_read_word(PC) - 1), register_read_word(SP));
+                DEBUG_PRINTF("POPR reg=%d pc=%04x pre-sp=%04x\n", reg, (register_read_word(PC) - 1), register_read_word(SP));
                 register_inc(SP);
                 register_write_lo(reg, memory_read(register_read_word(SP)));
                 register_inc(SP);
@@ -651,7 +653,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 lo = memory_read(register_read_word(PC));
                 register_inc(PC);
-                if (carry == 0) {
+                if (!carry) {
                     register_write_hi(PC, hi);
                     register_write_lo(PC, lo);
                 }
@@ -661,7 +663,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 lo = memory_read(register_read_word(PC));
                 register_inc(PC);
-                if (carry == 1) {
+                if (carry) {
                     register_write_hi(PC, hi);
                     register_write_lo(PC, lo);
                 }
@@ -737,6 +739,11 @@ int main(int argc, char** argv) {
                 exit(0);
                 break;
             case 0xb0:
+                if ((acc + memory_read(register_read_word(PC))) > 255) {
+                    carry = true;
+                } else {
+                    carry = false;
+                }
                 acc += memory_read(register_read_word(PC));
                 register_inc(PC);
                 break;
@@ -770,6 +777,11 @@ int main(int argc, char** argv) {
 
                 break;
             case 0xb8:
+                if ((acc + treg) > 255) {
+                    carry = true;
+                } else {
+                    carry = false;
+                }
                 acc = acc + treg;
                 break;
             case 0xb9:
@@ -785,16 +797,33 @@ int main(int argc, char** argv) {
                 acc = acc ^ treg;
                 break;
             case 0xbd:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+                if (acc & 0x80)
+                    tmpCarry = true;
+                else
+                    tmpCarry = false;
+                
+                acc = acc << 1;
+                if (tmpCarry)
+                    acc = acc | 0x01;
                 break;
             case 0xbe:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+                if (acc & 0x01)
+                    tmpCarry = true;
+                else
+                    tmpCarry = false;
+                
+                acc = acc >> 1;
+                if (tmpCarry)
+                    acc = acc | 0x80;
                 break;
             case 0xbf:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+                if (acc & 0x80)
+                    tmpCarry = true;
+                else
+                    tmpCarry = false;
+                acc = acc >> 1;
+                if (tmpCarry)
+                    acc = acc | 0x80;
                 break;
 
             case 0xc0:
@@ -847,16 +876,51 @@ int main(int argc, char** argv) {
                 register_inc(reg);
                 break;
             case 0xe0:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                if (acc & 0x80)
+                    tmpCarry = true;
+                else
+                    tmpCarry = false;
+                
+                acc = acc << 1;
+                if (carry)
+                    acc = acc | 0x01;
+                carry = tmpCarry;
                 break;
             case 0xe1:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                if (acc & 0x01)
+                    tmpCarry = true;
+                else
+                    tmpCarry = false;
+                
+                acc = acc >> 1;
+                if (carry)
+                    acc = acc | 0x80;
+                carry = tmpCarry;
                 break;
             case 0xe2:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                if ((acc + carry + memory_read(register_read_word(PC))) > 255) {
+                    tmpCarry = true;
+                } else {
+                    tmpCarry = false;
+                }
+                acc = acc + memory_read(register_read_word(PC)) + carry;
+                if (tmpCarry)
+                    carry = true;
+                else
+                    carry = false;
+                register_inc(PC);
                 break;
             case 0xe3:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+               if ((acc + carry + treg) > 255) {
+                    tmpCarry = true;
+                } else {
+                    tmpCarry = false;
+                }
+                acc = acc + treg + carry;
+                if (tmpCarry)
+                    carry = true;
+                else
+                    carry = false;
                 break;
             case 0xe4:
                 printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));

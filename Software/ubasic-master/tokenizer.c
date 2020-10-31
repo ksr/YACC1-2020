@@ -390,7 +390,7 @@ struct tokenizedLine {
 
 struct tokenizedLine workLine;
 
-const char *tokenize(char *program) {
+const char *tokenize11(char *program) {
     int tokencounter;
     char string[50];
     int bufferptr = 0;

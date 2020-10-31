@@ -43,3 +43,8 @@ Software/Sequencer Card/uCode-Generator/cache
 Software/Sequencer Card/uCode-Generator/dist/Debug/GNU-MacOSX/ucode-generator
 Software/Sequencer Card/uCode-Generator/test.hex
 Software/Sequencer Card/uCode-Generator/test.hexz
+Software/Assembler/dist/Debug/GNU-MacOSX/assembler
+Software/ubasic-master/tokenizer.o
+Software/Assembler/dist/Debug/GNU-MacOSX/assembler
+Software/ubasic-master/tokenizer.o
+Software/ubasic-master/use-ubasic

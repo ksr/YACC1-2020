@@ -99,14 +99,10 @@ BASIC_VARS: EQU 0100h
 ;
 emu_mode: EQU 01f0H
 ;
-
 bas_ended: EQU 0200h
 
 ;
-; for next statement stack ptr
-;
-bas_forstackptr: EQU 0202h
-
+; for next statement stack ptr and stack data
 ;
 ; for next stack data
 ; format
@@ -115,19 +111,24 @@ bas_forstackptr: EQU 0202h
 ;   2 bytes ptr to line after for instruction (format HL)
 ; later add step amount
 ;
+bas_forstackptr: EQU 0202h
 bas_forstack: EQU 0204h
 
 ;
-; gosub stack ptr
-;
-bas_gosubptr: EQU 0240
-
+; gosub stack ptr and data
 ;
 ; gosub STACK
 ; format
 ;   2 bytes return location ptr
 ;
+bas_gosubptr: EQU 0240h
 bas_gosubstack: EQU 0242h
+
+;
+; Basic interpreter text line buffer
+;
+parse_input_line: EQU 300h
+parse_token_buffer: EQU 400h
 
 ;
 ; basic interpreter, add IO and peek/poke
@@ -169,8 +170,171 @@ bas_gosubstack: EQU 0242h
          MVIW R2,CRLF
          JSR stringout
 ;
+; show test code addr to use with go command
+;
+         MVIW R3,tttt
+         JSR showaddr
+         MVIW R2,CRLF
+         JSR stringout
+;
+; if INPUT high start the monitor
+;
+         BRINH cmdloop
+;
+; else run test/code below at completetion blink OUT LED forever
+;
+tttt:
+        MVIW R2,TESTMSG
+        JSR stringout
+
+        jsr add16tests
+
+        mviw r4,0FFFAh
+        mviw r5,0002h
+        jsr mul16
+
+        LDAI 5
+        MVIW R2,nblink
+        JSRUR R2
+
+        halt
+
+mul16:
+;
+; Multiple numbers in R4 and R5
+;
+; R4 = product accumulator
+; R6 = Bit counter
+;
+        MVIW R7,0
+        MVIW R6,10h
+        jsr showregs
+
+mulloop:
+        jsr showregs
+
+        mvrla r5
+        andi  01h
+        brz mulskip
+        jsr muladd16
+mulskip:
+;
+; clear carry flag HACK
+;
+        addi 0
+;
+        mvrla r4
+        cshl
+        mvarl r4
+        mvrha r4
+        cshl
+        mvarh r4
+
+        addi 0
+        mvrha r5
+        cshr
+        mvarh r5
+        mvrla r5
+        cshr
+        mvarl r5
+
+        decr r6
+        mvrla r6
+        brnz mulloop
+        ret
+
+muladd16:
+
+        MVRLA R7
+        MVAT
+        mvrla r4
+        ADDT
+        mvarl r7
+
+        mvrha r7
+        MVAT
+        mvrha r4
+        addtc
+        mvarh r7
+        ret
+
+alltests:
+;         jsr shltest
+;         JSR shrtest
+;         jsr rshltest
+;         jsr rshrtest
+;         jsr cshltest
+;         JSR cshrtest
+;         JSR pshltest
+;         JSR additest
+;         JSR addictest
+;         JSR subtest
+;         JSR cmptest
+;         JSR shrtest
+;         JSR shltest
+;         JSR rshrtest
+;         JSR rshltest
+;         JSR cshltest
+;         JSR cshrtest
+;         JSR accumtest
+;         JSR pushpoptest
+;         JSR ortest
+;         JSR orttest
+;         JSR additest
+;         JSR movrrtest
+;         JSR add16tests
+
+testsdone:
+          JSR lblink
+          BR testsdone
+
+;
+; Individual Tests
+;
+
+;
+; 16 bit add carry tests
+;
+add16tests:
+;
+; add r4 and r5
+;
+
+      mviw r4,0FFFAh
+      mviw r5,0FFFCh
+      jsr showregs
+      jsr do_add16
+      jsr showregs
+
+      mviw r4,05689h
+      mviw r5,0abcdh
+      jsr showregs
+      jsr do_add16
+      jsr showregs
+
+      mviw r4,0FFFAh
+      mviw r5,0FFFEh
+      jsr showregs
+      jsr do_add16
+      jsr showregs
+      ret
+
+
+do_add16:
+      MVRLA R4
+      MVAT
+      mvrla r5
+      ADDT
+      mvarl r4
+      mvrha r4
+      MVAT
+      mvrha r5
+      addtc
+      mvarh r4
+      ret
+;
 ; pushr popr test
-;     
+;
          MVIW R3,0ff0h
          movrr r1,r5
          JSR showaddr
@@ -214,62 +378,7 @@ bas_gosubstack: EQU 0242h
          JSR showregs
          MVIW R2,CRLF
          JSR stringout
-
-
-;
-; show test code addr to use with go command
-;
-         MVIW R3,tttt
-         JSR showaddr
-         MVIW R2,CRLF
-         JSR stringout
-;
-; if INPUT high start the monitor
-;
-         BRINH cmdloop
-;
-; else run test/code below at completetion blink OUT LED forever
-;
-tttt:
-        MVIW R2,TESTMSG
-        JSR stringout
-
-        LDAI 5
-        MVIW R2,nblink
-        JSRUR R2
-
-alltests:
-;         jsr shltest
-;         JSR shrtest
-;         jsr rshltest
-;         jsr rshrtest
-;         jsr cshltest
-;         JSR cshrtest
-;         JSR pshltest
-;         JSR additest
-;         JSR addictest
-;         JSR subtest
-;         JSR cmptest
-;         JSR shrtest
-;         JSR shltest
-;         JSR rshrtest
-;         JSR rshltest
-;         JSR cshltest
-;         JSR cshrtest
-;         JSR accumtest
-;         JSR pushpoptest
-;         JSR ortest
-;         JSR orttest
-;         JSR additest
-;         JSR movrrtest
-
-testsdone:
-          JSR lblink
-          BR testsdone
-
-;
-; Individual Tests
-;
+         ret
 
 ;
 ; Register to Register move test
@@ -765,9 +874,9 @@ cmdloop:
 ;
 ; added for emulator eat cr next 3 lines
 ;
-     push
-     JSR uartin
-     pop
+;     push
+;     JSR uartin
+;     pop
       LDTI 'H'
       BRNEQ testexamine
       MVIW R2,CRLF
@@ -789,6 +898,8 @@ testexamine:
       BREQ fillblock
       LDTI 'G'
       BREQ go
+      LDTI 'L'
+      BREQ cmd_basiclist
       LDTI 'R'
       BREQ dumpreg
       LDTI 'T'
@@ -839,6 +950,11 @@ stop:   BR stop
 cmd_basic:
        jsr do_basic
        BR cmdloop
+
+cmd_basiclist:
+        mviw r7,basic_test
+        JSR tok_list
+        BR cmdloop
 
 dumpblock:
        MVIB R6,BLOCKMODE
@@ -1299,8 +1415,8 @@ uartout:
 ;
 ; add for emulator
 ;
-;      outa p2
-;     ret
+      outa p2
+      ret
 ;
         PUSH
         push
@@ -1337,8 +1453,8 @@ uartin:
 ;
 ; add for emulator
 ;
-;     inp p2
-;     ret
+     inp p2
+    ret
 ;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
@@ -2312,16 +2428,16 @@ exe_end_stmt:
 ; void statment()
 ;
 exe_stmt:
-    MVIW R2,exe_stmt_msg
-    JSR stringout
-    JSR showaddr
+;    MVIW R2,exe_stmt_msg
+;    JSR stringout
+;    JSR showaddr
     jsr tok_token
-    PUSH
-    JSR showbytea
-    MVIW R2,CRLF
-    JSR STRINGOUT
-    POP
-    halt
+;    PUSH
+;    JSR showbytea
+;    MVIW R2,CRLF
+;    JSR STRINGOUT
+;    POP
+
 
     LDTI TOKENIZER_PRINT
     BRNEQ exe_stmt1
@@ -2662,34 +2778,884 @@ tok_goto:
     movrr r7,r3
     ret
 
+;
+; list out token buffer
+; buffer address in r7
+;
+tokl_let: DB "LET ",0
+tokl_print: DB "PRINT ",0
+tokl_if: DB "IF ",0
+tokl_then: DB "THEN ",0
+tokl_else: DB "ELSE ",0
+tokl_for: DB "FOR ",0
+tokl_to: DB "TO ",0
+tokl_next: DB "NEXT ",0
+tokl_goto: DB "GOTO ",0
+tokl_gosub: DB "GOSUB ",0
+tokl_return: DB "RETURN ",0
+tokl_rem: DB "REM ",0
+tokl_peek: DB "PEEK ",0
+tokl_poke: DB "POKE ",0
+tokl_end: DB "END ",0
+tokl_call: DB "CALL ",0
+tokl_error: DB "LIST ERROR",0
+
+
+tok_list:
+    pushr r3
+    movrr r7,r3
+
+
+tok_list_loop:
+    ldavr r3
+
+    LDTI TOKENIZER_ERROR
+    BRNEQ tok_list1
+    MVIW R2,tokl_error
+    JSR stringout
+    JSR showaddr
+    BR tok_list_done
+    BR tok_list_loop
+
+tok_list1:
+    LDTI TOKENIZER_EOF
+    BRNEQ tok_list2
+    BR tok_list_done
+    BR tok_list_loop
+
+tok_list2:
+    LDTI TOKENIZER_NUMBER
+    BRNEQ tok_list3
+    incr r3
+    ldavr r3
+    mvarl r7
+    incr r3
+    ldavr r3
+    mvarh r7
+    INCR R3
+    jsr showr7
+    ldai ' '
+    jsr uartout
+    BR tok_list_loop
+
+tok_list3:
+    LDTI TOKENIZER_STRING
+    BRNEQ tok_list4
+    incr r3
+    movrr r3,r2
+    jsr stringout
+    ldai ' '
+    jsr uartout
+tok_list_string:
+    ldavr r3
+    brz tok_list_stringend
+    incr r3
+    br tok_list_string
+tok_list_stringend:
+    incr r3
+    BR tok_list_loop
+
+tok_list4:
+    LDTI TOKENIZER_VARIABLE
+    BRNEQ tok_list5
+    incr r3
+    ldavr r3
+    ldti 'A'
+    ADDT
+    incr r3
+    incr r3
+    jsr uartout
+
+;    ldavr r3
+;    mvarl r7
+;    incr r3
+;    ldavr r3
+;    mvarh r7
+;    INCR R3
+;    jsr showr7
+
+    ldai ' '
+    jsr uartout
+    BR tok_list_loop
+
+tok_list5:
+    LDTI TOKENIZER_LET
+    BRNEQ tok_list6
+    MVIW R2,tokl_let
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list6:
+    LDTI TOKENIZER_PRINT
+    BRNEQ tok_list7
+    MVIW R2,tokl_print
+    jsr STRINGOUT
+    INCR R3
+    BR tok_list_loop
+
+tok_list7:
+    LDTI TOKENIZER_IF
+    BRNEQ tok_list8
+    MVIW R2,tokl_if
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list8:
+    LDTI TOKENIZER_THEN
+    BRNEQ tok_list9
+    MVIW R2,tokl_then
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list9:
+    LDTI TOKENIZER_ELSE
+    BRNEQ tok_list10
+    MVIW R2,tokl_else
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list10:
+    LDTI TOKENIZER_FOR
+    BRNEQ tok_list11
+    MVIW R2,tokl_for
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list11:
+    LDTI TOKENIZER_TO
+    BRNEQ tok_list12
+    MVIW R2,tokl_to
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list12:
+    LDTI TOKENIZER_NEXT
+    BRNEQ tok_list13
+    MVIW R2,tokl_next
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list13:
+    LDTI TOKENIZER_GOTO
+    BRNEQ tok_list14
+    MVIW R2,tokl_goto
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list14:
+    LDTI TOKENIZER_GOSUB
+    BRNEQ tok_list15
+    MVIW R2,tokl_gosub
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list15:
+    LDTI TOKENIZER_RETURN
+    BRNEQ tok_list16
+    MVIW R2,tokl_return
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list16:
+    LDTI TOKENIZER_CALL
+    BRNEQ tok_list17
+    MVIW R2,tokl_call
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list17:
+    LDTI TOKENIZER_REM
+    BRNEQ tok_list18
+    MVIW R2,tokl_rem
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list18:
+    LDTI TOKENIZER_PEEK
+    BRNEQ tok_list19
+    MVIW R2,tokl_peek
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list19:
+    LDTI TOKENIZER_POKE
+    BRNEQ tok_list20
+    MVIW R2,tokl_poke
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list20:
+    LDTI TOKENIZER_END
+    BRNEQ tok_list21
+    MVIW R2,tokl_end
+    JSR stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list21:
+    LDTI TOKENIZER_COMMA
+    BRNEQ tok_list22
+    ldai ','
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list22:
+    LDTI TOKENIZER_SEMICOLON
+    BRNEQ tok_list23
+    ldai ';'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list23:
+    LDTI TOKENIZER_PLUS
+    BRNEQ tok_list24
+    ldai '+'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list24:
+    LDTI TOKENIZER_MINUS
+    BRNEQ tok_list25
+    ldai '-'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list25:
+    LDTI TOKENIZER_AND
+    BRNEQ tok_list26
+    ldai '&'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list26:
+    LDTI TOKENIZER_OR
+    BRNEQ tok_list27
+    ldai '|'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list27:
+    LDTI TOKENIZER_ASTR
+    BRNEQ tok_list28
+    ldai '*'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list28:
+    LDTI TOKENIZER_SLASH
+    BRNEQ tok_list29
+    ldai '/'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list29:
+    LDTI TOKENIZER_MOD
+    BRNEQ tok_list30
+    ldai '%'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list30:
+    LDTI TOKENIZER_HASH
+    BRNEQ tok_list31
+    ldai '#'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list31:
+    LDTI TOKENIZER_LEFTP
+    BRNEQ tok_list32
+    ldai '()'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list32:
+    LDTI TOKENIZER_RIGHTP
+    BRNEQ tok_list33
+    ldai ')'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list33:
+    LDTI TOKENIZER_LT
+    BRNEQ tok_list34
+    ldai '<'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list34:
+    LDTI TOKENIZER_GT
+    BRNEQ tok_list35
+    ldai '>'
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list35:
+    LDTI TOKENIZER_EQ
+    BRNEQ tok_list36
+    ldai '='
+    jsr uartout
+    ldai ' '
+    jsr uartout
+    INCR R3
+    BR tok_list_loop
+
+tok_list36:
+    LDTI TOKENIZER_CR
+    BRNEQ tok_list37
+    mviw r2,CRLF
+    jsr stringout
+    INCR R3
+    BR tok_list_loop
+
+tok_list37:
+    LDTI TOKENIZER_LINENUM
+    BRNEQ tok_list38
+    incr r3
+    ldavr r3
+    mvarl r7
+    incr r3
+    ldavr r3
+    mvarh r7
+    INCR R3
+    incr r3
+    incr r3
+    jsr showr7
+    ldai ' '
+    jsr uartout
+    BR tok_list_loop
+
+tok_list38:
+    MVIW R2,tokl_error
+    JSR stringout
+    JSR showaddr
+    BR tok_list_done
+;
+; any cleanup
+;
+tok_list_done:
+    popr r3
+    ret
+
+;
+;
+; Basic InterpreterParser
+; R3   =  UTILITY PTR
+; R4.L =  INPUT TEXT LINE PTR
+; R4.H =  INPUT TEXT LINE NEXTPTR
+; R5.L =  TOKEN BUFFER PTR
+; R5.H =  CURRENT TOKEN
+;
+parse_keywords:
+      DB "let",0,TOKENIZER_LET
+      DB "print",0,TOKENIZER_PRINT
+      DB "if",0,TOKENIZER_IF
+      DB "then",0,TOKENIZER_THEN
+      DB "else",0,TOKENIZER_ELSE
+      DB "for",0,TOKENIZER_FOR
+      DB "to",0,TOKENIZER_TO
+      DB "next",0,TOKENIZER_NEXT
+      DB "goto",0,TOKENIZER_GOTO
+      DB "gosub",0,TOKENIZER_GOSUB
+      DB "return",0,TOKENIZER_RETURN
+      DB "call",0,TOKENIZER_CALL
+      DB "rem",0,TOKENIZER_REM
+      DB "peek",0,TOKENIZER_PEEK
+      DB "poke",0,TOKENIZER_POKE
+      DB "end",0,TOKENIZER_END
+      DB 0,0,TOKENIZER_ERROR
+
+;
+; int singlechar (void)
+;
+; return TOKEN result in accumulator
+;
+; ready for testing
+;
+parse_singlechar:
+;
+    MVIW r3,parse_input_line
+    mvrla r4
+    mvarl r3
+;
+    ldti 0ah
+    brneq parsechar1
+    ldai TOKENIZER_CR
+    ret
+parsechar1:
+    ldti ','
+    brneq parsechar2
+    ldai TOKENIZER_COMMA
+    ret
+parsechar2:
+    ldti ';'
+    brneq parsechar3
+    ldai TOKENIZER_SEMICOLON
+    ret
+parsechar3:
+    ldti '+'
+    brneq parsechar4
+    ldai TOKENIZER_PLUS
+    ret
+parsechar4:
+    ldti '-'
+    brneq parsechar5
+    ldai TOKENIZER_MINUS
+    ret
+parsechar5:
+    ldti '&'
+    brneq parsechar6
+    ldai TOKENIZER_AND
+    ret
+parsechar6:
+    ldti '|'
+    brneq parsechar7
+    ldai TOKENIZER_OR
+    ret
+parsechar7:
+    ldti '*'
+    brneq parsechar8
+    ldai TOKENIZER_ASTR
+    ret
+parsechar8:
+    ldti '%'
+    brneq parsechar9
+    ldai TOKENIZER_MOD
+    ret
+parsechar9:
+    ldti '()'
+    brneq parsechar10
+    ldai TOKENIZER_LEFTP
+    ret
+parsechar10:
+    ldti '#'
+    brneq parsechar11
+    ldai TOKENIZER_HASH
+    ret
+parsechar11:
+    ldti ')'
+    brneq parsechar12
+    ldai TOKENIZER_RIGHTP
+    ret
+parsechar12:
+    ldti '<'
+    brneq parsechar13
+    ldai TOKENIZER_LT
+    ret
+parsechar13:
+    ldti '>'
+    brneq parsechar14
+    ldai TOKENIZER_GT
+    ret
+parsechar14:
+    ldti '='
+    brneq parsechar15
+    ldai TOKENIZER_EQ
+    ret
+parsechar15:
+    ldai 0
+    ret
+
+;
+; int get_next_token(void)
+;
+; under development fix ptr nextptr
+
+parse_get_next_tok:
+    pushr r6
+    MVIW r3,parse_input_line
+    mvrla r4
+    mvarl r3
+;
+    ldavr R3
+    brnz parse_gnt1
+    ldai TOKENIZER_EOF
+    popr r6
+    ret
+
+parse_gnt1:
+;
+; is digit
+;
+; chcek for number
+    ldavr R3
+    jsr parse_isdigit
+    brz parse_gnt2
+parse_gnt1loop:
+    incr R3
+    jsr parse_isdigit
+    brnz parse_gnt1loop
+    mvrla R3
+    mvarh R4
+    ldai TOKENIZER_NUMBER
+    popr r6
+    ret
+;
+parse_gnt2:
+;
+; singlechar
+;
+   ldavr R3
+   jsr parse_singlechar
+   BRZ parse_gnt3
+   push
+   incr r3
+   mvrla R3
+   mvarh R4
+   pop
+   popr r6
+   ret
+;
+parse_gnt3:
+;
+; quote
+;
+  ldavr R3
+  ldti '"'
+  brneq parse_gnt4
+parse_gnt3loop:
+  incr r3
+  ldavr R3
+  ldti '"'
+  brneq parse_gnt3loop
+  incr r3
+  mvrla R3
+  mvarh R4
+  ldai TOKENIZER_STRING
+  popr r6
+  ret
+;
+parse_gnt4:
+;
+; keyword search
+;
+  pushr r5
+  mviw r5,parse_keywords
+top:
+  ldavr r5
+  brz nokeyowrdsfound
+  movrr r3,r6
+pcmploop:
+  ldavr r5
+  brz found
+  MVAT
+  ldavr r6
+  brneq skiptoend
+  incr r5
+  incr r6
+  br pcmploop
+
+skiptoend:
+;  skip to end of string and skip over token
+skiploop:
+    ldavr r5
+    incr r5
+    brnz skiploop
+    incr r5
+    br top
+
+found:
+    mvrla r6
+    mvarh r4
+    incr r5
+    ldavr r5
+    popr r5
+    popr r6
+    ret
+
+nokeyowrdsfound:
+    popr r6
+    popr r5
+;
+;  check for variables
+;
+    ldavr r3
+    ldti 'A'
+    BRLT parse_gnt_error
+    ldti 'Z'
+    BRGT parse_gnt_error
+    INCR r3
+    mvrla R3
+    mvarl R4
+    LDAI tokenizer_variable
+    POPR R6
+    RET
+parse_gnt_error:
+    ldai tokenizer_error
+    POPR R6
+    ret
+
+;
+; void TOKENIZER_GOTO (char * program)
+;
+; under development
+;
+parse_goto:
+    movrr r7,r3
+    jsr parse_get_next_tok
+    mvarl r6
+    ret
+
+;
+; void tokenizer_init(int ptr)
+;
+; changed to set ptr to 0, assumes input line buffer is 256 byte aligned
+; so set ptrs to 0
+; ptr into line buffer R4.L
+; ptr int token buffer R5.L
+; token counter R5.H
+;
+; under development
+;
+parse_init:
+    ldai 0
+    mvarl R4
+    mvarh R5
+    mvarl R5
+    jsr parse_get_next_tok
+    ret
+
+;
+; int tokenizer_token(void)
+:
+parse_token:
+    mvrla r6
+    ret
+
+;
+; void tokenizer_next(void)
+;
+parse_next:
+
+;
+; VARIABLE_TYPE tokenizer_num(void)
+;
+; Hack for now input characters are ascii hex format HHHH
+;
+; value returned in R7
+;
+; Should this advance the line ptr?
+;
+parse_num:
+    JSR parse_getnibble
+    SHL
+    SHL
+    SHL
+    SHL
+    ANDI 0f0h
+    Push
+    JSR parse_getnibble
+    ANDI 0FH
+    MVAT
+    Pop
+    ORT
+    MVARH R7
+
+    JSR parse_getnibble
+    SHL
+    shl
+    shl
+    shl
+    ANDI 0f0h
+    push
+    JSR parse_getnibble
+    ANDI 0FH
+    MVAT
+    pop
+    ORT
+    MVARL R7
+    RET
+
+;
+; add error checking
+;
+; return hex nibble in accumulator
+;
+parse_getnibble:
+      MVIW r3,parse_input_line
+      mvrla r4
+      mvarl r3
+;
+      LDAVR R3
+;
+; Risk if input line is greater then 255 chars, maybe test at input
+;
+      incr r4
+
+      LDTI '9'
+      BRGT parse_af
+      SUBI '0'
+      RET
+parse_af:
+      JSR toupper
+      SUBI 'A'
+      ADDI 10
+      RET
+;
+; void tokenizer_string(char *dest, int len)
+;
+parse_string:
+    JSR parse_token
+    LDTI TOKENIZER_STRING
+    BREQ parse_string1
+    ret
+
+parse_string1:
+    MVIW r3,parse_input_line
+    mvrla r4
+    mvarl r3
+    ;
+    LDAVR R3
+
+
+;
+; void tokenizer_error_print(void)
+;
+parse_error_print:
+
+;
+; int tokenizer_finished(void)
+;
+parse_finished:
+
+;
+; int tokenizer_variable_num(void)
+;
+parse_variable_num:
+
+;
+; char *const tokenizer_pos(void)
+;
+parse_pos:
+
+;not used old
+; char *tokenize(char *program)
+;
+; parse:
+
+;
+; char *tokenizeLine(char *line)
+;
+parse_line:
+    MVIW R3,parse_token_buffer
+    LDAI 0
+    mvarl R3
+    mvarl R4
+    MVARL R5
+    LDAI TOKENIZER_LINENUM
+    STAVR R3
+    INCR R3
+
+    JSR parse_num ; testexamine
+
+    ;
+    LDAVR R3
+
+JSR parse_token
+LDTI TOKENIZER_STRING
+BREQ parse_string1
+ret
+
+
+;
+; void addLine(char *buff)
+;
+parse_addline:
+
+;
+; void removeLine(int lineNum)
+;
+parse_removeline:
+
+;
+; parse utilites
+;
+
+;
+; is digit
+; returns 1 if yes and 0 if no
+;
+; hack for now include HEX
+;
+; destroys tmp register
+parse_isdigit:
+   ldti '0'
+   brlt parse_isdigit_no
+   ldti '9'
+   brgt parse_isdigit_af
+   br parse_isdigit_yes
+
+parse_isdigit_af:
+    ldti 'A'
+    brlt parse_isdigit_no
+    ldti 'F'
+    brgt parse_isdigit_no
+
+parse_isdigit_yes:
+    ldai 1
+    ret
+
+parse_isdigit_no:
+    ldai 0
+    ret
+
 basic_test:
-;  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-;  DB   00h,0dh,00h,04h,02h,00h,23h,02h,07h,00h,24h,25h,1eh,00h,0ah,00h
-;  DB   06h,04h,02h,00h,24h,25h,28h,00h,07h,00h,14h,24h,01h,00h,00h,00h
-
-;  DB   25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-;  DB   00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
-;  DB   06h,04h,02h,00h,24h,25h,28h,00h,0ah,00h,0dh,02h,0ah,00h,24h,25h
-;  DB   32h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h
-
-;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
-;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
-;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
-;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,0dh,00h,04h,16h
-;    DB  00h,23h,02h,0ah,00h,24h,25h,46h,00h,0ah,00h,0dh,04h,16h,00h,24h
-;    DB  25h,50h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h
-
-;   DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-;  	DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
-;  	DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
-;  	DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
-;  	DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
-;  	DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
-;  	DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
-;  	DB  5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
-;  	DB  24h,25h,64h,00h,07h,00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h
-
     DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
     DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
     DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
@@ -2706,7 +3672,8 @@ basic_test:
     DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
     DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
 
-
-
+;
+; The End
+;
 ZZZZ:
   DB   0
