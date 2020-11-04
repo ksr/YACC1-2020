@@ -1,0 +1,11 @@
+#!/bin/sh
+ 
+./dist/Debug/GNU-MacOSX/assembler  -l -v -x -h -d yacc1 basic >basic.lst
+./dist/Debug/GNU-MacOSX/assembler  -l -v -x -h -d yacc1 monitor >monitor.lst
+awk 'n>=1 { print a[n%1] } { a[n%1]=$0; n=n+1 }' basic.img >tmprom
+cat tmprom monitor.img >rom
+rm tmprom
+echo "Basic.lst"
+tail -5 basic.lst
+echo "Monitor.lst"
+tail -5 monitor.lst
