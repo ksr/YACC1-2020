@@ -196,6 +196,7 @@ void loadNextInstruction() {
     clearSignal("-MEM-RD"); //STEP 9 DO NOT LEAVE DATA BUS DRIVEN WITH INSTRUCTION FETCHED FROM MEM  
 }
 
+/* might be an issue if current setRdId reg is different from one here */
 void incrementReg(int reg) {
     setRdId(reg);
     setSignal("-REG-FUNC-RD");
@@ -267,7 +268,7 @@ int main(int argc, char** argv) {
     writeCurrentLine();
     endInstruction();
     showCntlMemory(HALT);
-
+    
     branchInstructions();
 
     registerOnlyInstructions();

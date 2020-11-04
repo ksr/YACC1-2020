@@ -27,6 +27,7 @@
 #define REGISTERS 12
 #define PC 0
 #define SP 1
+#define IR 2
 
 union Register {
     unsigned char byte[2];
@@ -45,6 +46,7 @@ int jsrdepth;
 int pushpopdepth;
 int pushpoprdepth;
 bool carry;
+int firstSwitchRead = 1;
 
 
 /* Intel HEX read/write functions, Paul Stoffregen, paul@ece.orst.edu */
@@ -262,10 +264,12 @@ void tmp_write(unsigned char val) {
 
 void out_on() {
     out = 1;
+    //printf("out on\n");
 }
 
 void out_off() {
     out = 0;
+    //printf("out off\n");
 }
 
 /*
@@ -291,7 +295,8 @@ int main(int argc, char** argv) {
 
 
 
-    load_file("../Assembler/yacc1test.img");
+    load_file("../Assembler/basic.img");
+    load_file("../Assembler/monitor.img");
     dump(0xf000, 0xf0ff);
 
     while (1) {
@@ -595,6 +600,10 @@ int main(int argc, char** argv) {
             case 0x9e:
             case 0x9f:
                 portaddr = ins & 0x0f;
+                if ((port[0] == 1) && (firstSwitchRead == 1) && (portaddr == 1)) {
+                    firstSwitchRead = 0;
+                    acc = 0xff;
+                }
                 if (portaddr == 2) {
                     acc = getchar(); // get a char
                 }
@@ -735,8 +744,13 @@ int main(int argc, char** argv) {
                 exit(0);
                 break;
             case 0xaf:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                // do not branch
+                //register_write_hi(PC, hi);
+                //register_write_lo(PC, lo);
                 break;
             case 0xb0:
                 if ((acc + memory_read(register_read_word(PC))) > 255) {
@@ -801,7 +815,7 @@ int main(int argc, char** argv) {
                     tmpCarry = true;
                 else
                     tmpCarry = false;
-                
+
                 acc = acc << 1;
                 if (tmpCarry)
                     acc = acc | 0x01;
@@ -811,7 +825,7 @@ int main(int argc, char** argv) {
                     tmpCarry = true;
                 else
                     tmpCarry = false;
-                
+
                 acc = acc >> 1;
                 if (tmpCarry)
                     acc = acc | 0x80;
@@ -880,7 +894,7 @@ int main(int argc, char** argv) {
                     tmpCarry = true;
                 else
                     tmpCarry = false;
-                
+
                 acc = acc << 1;
                 if (carry)
                     acc = acc | 0x01;
@@ -891,7 +905,7 @@ int main(int argc, char** argv) {
                     tmpCarry = true;
                 else
                     tmpCarry = false;
-                
+
                 acc = acc >> 1;
                 if (carry)
                     acc = acc | 0x80;
@@ -911,7 +925,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 break;
             case 0xe3:
-               if ((acc + carry + treg) > 255) {
+                if ((acc + carry + treg) > 255) {
                     tmpCarry = true;
                 } else {
                     tmpCarry = false;
@@ -932,7 +946,7 @@ int main(int argc, char** argv) {
                 printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
                 break;
             case 0xe7:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                acc = 0xff;
                 break;
             case 0xe8:
                 printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
@@ -947,71 +961,83 @@ int main(int argc, char** argv) {
                 printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
                 break;
             case 0xec:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                acc= memory_read(register_read_word(IR));
                 break;
             case 0xed:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                memory_write(register_read_word(IR),acc);
                 break;
             case 0xee:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                treg= memory_read(register_read_word(IR));
                 break;
             case 0xef:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                memory_write(register_read_word(IR),treg);
                 break;
             case 0xf0:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf1:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf2:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf3:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf4:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf5:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf6:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf7:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                reg = ins & 0x07;
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                register_write_hi(reg, memory_read(register_read_word(IR)));
+                register_inc(IR);
+                register_write_lo(reg, memory_read(register_read_word(IR)));
+                register_inc(IR);
                 break;
             case 0xf8:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xf9:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xfa:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xfb:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xfc:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xfd:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xfe:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                break;
             case 0xff:
-                printf("bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
+                reg = ins & 0x07;
+                hi = memory_read(register_read_word(PC));
+                register_inc(PC);
+                lo = memory_read(register_read_word(PC));
+                register_inc(PC);
+                register_write_lo(IR, lo);
+                register_write_hi(IR, hi);
+                memory_write(register_read_word(IR),register_read_hi(reg));
+                register_inc(IR);  
+                memory_write(register_read_word(IR),register_read_lo(reg));
+                register_inc(IR); 
                 break;
         }
-
     }
-
-
-
     return (EXIT_SUCCESS);
 }
 

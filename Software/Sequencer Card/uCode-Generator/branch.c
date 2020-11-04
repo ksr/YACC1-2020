@@ -150,6 +150,13 @@ void branchInstructions() {
     branch(PC, ALUCS, NOINVERT, SOURCE_NONE);
     endInstruction();
     showCntlMemory(BRC);
+    
+    startInstruction(BRDEV);
+    loadNextInstruction();
+    initCurrentLine();
+    branch(PC, ALUBR, NOINVERT, SOURCE_NONE);
+    endInstruction();
+    showCntlMemory(BRDEV);
 
     for (int reg = 0; reg < 8; reg++) {
         // When reg != pc should reg autoincrement ?
@@ -162,6 +169,7 @@ void branchInstructions() {
         showCntlMemory(BRVR | reg);
     }
 
+/* not implemented 
     for (int reg = 0; reg < 8; reg++) {
         startInstruction(BRUR | reg);
         loadNextInstruction();
@@ -191,8 +199,9 @@ void branchInstructions() {
 
         endInstruction();
         showCntlMemory(BRUR | reg);
+  
     }
-
+*/
 
     startInstruction(BRLT);
     loadNextInstruction();

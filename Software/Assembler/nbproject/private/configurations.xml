@@ -26,9 +26,13 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test >list</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 monitor basic</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test yacc2test</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test; "${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc2test</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test</runcommandpicklistitem>
+          <runcommandpicklistitem>./makerom</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"   -l -v -x -h -d yacc1 yacc1test</runcommand>
+        <runcommand>./makerom</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

@@ -72,3 +72,4 @@ extern "C" {
 
 #define PC 0 //program counter is currently locked to reg 0
 #define SP 1 //stack pointer is currently locked to reg 1 (only needed if JSR/RET is used)
+#define IR 2 //memory indirect operations

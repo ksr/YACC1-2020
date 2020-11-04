@@ -160,4 +160,282 @@ void registerOnlyInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
+
+    for (reg = 0; reg < 8; reg++) {
+        ins = LDR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        putMemAtRegOnBus(PC);
+        setSignal("-REG-FUNC-LD");
+        setLdId(IR);
+        setSignal("-HL-SWAP");
+        setSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        clearSignal("-HL-SWAP");
+        writeCurrentLine();
+        incrementReg(PC);
+
+        putMemAtRegOnBus(PC);
+        setSignal("-REG-FUNC-LD");
+        setLdId(IR);
+        writeCurrentLine();
+        setSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        clearSignal("-MEM-RD");
+        writeCurrentLine();
+        incrementReg(PC);
+
+        putMemAtRegOnBus(IR);
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
+        setSignal("-HL-SWAP");
+        writeCurrentLine();
+        setSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        clearSignal("-HL-SWAP");
+        writeCurrentLine();
+        setRdId(IR);
+        writeCurrentLine();
+        incrementReg(IR);
+
+        putMemAtRegOnBus(IR);
+        setSignal("-REG-FUNC-LD");
+        setLdId(reg);
+        writeCurrentLine();
+        setSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        writeCurrentLine();
+
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    for (reg = 0; reg < 8; reg++) {
+        ins = STR | (reg & 0x07);
+        startInstruction(ins);
+        loadNextInstruction();
+        initCurrentLine();
+
+        putMemAtRegOnBus(PC);
+        setSignal("-REG-FUNC-LD");
+        setLdId(IR);
+        setSignal("-HL-SWAP");
+        writeCurrentLine();
+        setSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("REG-LD-HI");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        clearSignal("-HL-SWAP");
+        writeCurrentLine();
+        incrementReg(PC);
+
+        putMemAtRegOnBus(PC);
+        setSignal("-REG-FUNC-LD");
+        setLdId(IR);
+        writeCurrentLine();
+        setSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("REG-LD-LO");
+        writeCurrentLine();
+        clearSignal("-REG-FUNC-LD");
+        clearSignal("-MEM-RD");
+        writeCurrentLine();
+        incrementReg(PC);
+
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+        setSignal("-HL-SWAP");
+        writeCurrentLine();
+        putBustoRegMem(IR, "-REG-RD-HI");
+        writeCurrentLine();
+        setRdId(IR);
+        writeCurrentLine();
+        incrementReg(IR);
+
+        clearSignal("-HL-SWAP");
+        setSignal("-REG-FUNC-RD");
+        setRdId(reg);
+        writeCurrentLine();
+        putBustoRegMem(IR, "-REG-RD-LO");
+        writeCurrentLine();
+       
+        endInstruction();
+        showCntlMemory(ins);
+    }
+
+    ins = LDA;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    setSignal("-HL-SWAP");
+    setSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-HL-SWAP");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    writeCurrentLine();
+    setSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putMemAtRegOnBus(IR);
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    writeCurrentLine();
+    setSignal("-AC-LD");
+    writeCurrentLine();
+    clearSignal("-AC-LD");
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    ins = LDT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    setSignal("-HL-SWAP");
+    setSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-HL-SWAP");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    writeCurrentLine();
+    setSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putMemAtRegOnBus(IR);
+    setSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+    clearSignal("-TMP-REG-LD0");
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(ins);
+
+    ins = STA;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    setSignal("-HL-SWAP");
+    setSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-HL-SWAP");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    writeCurrentLine();
+    setSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    setSignal("-ALU-FUNC");
+    setAlu(ALUDATA);
+    writeCurrentLine();
+
+    putBustoRegMem(IR, "-AC-RD");
+
+    endInstruction();
+    showCntlMemory(ins);
+
+
+    ins = STT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    setSignal("-HL-SWAP");
+    setSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("REG-LD-HI");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-HL-SWAP");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    //putBustoRegMem(IR, "-REG-RD-LO");
+    putMemAtRegOnBus(PC);
+    setSignal("-REG-FUNC-LD");
+    setLdId(IR);
+    writeCurrentLine();
+    setSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    writeCurrentLine();
+    clearSignal("-REG-FUNC-LD");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    incrementReg(PC);
+
+    putBustoRegMem(IR, "-TMP-REG-RD0");
+
+    endInstruction();
+    showCntlMemory(ins);
 }

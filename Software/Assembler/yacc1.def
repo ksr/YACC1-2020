@@ -86,6 +86,8 @@ BR16Z \W
 AB  hi(1) lo(1)
 BR16NZ \W
 AC  hi(1) lo(1)
+BRDEV \W
+AF  hi(1) lo(1)
 ADDI \B
 B0 \1
 SUBI \B
@@ -134,6 +136,18 @@ ADDIC \B
 E2 \1
 ADDTC
 E3
+LDA \W
+EC  hi(1) lo(1)
+STA \W
+ED  hi(1) lo(1)
+LDT \W
+EE  hi(1) lo(1)
+STT \W
+EF  hi(1) lo(1)
+LDR \{regs},\W
+F0|1  hi(2) lo(2)
+STR \{regs},\W
+F8|1  hi(2) lo(2)
 ORG     \W
 \O1
 END     \W

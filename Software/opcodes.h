@@ -66,6 +66,7 @@ extern "C" {
 #define        BRNEQ    0xAA
 #define        BR16Z    0xAB
 #define        BR16NZ   0xAC
+#define        BRDEV    0xAF
 #define        ADDI	0xB0
 #define        SUBI	0xB1
 #define        ORI	0xB2
@@ -90,7 +91,12 @@ extern "C" {
 #define        CSHR     0xE1
 #define        ADDIC    0xE2
 #define        ADDTC    0xE3
-#define        BRUR     0xE8
+#define        LDA      0xEC
+#define        STA      0xED
+#define        LDT      0xEE
+#define        STT      0xEF
+#define        LDR      0xf0
+#define        STR      0xf8
 
 #endif /* OPCODES_H */
 
