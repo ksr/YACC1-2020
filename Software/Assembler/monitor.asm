@@ -3,7 +3,10 @@
 ;
 basic_list:   EQU 0e000h
 basic_run:    EQU 0e010h
-
+basic_cold:   EQU 0e020h
+basic_test:   EQU 0e030h
+basic_parse:  EQU 0e050h
+basic_copy:   EQU 0e060h
 ;
 ; Hardware info
 ;
@@ -37,7 +40,10 @@ FILLMODE:     EQU 4
 ;
 ; Monitor variables 0x0f00 - 0x0fff
 ;
-monmode:      EQU 0f00h
+monmode:        EQU 0f00h
+continue_addr:  EQU 0f02h
+line_buffer:    EQU 0f80h    ; 128 bytes long max
+
 
 ;
 ; Setup Stack, use R1 0eff -> down to 0c00 (but no checking)
@@ -89,25 +95,27 @@ eprom:
 ; Main
 ;
           JSR lblink
-          MVIW R2,hello
+          MVIW R7,hello
           JSR stringout
+          JSR basic_cold   ; initialize basic interpreter
+                           ; hack should this pass in token buffer ptr
 ;
 ; additional proof of life
 ;
 ; show first 16 bytes of ROM & REGISTERS
 ;
-         MVIW R3,0f000h
+         MVIW R7,0f000h
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 ;
 ; show test code addr to use with go command
 ;
-         MVIW R3,tttt
+         MVIW R7,tttt
          JSR showaddr
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 ;
 ; if INPUT high start the monitor
@@ -117,18 +125,15 @@ eprom:
 ; else run test/code below at completetion blink OUT LED jump to cmdloop
 ;
 tttt:
-        MVIW R2,TESTMSG
+        MVIW R7,TESTMSG
         JSR stringout
 ;
 ; Tests to be run at startup
 ;
 
-
 ;
 ; startup tests complete
 ;
-        LDAI 5
-        MVIW R2,nblink
         BR cmdloop
 ;
 ;
@@ -161,6 +166,7 @@ alltests:
 ;         jsr mem_indirect_tests
 ;         jsr mul16
 ;         jsr pushr_popr_tests
+;         jsr sub16tests
 
 alltestsdone:
           JSR lblink
@@ -171,68 +177,11 @@ alltestsdone:
 ;
 
 ;
-; 16 x 16 bit multiply
+; 16 x 16 bit multiply test
 ;
 mul16:
       mviw r4,0FFFAh
       mviw r5,0002h
-;
-; Multiple numbers in R4 and R5
-;
-; R4 = product accumulator
-; R6 = Bit counter
-;
-        MVIW R7,0
-        MVIW R6,10h
-        jsr showregs
-
-mulloop:
-        jsr showregs
-
-        mvrla r5
-        andi  01h
-        brz mulskip
-        jsr muladd16
-mulskip:
-;
-; clear carry flag HACK
-;
-        addi 0
-;
-        mvrla r4
-        cshl
-        mvarl r4
-        mvrha r4
-        cshl
-        mvarh r4
-
-        addi 0
-        mvrha r5
-        cshr
-        mvarh r5
-        mvrla r5
-        cshr
-        mvarl r5
-
-        decr r6
-        mvrla r6
-        brnz mulloop
-        ret
-
-muladd16:
-
-        MVRLA R7
-        MVAT
-        mvrla r4
-        ADDT
-        mvarl r7
-
-        mvrha r7
-        MVAT
-        mvrha r4
-        addtc
-        mvarh r7
-        ret
 
 ;
 ; test new memory based load/store instructions
@@ -250,14 +199,11 @@ clearmem:
 
 ; initial dump
 
-        MVIW R3,02000h
-        JSR showaddr
-        JSR show16
-        JSR showregs
-        ldai 010h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+;
+; step 10
+;
+        ldai 010h       ;counter
+        jsr mem_indirect_util
 
 ; str 0x5544 into 0x2000-1 with tested opcodes
 
@@ -268,125 +214,85 @@ clearmem:
         LDAI 044h
         STAVR R4
 
-        MVIW R3,02000h
-        JSR showaddr
-        JSR show16
-        JSR showregs
+; step 11
+
         ldai 011h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+        jsr mem_indirect_util
 
 ; load register R5 from memory 0x2000
 
         LDR R5,02000h
-        movrr r2,r6
+        movrr r2,r6       ;move r2 to r6 for output purposes
+                          ;R2 is used by LDR/STR instuctions
 
-        MVIW R3,02000h
-        JSR showaddr
-        JSR show16
-        JSR showregs
+; step 12
+
         ldai 012h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+        jsr mem_indirect_util
 
 ; store info in R5 into 0x2004-5
+; step 13
 
         STR R5,2004h
         movrr r2,r6
 
-        MVIW R3,02000h
-        JSR showaddr
-        JSR show16
-        JSR showregs
         ldai 013h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+        jsr mem_indirect_util
 
 ; load 0x66 into accumulator and store in 0x2006
 ; Save R2 into R6 for display
-; put value in accumulator into r7.0
+; step 14
 
         LDAI 066h
         STA  02006h
         movrr r2,r6
-        mvarl r7
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
         ldai 014h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+        jsr mem_indirect_util
 
 ; load accumulator from 0xf000
 ; save R2 in R6 for display
-; put value in accumulator into r7.0
 ; store value in accumulator into 0x2008
+; step 15
 
         lda 0f000h
-        push
-        movrr r2,r6
-        mvarl r7
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
-        ldai 015h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
 
-        pop
+; store value from 0f000h to 2008h
+
         sta 02008h
         movrr r2,r6
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
-        ldai 016h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
-
+        ldai 015h
+        jsr mem_indirect_util
+;
+;  load 88 into tmp register and store t 200a
+;  step 16
+;
         ldti 088h
         stt 0200ah
         movrr r2,r6
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
-        ldai 017h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
-
+        ldai 016h
+        jsr mem_indirect_util
+;
+; load tmp from memory f001 and store to 200c
+; step 17
+;
         ldt 0f001h
-        MVTA
-        mvarl r7
-        movrr r2,r6
-
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
-        ldai 018h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
-
-        mvrla r7
-        mvat
         stt 0200ch
         movrr r2,r6
-        MVIW R3,02000h
-        JSR show16
-        JSR showregs
-        ldai 019h
-        JSR showbytea
-        MVIW R2,CRLF
-        JSR stringout
+        ldai 017h
+        jsr mem_indirect_util
         ret
 
-
+mem_indirect_util:
+        push
+        MVIW R7,02000h
+        JSR showaddr
+        JSR show16
+        JSR showregs
+        pop
+        JSR showbytea
+        MVIW R7,CRLF
+        JSR stringout
+        ret
 ;
 ; 16 bit add carry tests
 ;
@@ -397,23 +303,22 @@ add16tests:
 
       mviw r4,0FFFAh
       mviw r5,0FFFCh
-      jsr showregs
-      jsr do_add16
-      jsr showregs
+      jsr do_add16_util
 
       mviw r4,05689h
       mviw r5,0abcdh
-      jsr showregs
-      jsr do_add16
-      jsr showregs
+      jsr do_add16_util
 
       mviw r4,0FFFAh
       mviw r5,0FFFEh
+      jsr do_add16_util
+      ret
+
+do_add16_util:
       jsr showregs
       jsr do_add16
       jsr showregs
       ret
-
 
 do_add16:
       MVRLA R4
@@ -427,6 +332,56 @@ do_add16:
       addtc
       mvarh r4
       ret
+
+;
+; 16 bit sub  tests
+;
+sub16tests:
+;
+; sub r4 from r5
+;
+
+      mviw r4,0001h
+      mviw r5,0009h
+      jsr do_sub16_util
+
+      mviw r4,0001h
+      mviw r5,0100h
+      jsr do_sub16_util
+
+      mviw r4,0009h
+      mviw r5,0001h
+      jsr do_sub16_util
+
+
+      mviw r4,0220h
+      mviw r5,0110h
+      jsr do_sub16_util
+
+      mviw r4,0001h
+      mviw r5,0FFFCh
+      jsr do_sub16_util
+
+      ret
+
+do_sub16_util:
+      jsr showregs
+      jsr do_sub16
+      jsr showregs
+      ret
+;
+; 16 bit subtract of r4 from r5, return result in r5
+;
+do_sub16:
+      mvrha r4
+      inva
+      mvarh r4
+      mvrla r4
+      inva
+      mvarl r4
+      incr r4
+      jsr showregs
+      br do_add16
 ;
 ; pushr popr test
 ;
@@ -438,7 +393,7 @@ pushr_popr_tests:
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 
          mviw R4,01234h ;put a value into R4
@@ -447,7 +402,7 @@ pushr_popr_tests:
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 
          pushr r4
@@ -456,7 +411,7 @@ pushr_popr_tests:
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 
          mviw r4,0h
@@ -465,7 +420,7 @@ pushr_popr_tests:
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
 
          popr r4
@@ -474,7 +429,7 @@ pushr_popr_tests:
          JSR showaddr
          JSR show16
          JSR showregs
-         MVIW R2,CRLF
+         MVIW R7,CRLF
          JSR stringout
          ret
 
@@ -482,65 +437,41 @@ pushr_popr_tests:
 ; Register to Register move test
 ;
 movrrtest:
-        MVIW   R2,MOVRRHELP
+        MVIW   R7,MOVRRHELP
         JSR    stringout
 
         MVIW R3,1234h
-        MVIW R8,5678h
+        MVIW R4,5678h
 
-        jsr showreg38
+        jsr showreg34
 
-        MOVRR R3,R8
+        MOVRR R3,R4
 
-        jsr showreg38
+        jsr showreg34
 
         MVIW R3,4321h
 
-        jsr showreg38
+        jsr SHOWREG34
 
-        MVIW R2,1234h
-        MVIW R9,5678h
+        MVIW R4,1234h
+        MVIW R5,5678h
 
-        jsr showreg29
+        jsr showreg45
 
-        MOVRR R2,R9
+        MOVRR R4,R5
 
-        jsr showreg29
+        jsr showreg45
 
+        MVIW R4,4321h
 
-        MVIW R2,4321h
-
-        jsr showreg29
+        jsr showreg45
 
         ret
 
 ;
 ; sho registers (hard coded)
 ;
-showreg23:
-        LDAI 0h
-        JSR ledout
-        MVRHA r2
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 1h
-        JSR ledout
-        MVRLA r2
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 2h
-        JSR ledout
-        MVRHA r3
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 3h
-        JSR ledout
-        MVRLA r3
-        JSR TIL311out
-        JSR switchtoggle
-        ret
-
-showreg34:
+showreg34:              ; registers across two boards
         LDAI 0h
         JSR ledout
         MVRHA r3
@@ -563,58 +494,37 @@ showreg34:
         JSR switchtoggle
         ret
 
-showreg38:
+showreg45:             ;register on same board
         LDAI 0h
         JSR ledout
-        MVRHA r3
+        MVRHA r4
         JSR TIL311out
         JSR switchtoggle
         LDAI 1h
         JSR ledout
-        MVRLA r3
+        MVRLA r4
         JSR TIL311out
         JSR switchtoggle
         LDAI 2h
         JSR ledout
-        MVRHA r8
+        MVRHA r5
         JSR TIL311out
         JSR switchtoggle
         LDAI 3h
         JSR ledout
-        MVRLA r8
+        MVRLA r5
         JSR TIL311out
         JSR switchtoggle
         ret
-showreg29:
-        LDAI 0h
-        JSR ledout
-        MVRHA r2
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 1h
-        JSR ledout
-        MVRLA r2
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 2h
-        JSR ledout
-        MVRHA r9
-        JSR TIL311out
-        JSR switchtoggle
-        LDAI 3h
-        JSR ledout
-        MVRLA r9
-        JSR TIL311out
-        JSR switchtoggle
-        ret
+
 ;
 ; OR - OR accumulator immediate
 ;
 ORHELP: DB "OR tests - or input switches with 0x55 (5x)",0ah,0dh,0
 ortest:
-         MVIW   R2,ORHELP
+         MVIW   R7,ORHELP
          JSR    stringout
-         MVIB   R2,5
+         MVIB   R3,5
 orloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
@@ -622,8 +532,8 @@ orloop:
          ORI  055H
          OUTA  P1
 
-         DECR R2
-         MVRLA R2
+         DECR R3
+         MVRLA R3
          BRNZ orloop
          RET
 
@@ -631,9 +541,9 @@ orloop:
 ; ADDI - ADD accumulator with immediate
 ;
 additest:
-       MVIW   R2,ADDIHELP
+       MVIW   R7,ADDIHELP
        JSR    stringout
-       MVIB   R2,5
+       MVIB   R3,5
 addiloop:
        JSR switchtoggle
        OUTI P0,(SWITCHLED)
@@ -641,8 +551,8 @@ addiloop:
        ADDI 02h
        OUTA  P1
 
-       DECR R2
-       MVRLA R2
+       DECR R3
+       MVRLA R3
        BRNZ addiloop
        RET
 
@@ -650,9 +560,9 @@ addiloop:
 ; ADDIC - ADD accumulator with immediate with carry
 ;
 addictest:
-      MVIW   R2,ADDICHELP
+      MVIW   R7,ADDICHELP
       JSR    stringout
-      MVIB   R2,5
+      MVIB   R3,5
 addicloop:
       JSR switchtoggle
       OUTI P0,(SWITCHLED)
@@ -660,8 +570,8 @@ addicloop:
       ADDIC 02h
       OUTA  P1
 
-      DECR R2
-      MVRLA R2
+      DECR R3
+      MVRLA R3
       BRNZ addicloop
       RET
 
@@ -669,9 +579,9 @@ addicloop:
 ; ORT - OR accumulator with tmp register
 ;
 orttest:
-        MVIW   R2,ORTHELP
+        MVIW   R7,ORTHELP
         JSR    stringout
-        MVIB   R2,5
+        MVIB   R3,5
 ortloop:
         JSR switchtoggle
         OUTI P0,(SWITCHLED)
@@ -683,36 +593,36 @@ ortloop:
         ORT
         OUTA  P1
 
-        DECR R2
-        MVRLA R2
+        DECR R3
+        MVRLA R3
         BRNZ ortloop
         RET
 ;
 ; push pop tests - push 3 values onto stack, pop 3values from stack
 ;
 pushpoptest:
-         MVIW   R2,PUSHPOPHELP
+         MVIW   R7,PUSHPOPHELP
          JSR    stringout
 
-         MVIB   R2,3
+         MVIB   R3,3
 ppenterloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
          INP P1
          push
 
-         DECR R2
-         MVRLA R2
+         DECR R3
+         MVRLA R3
          BRNZ ppenterloop
 
-         MVIB   R2,3
+         MVIB   R3,3
 ppdisloop:
         JSR switchtoggle
         OUTI P0,(SWITCHLED)
         POP
         OUTA  P1
-        DECR R2
-        MVRLA R2
+        DECR R3
+        MVRLA R3
         BRNZ ppdisloop
 
         RET
@@ -721,9 +631,9 @@ ppdisloop:
 ;                              move values between accumulator and register LO 8 bits
 ;
 accumtest:
-         MVIW   R2,accumhelp
+         MVIW   R7,accumhelp
          JSR    stringout
-         MVIB   R2,10
+         MVIB   R3,10
 accloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
@@ -740,8 +650,8 @@ accloop:
          MVRLA R3
          OUTA P1
 
-         DECR R2
-         MVRLA R2
+         DECR R3
+         MVRLA R3
          BRNZ accloop
          RET
 ;
@@ -751,9 +661,9 @@ accloop:
 ;
 SHIFT_LEFTHELP: DB "Shift Left - shift input switches (5x)",0ah,0dh,0
 shltest:
-         MVIW   R2,SHIFT_LEFTHELP
+         MVIW   R7,SHIFT_LEFTHELP
          JSR    stringout
-         MVIB   R2,5
+         MVIB   R3,5
 shlloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
@@ -761,8 +671,8 @@ shlloop:
          SHL
          OUTA  P1
 
-         DECR R2
-         MVRLA R2
+         DECR R3
+         MVRLA R3
          BRNZ shlloop
          RET
 ;
@@ -770,9 +680,9 @@ shlloop:
 ;
 SHIFT_RIGHTHELP: DB "Shift Right - shift input switches (5x)",0ah,0dh,0
 shrtest:
-          MVIW   R2,SHIFT_RIGHTHELP
+          MVIW   R7,SHIFT_RIGHTHELP
           JSR    stringout
-          MVIB   R2,5
+          MVIB   R3,5
 shrloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -780,17 +690,17 @@ shrloop:
           SHR
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ shrloop
           RET
 ;
 ; ring shift left
 ;
 rshltest:
-         MVIW   R2,RSHIFT_LEFTHELP
+         MVIW   R7,RSHIFT_LEFTHELP
          JSR    stringout
-         MVIB   R2,10
+         MVIB   R3,10
 rshlloop:
          JSR switchtoggle
          OUTI P0,(SWITCHLED)
@@ -798,17 +708,17 @@ rshlloop:
          RSHL
          OUTA  P1
 
-         DECR R2
-         MVRLA R2
+         DECR R3
+         MVRLA R3
          BRNZ rshlloop
          RET
 ;
 ; ring shift right
 ;
 rshrtest:
-          MVIW   R2,RSHIFT_RIGHTHELP
+          MVIW   R7,RSHIFT_RIGHTHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
 rshrloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -816,17 +726,17 @@ rshrloop:
           RSHR
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ rshrloop
           RET
 ;
 ; shift left and propagate sign bit
 ;
 pshltest:
-          MVIW   R2,PSHIFT_LEFTHELP
+          MVIW   R7,PSHIFT_LEFTHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
 pshlloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -834,17 +744,17 @@ pshlloop:
           PSHR
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ pshlloop
           RET
 ;
 ; ring shift left through carry bit
 ;
 cshltest:
-          MVIW   R2,CSHIFT_LEFTHELP
+          MVIW   R7,CSHIFT_LEFTHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
 cshlloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -852,17 +762,17 @@ cshlloop:
           CSHR
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ cshlloop
           RET
 ;
 ; ring shift right through carry bit
 ;
 cshrtest:
-          MVIW   R2,CSHIFT_RIGHTHELP
+          MVIW   R7,CSHIFT_RIGHTHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
 cshrloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -870,17 +780,17 @@ cshrloop:
           CSHR
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ cshrloop
           RET
 ;
 ; subtraction tests
 ;
 subtest:
-          MVIW   R2,SUBHELP
+          MVIW   R7,SUBHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
 subloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
@@ -888,17 +798,17 @@ subloop:
           SUBI  1
           OUTA  P1
 
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ subloop
           RET
 ;
 ; Compare Tests/compare input switches to 0x55 10 times
 ;
 cmptest:
-          MVIW   R2,COMPAREHELP
+          MVIW   R7,COMPAREHELP
           JSR    stringout
-          MVIB   R2,10
+          MVIB   R3,10
           LDTI   055H
 cmploop:
           JSR switchtoggle
@@ -922,45 +832,15 @@ OUTLT:
 
 cmpres:
           JSR uartout
-          DECR R2
-          MVRLA R2
+          DECR R3
+          MVRLA R3
           BRNZ cmploop
           RET
 
 ;
 ; Monitor
 ;
-
-; Single char
-;
-;
-; Commands
-;
-; H      - Display help menu
-;
-; T      - Test menu
-;
-; B AAAA - Show 256 bytes at address AAAA (16 byte aligned)
-;          followed by CR display next 256 bytes
-;
-; D AAAA - Show 16 bytes at address AAAA (16 byte aligned)
-;          followed by CR display next 16 bytes
-;
-; E AAAA - show contents of location AAAA (Output AAAA:XX)
-;          if followed by ASCII-HEX modify location with new value (and redisplay)
-;          if followed by CR display next location
-;
-; F AAAA - fill block with 0
-;          if followed by CR fill next location
-;
-; G AAAA - Jump to (and execute) starting at AAAA
-;          code could end in BR to 0xf000h to restart monitor or RET if called via JSR
-;
-; L      - List current basic program
-;
-; R      - SHOW REGISTERS
-;
-; Z      - Basic Interpreter
+; See help code below
 
 ;
 ; eumaltor eat 0x0a
@@ -980,7 +860,7 @@ eat_nl_done:
 :
 
 cmdloop:
-      MVIW R2,PROMPT
+      MVIW R7,PROMPT
       JSR stringout
 ;
 ;
@@ -1002,17 +882,19 @@ cmdloop:
       jsr eat_nl
       LDTI 'H'
       BRNEQ testexamine
-      MVIW R2,CRLF
+      MVIW R7,CRLF
       JSR stringout
-      MVIW R2,helpmenu
+      MVIW R7,helpmenu
       JSR stringout
       BR cmdloop
 
 testexamine:
-      LDTI 'Z'
-      BREQ cmd_basic
+      LDTI '0'
+      BREQ cmd_exit
       LDTI 'B'
       BREQ dumpblock
+      LDTI 'C'
+      BREQ cmd_basic_copy
       LDTI 'D'
       BREQ dump
       LDTI 'E'
@@ -1023,10 +905,16 @@ testexamine:
       BREQ go
       LDTI 'L'
       BREQ cmd_basiclist
+      LDTI 'P'
+      BREQ cmd_basicparse
       LDTI 'R'
       BREQ dumpreg
       LDTI 'T'
       BREQ tests
+      LDTI 'Y'
+      BREQ cmd_basic_test
+      LDTI 'Z'
+      BREQ cmd_basic
       LDTI 0Dh        ; hardware continue
       BREQ continue
 ;
@@ -1038,14 +926,14 @@ testexamine:
       LDTI 0ah      ; emulator continue
       BREQ continue
 
-      MVIW R2,CRLF
+      MVIW R7,CRLF
 
       JSR stringout
 
-      MVIW R2,ERROR
+      MVIW R7,ERROR
       JSR stringout
 
-      MVIW R2,helpmenu
+      MVIW R7,helpmenu
       JSR stringout
       BR cmdloop
 ;
@@ -1069,18 +957,54 @@ continue:
 ;
 ;      ERROR
 ;
-       MVIW R2,CONTINUEERROR
+       MVIW R7,CONTINUEERROR
        JSR stringout
        BR cmdloop
 
 stop:   BR stop
 
+cmd_exit:
+      BRDEV stop
+      DB 0
+
 cmd_basic:
        jsr basic_run
        BR cmdloop
 
+cmd_basicparse:
+        ;build input string
+        ;point register to BUFFER
+        ;loop fetch chars
+        ;until CR
+        ;be sure line ends with a NULL or CR
+        ;what does parse require???
+
+        mviw r3,line_buffer
+parse_inputloop:
+        jsr uartin
+        stavr r3
+        incr r3
+        ldti 0ah
+        brneq parse_inputloop
+        mviw r7,line_buffer
+        JSR BASIC_PARSE
+        mviw r7,0400H
+        jsr show256
+        BR cmdloop
+do_parse:
+        JSR basic_parse
+        BR cmdloop
+
 cmd_basiclist:
         JSR basic_list
+        BR cmdloop
+
+cmd_basic_copy:
+        JSR basic_copy
+        BR cmdloop
+
+cmd_basic_test:
+        JSR basic_test
         BR cmdloop
 
 dumpblock:
@@ -1088,51 +1012,64 @@ dumpblock:
        LDTI BLOCKMODE
        STT monmode
 
-       MVIW R2,DUMPBLOCKMSG
+       MVIW R7,DUMPBLOCKMSG
        JSR stringout
        jsr getaddress
-       MVIW R2,CRLF
+       str r7,continue_addr
+       MVIW R7,CRLF
        JSR stringout
 
 dumpblockcont:
+       ldr r7,continue_addr
        jsr show256
+       str r7,continue_addr
        BR cmdloop
-
+;
+; dump 16 bytes on 16 byte boundry
+;
 dump:
 ;       MVIB R6,DUMPMODE
        LDTI DUMPMODE
        STT monmode
-       MVIW R2,DUMPMSG
+       MVIW R7,DUMPMSG
        JSR stringout
        jsr getaddress
-       MVIW R2,CRLF
+       str r7,continue_addr
+       MVIW R7,CRLF
        JSR stringout
 
 dumpcont:
+       ldr r7,continue_addr
        jsr showaddr
        jsr show16
+       str r7,continue_addr
        BR cmdloop
 
 examine:
 ;       MVIB R6,EXAMINEMODE
       LDTI EXAMINEMODE
       STT monmode
-       MVIW R2,EXAMINEMSG
-       JSR stringout
-       jsr getaddress
-       MVIW R2,CRLF
-       JSR stringout
+      MVIW R7,EXAMINEMSG
+      JSR stringout
+      jsr getaddress
+      str r7,continue_addr
+      MVIW R7,CRLF
+      JSR stringout
 
 examinecont:
+      ldr r7,continue_addr
       JSR showaddr
-      JSR showbyte
       LDAI ' '
       JSR uartout
 
       JSR uartin
       LDTI 01bh
       BREQ examdone
+      LDTI '-'
+      BREQ examdone
       LDTI 0dh
+      BREQ examnext
+      LDTI 0ah
       BREQ examnext
       JSR getnibblec
       SHL
@@ -1144,17 +1081,19 @@ examinecont:
       MVAT
       Pop
       ORT
-      STAVR R3
+      STAVR R7
 
 examnext:
-      INCR R3
+      INCR R7
+      str r7,continue_addr
       LDAI 0ah
       JSR uartout
       LDAI 0dh
       JSR uartout
       BR examinecont
+
 examdone:
-      MVIW R2,CRLF
+      MVIW R7,CRLF
       JSR stringout
       BR cmdloop
 
@@ -1163,24 +1102,27 @@ fillblock:
        LDTI FILLMODE
        STT monmode
 
-       MVIW R2,FILLMSG
+       MVIW R7,FILLMSG
        JSR stringout
        jsr getaddress
-       MVIW R2,CRLF
+       STR r7,continue_addr
+       MVIW R7,CRLF
        JSR stringout
 
 fillcont:
+      ldr r7,continue_addr
       jsr showaddr
-      MVIW R2,CRLF
+      MVIW R7,CRLF
       JSR stringout
-
+      ldr r7,continue_addr
 morefill:
       LDAI 0
-      STAVR R3
-      INCR R3
-      MVRLA R3
+      STAVR R7
+      INCR R7
+      MVRLA R7
       ANDI  0FFH
       BRNZ morefill
+      str r7,continue_addr
       LDAI 0ah
       JSR uartout
       LDAI 0dh
@@ -1189,10 +1131,10 @@ morefill:
 
 
 go:
-      MVIW R2,GOMSG
+      MVIW R7,GOMSG
       JSR stringout
       jsr getaddress
-      BRVR R3
+      BRVR R7
 
 dumpreg:
       JSR showregs
@@ -1206,22 +1148,22 @@ tests:
 ;      MVIB R6,NOMODE
       LDTI NOMODE
       STT monmode
-      MVIW R2,CRLF
+      MVIW R7,CRLF
       JSR stringout
       MVIW R3,testmenu
-      MVIW R4,0000h
+      MVIW R4,0000h  ; counter
 
 testsloop:
 
       INCR R3
       INCR R3
       LDAVR R3
-      MVARH R2
+      MVARH R7
       INCR  R3
       LDAVR R3
-      MVARL R2
+      MVARL R7
       INCR R3
-      LDAVR R2
+      LDAVR R7
       LDTI '-'
       BREQ testsloopdone
       MVRLA R4
@@ -1229,7 +1171,7 @@ testsloop:
       LDAI  '-'
       JSR uartout
       JSR stringout
-      MVIW R2,CRLF
+      MVIW R7,CRLF
       JSR stringout
       INCR R4
       BR testsloop
@@ -1239,7 +1181,7 @@ testsloopdone:
 ; multiple by 4 and add to test list base
 ; JSR via register holding info
 ;
-      MVIW R2,gettestpromopt
+      MVIW R7,gettestpromopt
       JSR stringout
 
       JSR getnibble
@@ -1270,16 +1212,16 @@ menucarry:
 
 dotest:
       LDAVR R3
-      MVARH R4
+      MVARH R7
       INCR  R3
       LDAVR R3
-      MVARL R4
-      JSRUR R4
+      MVARL R7
+      JSRUR R7
       BR cmdloop
 
 getaddress:
 ;
-; Read 4 char address and return in R3
+; Read 4 char address and return in R7
 ;
             Push
             JSR getnibble
@@ -1294,7 +1236,7 @@ getaddress:
             MVAT
             Pop
             ORT
-            MVARH R3
+            MVARH R7
 
             JSR getnibble
             SHL
@@ -1308,7 +1250,7 @@ getaddress:
             MVAT
             pop
             ORT
-            MVARL R3
+            MVARL R7
             POP
             RET
 ;
@@ -1326,7 +1268,7 @@ INAF:     JSR toupper
           ADDI 10
           RET
 ;
-; convert to uppercase
+; value in accumulator convert to uppercase
 ;
 toupper:  LDTI 'Z'
           BRGT lower
@@ -1335,25 +1277,26 @@ lower:
           SUBI 020h
           RET
 ;
-; display R3 followed by a ":" and " " for showaddr and nothing for shownum
+; display R7 (old r3) followed by
+; ":" and " " for showaddr and nothing for shownum
 ;
 showaddr:   Push
-            MVRHA R3
+            MVRHA R7
             SHR
             SHR
             SHR
             SHR
             JSR shownibble
-            MVRHA R3
+            MVRHA R7
             ANDI 0FH
             JSR shownibble
-            MVRLA R3
+            MVRLA R7
             SHR
             SHR
             SHR
             SHR
             JSR shownibble
-            MVRLA R3
+            MVRLA R7
             ANDI 0FH
             JSR shownibble
             LDAI ':'
@@ -1363,30 +1306,7 @@ showaddr:   Push
             POP
             RET
 
-shownum:   Push
-            MVRHA R3
-            SHR
-            SHR
-            SHR
-            SHR
-            JSR shownibble
-            MVRHA R3
-            ANDI 0FH
-            JSR shownibble
-            MVRLA R3
-            SHR
-            SHR
-            SHR
-            SHR
-            JSR shownibble
-            MVRLA R3
-            ANDI 0FH
-            JSR shownibble
-            POP
-            RET
-;
-; display R7 followed by a ":" and " "
-;
+shownum:
 showr7:     Push
             MVRHA R7
             SHR
@@ -1412,36 +1332,38 @@ showr7:     Push
 ;
 ;
 showregs:
-            MVIW R2,CRLF
+            pushr r7
+            MVIW R7,CRLF
             JSR stringout
-            MOVRR r0,r3
+            MOVRR r0,r7
             jsr showaddr
-            MOVRR r1,r3
+            MOVRR r1,r7
             jsr showaddr
-            MOVRR r2,r3
+            MOVRR r2,r7
             jsr showaddr
-            MOVRR r3,r3
+            MOVRR r3,r7
             jsr showaddr
-            MOVRR r4,r3
+            MOVRR r4,r7
             jsr showaddr
-            MOVRR r5,r3
+            MOVRR r5,r7
             jsr showaddr
-            MOVRR r6,r3
+            MOVRR r6,r7
             jsr showaddr
-            MOVRR r7,r3
+            popr r7
             jsr showaddr
 
-            MVIW R2,CRLF
+            MVIW R7,CRLF
             JSR stringout
             RET
 ;
-; display upto 16 bytes point to by R3, stops on a 16 byte boundry, increments R3
+; display upto 16 bytes point to by R7 (old r3), stops on a 16 byte boundry
+; increments R7
 ;
 show16:     JSR showbyte
-            INCR R3
+            INCR R7
             LDAI ' '
             JSR uartout
-            MVRLA R3
+            MVRLA R7
             ANDI 0FH
             BRNZ show16
             LDAI 0ah
@@ -1450,34 +1372,39 @@ show16:     JSR showbyte
             JSR uartout
             RET
 ;
-; display upto 256 bytes point to by R3, stops on a 256 byte boundry, increments R3
+; display upto 256 bytes point to by R7 (old r3),
+; stops on a 256 byte boundry, increments R7
+;
 show256:
+          push
+show256loop:
           jsr showaddr
           jsr show16
-;          MVIW R2,CRLF
-;          JSR stringout
-          MVRLA R3
+
+;         MVIW R7,CRLF
+;         JSR stringout
+
+          MVRLA R7
           ANDI  0FFH
-          BRNZ show256
-          LDAI 0ah
+          BRNZ show256loop
           JSR uartout
           LDAI 0dh
           JSR uartout
+          pop
           RET
 ;
-; Output ASCII representation of a BYTE pointed to by R3
+; Output ASCII representation of a BYTE pointed to by R7 (OLD r7)
 ; or use showbytea in accumulator
-; both destructive for accumulator - no longer true with push/pop?
+; both destructive for accumulator - no longer true with push/pop
 :
 showbyte:   PUSH
-            LDAVR R3
-
+            LDAVR R7
             SHR
             SHR
             SHR
             SHR
             JSR shownibble
-            LDAVR R3
+            LDAVR R7
             ANDI 0FH
             JSR shownibble
             POP
@@ -1485,7 +1412,6 @@ showbyte:   PUSH
 ;
 showbytea:  PUSH
             PUSH
-
             SHR
             SHR
             SHR
@@ -1497,8 +1423,8 @@ showbytea:  PUSH
             POP
             RET
 ;
-; Display nibble in accumulator (destructive)
-; destroys  tmp
+; Display nibble in accumulator ((this looks wrong) destructive)
+;  destroys tmp register  - maybe add pusht - popt
 ;
 shownibble:  PUSH
              LDTI 9
@@ -1528,50 +1454,57 @@ ledout:
         OUTI  P0,(SWITCHLED)
         OUTA  P1
         RET
+;
 TIL311out:
         OUTI  P0,(TIL311)
         OUTA  P1
         RET
 ;
-; Output null terminated string pointed to by R2 to UART then send CR and LF
+; OLD: Output null terminated string pointed to by R2 to UART then send CR and LF
 ; Advances R2 to end of string
+;
+; Output null terminated string pointed to by R7 to UART
+; Advances R7 to end of string
 ;
 stringout:
         Push
 sloop:
-        LDAVR R2
+        LDAVR R7
         BRZ sloopdone
         JSR uartout
-        INCR R2
+        INCR R7
         BR sloop
 ;
-; send CR and LF
+; (not done send CR and LF)
 ;
 sloopdone:
         POP
         RET
 ;
-; output accumulator to UART
+; output accumulator to UART, wait for UART out available
 ;
 charout:
 uartout:
 ;
-; add for emulator
+; add for emulator, outputs via putch
 ;
-      BRDEV hard2
-      outa p2
-      ret
+        BRDEV emulator2
+        outa p2
+        ret
 ;
-hard2:
+emulator2:
         PUSH
         push
+;
 ; doubt 2nd push pop is needed, to be tested
+;
 uartoutw:
+;
+; test uart out is available
+;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
         ANDI  040h
-;
-; i think this a brnz test -- that didn't work
         BRZ   uartoutw
         POP
         OUTI  P0,UARTCS
@@ -1582,37 +1515,39 @@ uartoutw:
        RET
 
 ;
-; OLD
+; wait for UART character available then input to accumulator
 ;
-;        MVIW R7,01FFh
-;uartdelay:
-;        DECR R7
-;        MVRHA R7
-;        BRNZ uartdelay
-;        POP
-;        RET
-;
-; input UART to accumulator
+; Looks like this echos out character
+; should this be settable via a flag
 ;
 uartin:
 ;
-; add for emulator
+; added for emulator, emulator P2 reads a char via getch
 ;
-    BRDEV hard3
-    inp p2
-    ret
+        BRDEV emulator3
+        inp p2
+        ret
 ;
-hard3:
+emulator3:
+;
+; wait for a charater available at input
+;
         OUTI  P0,(UARTCS!UARTA5)
         INP   p1
         ANDI  01h
         BRZ   uartin
         OUTI  P0,(UARTCS)
         INP   P1
-        JSR uartout
+;
+; emulator
+;
+;        ldti  0ah
+;        breq uartin
+        JSR   uartout
         RET
 ;
 ; long delay (approx 5 seconds)
+; destroys r7
 ;
 LONGDELAY:
         PUSH
@@ -1625,6 +1560,7 @@ longdelayloop:
         RET
 ;
 ; short delay (approx 1 second)
+; destroys R7
 ;
 SHORTDELAY:
         PUSH
@@ -1636,17 +1572,9 @@ shortdelayloop:
         POP
         RET
 
-NODELAY:
-      PUSH
-      MVIW R7,00FFh
-nodelayloop:
-      DECR R7
-      MVRHA R7
-      BRNZ nodelayloop
-      POP
-      RET
 ;
 ; toggle input switch (with debounce)
+; destroys r7
 ;
 switchtoggle:
         Push
@@ -1672,9 +1600,10 @@ delayb:
 ;
 blink:
 ;
-; added for emulator
+; added for emulator, return immediately to skip counting
+; destroys r7
 ;
-;        ret
+;       ret
         Push
         ON
         MVIW R7,03FFh
@@ -1696,7 +1625,8 @@ offloop:
 ;
 lblink:
 ;
-; emulator change
+; emulator change, return immediately to skip counting
+; destroys r7
 ;
 ;       ret
         Push
@@ -1718,8 +1648,7 @@ loffloop:
 ;
 ; blink n times in accumulator
 ;
-;
-; emulator change
+; emulator change, return immediately to skip counting
 ;
 ;    ret
 nblink:
@@ -1752,9 +1681,12 @@ CONTMSG: DB "CONTINUE MODE",0
 gettestpromopt: DB "Enter Test number:",0
 ;
 helpmenu:
-DB "H      - Display help menu",0ah,0dh
+DB "0      - Exit monitor (emulator only)",0ah,0dh
+DB "H      - This help menu",0ah,0dh,0ah,0dh
+
 DB "B AAAA - Show 256 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
 DB "         followed by CR display next 256 bytes",0ah,0dh
+DB "C      - Copy BASIC test program into interpreter buffer",0ah,0dh
 DB "D AAAA - Show 16 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
 DB "         followed by CR display next 16 bytes",0ah,0dh
 DB "E AAAA - show contents of location AAAA (Output AAAA:XX)",0ah,0dh
@@ -1764,10 +1696,12 @@ DB "F AAAA   Fill contents 256 bytes of memory at address AAAA with 0(16 byte al
 DB "         if followed by CR fill next 256 bytes",0ah,0dh
 DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
 DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
-DB "L      - List current basic program",0ah,0dh
+DB "L      - List current BASIC program",0ah,0dh
+DB "P      - Enter a program line to BASIC program",0ah,0dh
 DB "R      - Show registers",0ah,0dh
 DB "T      - Test menu",0ah,0DH
-DB "Z      - Run Basic interpreter",0ah,0DH
+DB "Y      - run BASIC test code (tmp)",0ah,0DH
+DB "Z      - Run program with Basic interpreter",0ah,0DH
 DB 0
 ;
 ; TEST HELP MESSAGES
@@ -1807,6 +1741,10 @@ testmenu:
       DW additest,addimenu
       DW addictest,addicmenu
       DW movrrtest,movrrmenu
+      DW add16tests,add16menu
+      DW mem_indirect_tests,mem_indirect_menu
+      DW mul16,mul16menu
+      DW pushr_popr_tests,pushr_popr_menu
       DW endmenu,endmenu
 
 ;
@@ -1829,6 +1767,10 @@ cmpmenu: DB "Compare Branch",0
 addimenu: DB "ADDI",0
 addicmenu: DB "ADDI",0
 movrrmenu: DB "MOVRR",0
+add16menu: DB "add16",0
+mem_indirect_menu: DB "mem indirect",0
+mul16menu: DB "mul16",0
+pushr_popr_menu: DB "pushr popr",0
 endmenu: DB "-",0
 
 ;
@@ -1904,12 +1846,12 @@ endmenu: DB "-",0
 ;     INP   P1
 ;     XORI  055H
 ;     OUTA  P1
-      JSRUR R2
+;      JSRUR R2
 
 ;
 ; BIOS ENTRY Points
 ;
-    org 0ff00h
+    org 0ffc0h
 
 e_stringout:
     jsr stringout

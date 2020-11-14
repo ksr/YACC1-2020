@@ -1,0 +1,285 @@
+e4bdh: BASIC_LIST       - <  1186>    138 
+e3dch: BASIC_RUN        - <   988>    145 
+ec00h: BASIC_TEST       - <  2316>    185 
+0100h: BASIC_VARS       - <    59>   1046   1064 
+e4d6h: BASLIST1         - <  1202>   1195 
+e576h: BASLIST10        - <  1303>   1297 
+e585h: BASLIST11        - <  1311>   1305 
+e594h: BASLIST12        - <  1319>   1313 
+e5a3h: BASLIST13        - <  1327>   1321 
+e5b2h: BASLIST14        - <  1335>   1329 
+e5c1h: BASLIST15        - <  1343>   1337 
+e5d0h: BASLIST16        - <  1351>   1345 
+e5dfh: BASLIST17        - <  1359>   1353 
+e5eeh: BASLIST18        - <  1367>   1361 
+e5fdh: BASLIST19        - <  1375>   1369 
+e4e1h: BASLIST2         - <  1208>   1204 
+e60ch: BASLIST20        - <  1383>   1377 
+e61bh: BASLIST21        - <  1391>   1385 
+e62eh: BASLIST22        - <  1401>   1393 
+e641h: BASLIST23        - <  1411>   1403 
+e654h: BASLIST24        - <  1421>   1413 
+e667h: BASLIST25        - <  1431>   1423 
+e67ah: BASLIST26        - <  1441>   1433 
+e68dh: BASLIST27        - <  1451>   1443 
+e6a0h: BASLIST28        - <  1461>   1453 
+e6b3h: BASLIST29        - <  1471>   1463 
+e4f8h: BASLIST3         - <  1223>   1210 
+e6c6h: BASLIST30        - <  1481>   1473 
+e6d9h: BASLIST31        - <  1491>   1483 
+e6ech: BASLIST32        - <  1501>   1493 
+e6ffh: BASLIST33        - <  1511>   1503 
+e712h: BASLIST34        - <  1521>   1513 
+e725h: BASLIST35        - <  1531>   1523 
+e738h: BASLIST36        - <  1541>   1533 
+e747h: BASLIST37        - <  1549>   1543 
+e760h: BASLIST38        - <  1566>   1551 
+e514h: BASLIST4         - <  1240>   1225 
+e52bh: BASLIST5         - <  1263>   1242 
+e53ah: BASLIST6         - <  1271>   1265 
+e549h: BASLIST7         - <  1279>   1273 
+e558h: BASLIST8         - <  1287>   1281 
+e567h: BASLIST9         - <  1295>   1289 
+e76ch: BASLIST_DONE     - <  1574>   1199   1205   1570 
+e4c1h: BASLIST_LOOP     - <  1191>   1200   1206   1221   1238   1261   1269 
+e508h: BASLIST_STRING   - <  1231>   1235 
+e510h: BASLIST_STRINGEND - <  1236>   1233 
+ea88h: BASU_FIND        - <  2202>    167    514   2158 
+eab1h: BASU_FIND1       - <  2233>   2220 
+eab2h: BASU_FIND2       - <  2235>   2225 
+ea8dh: BASU_FIND_LOOP   - <  2206>   2248 
+ea9ah: BASU_FIND_LOOP1  - <  2215>   2209 
+eabbh: BASU_FIND_MOVEPTR - <  2243>   2247 
+020eh: BAS_BUFFERENDHI  - <    71>    158   2186 
+e069h: BAS_COPYLOOP     - <   187>    194    196 
+020ah: BAS_CURRENTTOKEN - <    69>   1834   1842   1867   1991 
+e414h: BAS_ERROR        - <  1076>    268    966 
+0282h: BAS_FORSTACK     - <    88>    240 
+0280h: BAS_FORSTACKPTR  - <    87> 
+02c0h: BAS_GOSUBPTR     - <    97> 
+02c2h: BAS_GOSUBSTACK   - <    98>    238 
+e077h: BAS_MSG1         - <   211>    267 
+e08ah: BAS_MSG2         - <   212> 
+e09bh: BAS_MSG3         - <   213>    962 
+0204h: BAS_NXTPTR       - <    66>   1719   1731   1747   1782   1800   1855 
+0200h: BAS_RUN_ENDED    - <    64>    242    532    869   1022 
+0208h: BAS_TOKCOUNTER   - <    68>   1832   2033   2059   2061   2072   2075 
+020ch: BAS_TOKENBUFFER  - <    70>    137    156    249   2204 
+0206h: BAS_TOKPTR       - <    67>   1830 
+2000h: BAS_TOK_BUF_END  - <   115>    157 
+1000h: BAS_TOK_BUF_START - <   111>    155    184 
+0202h: BAS_TXTPTR       - <    65>   1610   1699   1761   1828   1856   1910 
+ffc4h: CHAROUT          - <     5>    575 
+eaf6h: CRLF             - <  2311>    609   1544 
+e0bbh: EXE              - <   227> 
+e0cbh: EXE_ACCEPT       - <   258>    291    308    314    317    531    545 
+e0d8h: EXE_ACCEPT_DONE  - <   269>    266 
+e34bh: EXE_END_STMT     - <   868>    944 
+e14fh: EXE_EXPR         - <   386>    315    459    475    484    494    546 
+e186h: EXE_EXPR_AND     - <   424>    400 
+e19ch: EXE_EXPR_DONE    - <   442>    404 
+e158h: EXE_EXPR_LOOP    - <   393>    413    422    431    440 
+e17bh: EXE_EXPR_MINUS   - <   415>    398 
+e191h: EXE_EXPR_OR      - <   433>    402 
+e170h: EXE_EXPR_PLUS    - <   406>    396 
+e0e8h: EXE_FACTOR       - <   298>    334    349    358    367 
+e0f6h: EXE_FACTOR1      - <   311>    305 
+e107h: EXE_FACTOR2      - <   320>    313 
+e3eeh: EXE_FINISHED     - <  1021>   1009 
+e400h: EXE_FINISHED_YES - <  1033>   1025   1029 
+e30fh: EXE_FOR_STMT     - <   782>    920 
+e40ah: EXE_GET_VARIABLE - <  1063>    289    739 
+e2abh: EXE_GOSUB_STMT   - <   653>    908 
+e205h: EXE_GOTO_STMT    - <   543>    958 
+e275h: EXE_IF_STMT      - <   617>    896 
+e28bh: EXE_IF_STMT1     - <   628>    626 
+e1e7h: EXE_INDEX_FIND   - <   513>    522 
+e0bbh: EXE_INIT         - <   237>   1001 
+e1ebh: EXE_JUMP_LINE    - <   521>    547    679 
+e202h: EXE_JUMP_LINE1   - <   536>    524    526 
+e28eh: EXE_LET_STMT     - <   635>    902    952 
+e3d3h: EXE_LINE_STMT    - <   971>   1015 
+e303h: EXE_NEXT_DONE    - <   767>    757 
+e2d5h: EXE_NEXT_STMT    - <   710>    938 
+e441h: EXE_NEXT_TOK3_DONE - <  1121>   1117 
+e439h: EXE_NEXT_TOK3_LOOP - <  1115>   1119 
+e415h: EXE_NEXT_TOKEN   - <  1083>    270    348    357    366    407    416 
+e41fh: EXE_NEXT_TOKEN1  - <  1092>   1086 
+e428h: EXE_NEXT_TOKEN2  - <  1100>   1094 
+e433h: EXE_NEXT_TOKEN3  - <  1110>   1102 
+e443h: EXE_NEXT_TOKEN4  - <  1125>   1112 
+e445h: EXE_NUM          - <  1132>    306    656 
+e349h: EXE_PEEK_STMT    - <   856>    926 
+e34ah: EXE_POKE_STMT    - <   862>    932 
+e211h: EXE_PRINT_STMT   - <   552>    890 
+e22ah: EXE_PRINT_STMT1  - <   570>    559 
+e23ah: EXE_PRINT_STMT2  - <   579>    573 
+e245h: EXE_PRINT_STMT3  - <   585>    581 
+e257h: EXE_PRINT_STMT4  - <   595>    587    589    591 
+e26bh: EXE_PRINT_STMT_DONE - <   608>    593    603    605 
+e216h: EXE_PRINT_STMT_LOOP - <   556>    606 
+e25dh: EXE_PRINT_STMT_TEST - <   600>    568    577    583 
+e1a3h: EXE_RELATION     - <   455>    622 
+e1e0h: EXE_RELATION_DONE - <   501>    471 
+e1d5h: EXE_RELATION_EQ  - <   492>    469 
+e1cah: EXE_RELATION_GT  - <   482>    467 
+e1ach: EXE_RELATION_LOOP - <   462>    480    490    499 
+e1bfh: EXE_RELATION_LT  - <   473>    465 
+e2c7h: EXE_RETURN_STMT  - <   685>    914 
+e3dfh: EXE_RUN          - <  1008>   1016 
+e3e8h: EXE_RUN_CONT     - <  1014>   1011 
+e403h: EXE_SET_VARIABLE - <  1045>    645    742    817 
+e352h: EXE_STMT         - <   876>    627    982 
+e35ch: EXE_STMT1        - <   893>    889 
+e3adh: EXE_STMT10       - <   947>    943 
+e3bbh: EXE_STMT11       - <   955>    949 
+e3c4h: EXE_STMT12       - <   961>    957 
+e365h: EXE_STMT2        - <   899>    895 
+e36eh: EXE_STMT3        - <   905>    901 
+e377h: EXE_STMT4        - <   911>    907 
+e380h: EXE_STMT5        - <   917>    913 
+e389h: EXE_STMT6        - <   923>    919 
+e392h: EXE_STMT7        - <   929>    925 
+e39bh: EXE_STMT8        - <   935>    931 
+e3a4h: EXE_STMT9        - <   941>    937 
+e0b1h: EXE_STMT_MSG     - <   214> 
+e452h: EXE_STRING       - <  1153>    564 
+e10bh: EXE_TERM         - <   330>    390    408    417    426    435 
+e127h: EXE_TERM_ASTR    - <   347>    340 
+e148h: EXE_TERM_DONE    - <   374>    345 
+e114h: EXE_TERM_LOOP    - <   337>    354    363    372 
+e13dh: EXE_TERM_MOD     - <   365>    344 
+e132h: EXE_TERM_SLASH   - <   356>    342 
+e0dch: EXE_VARFACTOR    - <   282>    321 
+e44eh: EXE_VARIABLE_NUM - <  1147>    285    636    728    795 
+e8bdh: FOUND            - <  1781>   1764 
+e8c7h: NOKEYOWRDSFOUND  - <  1789>   1760 
+e7deh: PARSECHAR1       - <  1618>   1615 
+e826h: PARSECHAR10      - <  1663>   1660 
+e82eh: PARSECHAR11      - <  1668>   1665 
+e836h: PARSECHAR12      - <  1673>   1670 
+e83eh: PARSECHAR13      - <  1678>   1675 
+e846h: PARSECHAR14      - <  1683>   1680 
+e84eh: PARSECHAR15      - <  1688>   1685 
+e7e6h: PARSECHAR2       - <  1623>   1620 
+e7eeh: PARSECHAR3       - <  1628>   1625 
+e7f6h: PARSECHAR4       - <  1633>   1630 
+e7feh: PARSECHAR5       - <  1638>   1635 
+e806h: PARSECHAR6       - <  1643>   1640 
+e80eh: PARSECHAR7       - <  1648>   1645 
+e816h: PARSECHAR8       - <  1653>   1650 
+e81eh: PARSECHAR9       - <  1658>   1655 
+eac4h: PARSE_ADD16      - <  2254>   2178   2278 
+ea60h: PARSE_ADDLINE    - <  2150> 
+e97fh: PARSE_AF         - <  1953>   1950 
+e996h: PARSE_ERROR_PRINT - <  1980> 
+e997h: PARSE_FINISHED   - <  1986>   1849   1879 
+e9adh: PARSE_FINISHED_YES - <  1997>   1990   1993 
+e975h: PARSE_GETNIBBLE  - <  1946>   1911   1918   1925   1932 
+e851h: PARSE_GET_NEXT_TOK - <  1697>   1833   1866 
+e85fh: PARSE_GNT1       - <  1710>   1701 
+e866h: PARSE_GNT1LOOP   - <  1714>   1718 
+e876h: PARSE_GNT2       - <  1726>   1713 
+e884h: PARSE_GNT3       - <  1737>   1729 
+e88ah: PARSE_GNT3LOOP   - <  1741>   1745 
+e89ah: PARSE_GNT4       - <  1752>   1740 
+e8ddh: PARSE_GNT_ERROR  - <  1804>   1796   1798 
+e8e2h: PARSE_INIT       - <  1825>   2031 
+0300h: PARSE_INPUT_LINE - <   103> 
+ead9h: PARSE_ISDIGIT    - <  2287>   1712   1717 
+eae6h: PARSE_ISDIGIT_AF - <  2294>   2291 
+eaf3h: PARSE_ISDIGIT_NO - <  2304>   2289   2296   2298   2298 
+eaf0h: PARSE_ISDIGIT_YES - <  2300>   2292 
+e76fh: PARSE_KEYWORDS   - <  1581>   1757 
+e9bdh: PARSE_LINE       - <  2030>    179 
+ea05h: PARSE_LINE1      - <  2078>   2064 
+ea1eh: PARSE_LINE1DONE  - <  2094>   2086 
+ea0bh: PARSE_LINE1LOOP  - <  2083>   2093 
+ea2dh: PARSE_LINE2      - <  2104>   2080 
+ea46h: PARSE_LINE_DONE  - <  2120>   2055 
+e9d8h: PARSE_LINE_LOOP  - <  2051>   2076   2102   2106   2118 
+e900h: PARSE_NEXT       - <  1848>   1895   2052 
+e907h: PARSE_NEXT1      - <  1853>   1850 
+e90fh: PARSE_NEXT1LOOP  - <  1858>   1863 
+e919h: PARSE_NEXT2      - <  1865>   1861 
+e927h: PARSE_NEXT3      - <  1878>   1870   1885 
+e937h: PARSE_NEXTDONE   - <  1887>   1880   1883 
+e93eh: PARSE_NEXTDONE2  - <  1893>   1890 
+e947h: PARSE_NUM        - <  1908>   2040   2065   2107 
+e9bdh: PARSE_POS        - <  2017> 
+ea60h: PARSE_REMOVELINE - <  2157>    170    172 
+ea6ch: PARSE_REMOVELINE1 - <  2164>   2160   2162 
+ea7dh: PARSE_REMOVELOOP - <  2179>   2188 
+e7ceh: PARSE_SINGLECHAR - <  1607>   1728 
+e987h: PARSE_STRING     - <  1963> 
+e990h: PARSE_STRING1    - <  1969>   1966 
+eacfh: PARSE_SUB16      - <  2270> 
+e8fch: PARSE_TOKEN      - <  1841>   1964   2053 
+0400h: PARSE_TOKEN_BUFFER - <   107>   1829   2034   2128 
+e9b2h: PARSE_VARIABLE_NUM - <  2005> 
+e8a6h: PCMPLOOP         - <  1762>   1770 
+ffcch: SHOWADDR         - <     7>    964   1198   1569 
+ffd8h: SHOWBYTE         - <    10>    965 
+ffd4h: SHOWR7           - <     9>    165    168    597   1218   1561 
+e8b4h: SKIPLOOP         - <  1774>   1777 
+e8b4h: SKIPTOEND        - <  1772>   1767 
+ffc0h: STRINGOUT        - <     4>    566    610    963   1197   1228   1267 
+0019h: TOKENIZER_AND    - <    40>    399   1432   1641 
+001bh: TOKENIZER_ASTR   - <    42>    339   1452   1651 
+0010h: TOKENIZER_CALL   - <    31>   1352   1593 
+0015h: TOKENIZER_COMMA  - <    36>    572   1392   1621 
+0024h: TOKENIZER_CR     - <    51>    530    602    646    659    775    836 
+0009h: TOKENIZER_ELSE   - <    24>   1296   1586 
+0014h: TOKENIZER_END    - <    35>    942   1384   1597 
+0001h: TOKENIZER_EOF    - <    16>    604   1028   1203   1702   1992   2208 
+0023h: TOKENIZER_EQ     - <    50>    468    641    810   1532   1686 
+0000h: TOKENIZER_ERROR  - <    15>   1194   1598   1805 
+000ah: TOKENIZER_FOR    - <    25>    790    918   1304   1587 
+000eh: TOKENIZER_GOSUB  - <    29>    654    906   1336   1591 
+000dh: TOKENIZER_GOTO   - <    28>    544    956   1328   1590 
+0022h: TOKENIZER_GT     - <    49>    466   1522   1681 
+001eh: TOKENIZER_HASH   - <    45>   1482   1666 
+0007h: TOKENIZER_IF     - <    22>    619    894   1280   1584 
+001fh: TOKENIZER_LEFTP  - <    46>    312    590   1492   1661 
+0005h: TOKENIZER_LET    - <    20>    948    950   1264   1582 
+0025h: TOKENIZER_LINENUM - <    52>    980   1101   1550   2036 
+0021h: TOKENIZER_LT     - <    48>    464   1512   1676 
+0018h: TOKENIZER_MINUS  - <    39>    397   1422   1636 
+001dh: TOKENIZER_MOD    - <    44>    343   1472   1656 
+000ch: TOKENIZER_NEXT   - <    27>    629    723    936   1320   1589 
+0002h: TOKENIZER_NUMBER - <    17>    304    588    657   1085   1209   1720 
+001ah: TOKENIZER_OR     - <    41>    401   1442   1646 
+0012h: TOKENIZER_PEEK   - <    33>    924   1368   1595 
+0017h: TOKENIZER_PLUS   - <    38>    395   1412   1631 
+0013h: TOKENIZER_POKE   - <    34>    930   1376   1596 
+0006h: TOKENIZER_PRINT  - <    21>    553    888   1272   1583 
+0011h: TOKENIZER_REM    - <    32>   1360   1594   1869 
+000fh: TOKENIZER_RETURN - <    30>    686    912   1344   1592 
+0020h: TOKENIZER_RIGHTP - <    47>    316   1502   1671 
+0016h: TOKENIZER_SEMICOLON - <    37>    580   1402   1626 
+001ch: TOKENIZER_SLASH  - <    43>    341   1462 
+0003h: TOKENIZER_STRING - <    18>    558   1111   1224   1748   1965   2079 
+0008h: TOKENIZER_THEN   - <    23>    623   1288   1585 
+000bh: TOKENIZER_TO     - <    26>    821   1312   1588 
+0004h: TOKENIZER_VARIABLE - <    19>    290    586    639    733    808    900 
+e4ach: TOKL_CALL        - <  1182>   1354 
+e46ch: TOKL_ELSE        - <  1171>   1298 
+e4a7h: TOKL_END         - <  1181>   1386 
+e4b2h: TOKL_ERROR       - <  1183>   1196   1567 
+e472h: TOKL_FOR         - <  1172>   1306 
+e487h: TOKL_GOSUB       - <  1176>   1338 
+e481h: TOKL_GOTO        - <  1175>   1330 
+e462h: TOKL_IF          - <  1169>   1282 
+e456h: TOKL_LET         - <  1167>   1266 
+e47bh: TOKL_NEXT        - <  1174>   1322 
+e49bh: TOKL_PEEK        - <  1179>   1370 
+e4a1h: TOKL_POKE        - <  1180>   1378 
+e45bh: TOKL_PRINT       - <  1168>   1274 
+e496h: TOKL_REM         - <  1178>   1362 
+e48eh: TOKL_RETURN      - <  1177>   1346 
+e466h: TOKL_THEN        - <  1170>   1290 
+e477h: TOKL_TO          - <  1173>   1314 
+e89fh: TOP              - <  1758>   1779 
+ffd0h: TOUPPER          - <     8>   1954 
+ffc8h: UARTOUT          - <     6>   1220   1230   1249   1260   1395   1397 
+ecf0h: ZZZZ             - <  2336> 

@@ -28,7 +28,7 @@
  *
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #define DEBUG_PRINTF(...)  printf(__VA_ARGS__)
@@ -206,7 +206,8 @@ tokenizer_goto(const char *program) {
     DEBUG_PRINTF("tokenizer_goto %d\n", current_token);
 }
 
-void new_tokenizer_goto(int ptr) {
+void
+new_tokenizer_goto(int ptr) {
     DEBUG_PRINTF("new_tokenizer_goto %d\n", ptr);
     tokenBufferPtr = ptr;
     current_token = get_next_token();
@@ -222,7 +223,8 @@ tokenizer_init(const char *program) {
     DEBUG_PRINTF("tokenizer_init %d\n", current_token);
 }
 
-void new_tokenizer_init(int ptr) {
+void
+new_tokenizer_init(int ptr) {
     DEBUG_PRINTF("new_tokenizer_init %d\n", ptr);
     new_tokenizer_goto(ptr);
     current_token = get_next_token();
@@ -520,7 +522,7 @@ const char *tokenizeLine(char *line) {
     char newLine[20];
     char buff[100];
 
-    DEBUG_PRINTF("tl start[%s]\n", line);
+    DEBUG_PRINTF("tokenizeLine start[%s]\n", line);
     tokenizer_init(line);
 
     workLine.lineNumber = tokenizer_num();
@@ -532,7 +534,9 @@ const char *tokenizeLine(char *line) {
         switch (tokenizer_token()) {
             case TOKENIZER_NUMBER:
                 tmp = tokenizer_num();
-                memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                //memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                workLine.lineTokens[tokencounter] = (tmp >> 8) & 0xff;
+                workLine.lineTokens[tokencounter+1] = tmp & 0xff;
                 tokencounter += 2;
                 break;
             case TOKENIZER_STRING:
@@ -543,22 +547,23 @@ const char *tokenizeLine(char *line) {
                 break;
             case TOKENIZER_VARIABLE:
                 tmp = tokenizer_variable_num();
-                memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                //memcpy(&workLine.lineTokens[tokencounter], &tmp, sizeof (tmp));
+                workLine.lineTokens[tokencounter] = (tmp >> 8) & 0xff;
+                workLine.lineTokens[tokencounter+1] = tmp & 0xff;
                 tokencounter += 2;
                 break;
         }
         tokenizer_next();
     }
-    //tokenizer_next();
 
-    DEBUG_PRINTF("tokencounter=[%d]\n", tokencounter);
-
-    DEBUG_PRINTF("Line[%d] Tokens: ", workLine.lineNumber);
+    DEBUG_PRINTF("TokenizeLine complete tokencounter=[%d]\n", tokencounter);
+    DEBUG_PRINTF("Copy line number[%d] Tokens: ", workLine.lineNumber);
+    
     for (int i = 0; i < tokencounter;) {
         DEBUG_PRINTF(" T-%02d ", workLine.lineTokens[i]);
         switch (workLine.lineTokens[i++]) {
             case TOKENIZER_NUMBER:
-                memcpy(&tmp, &workLine.lineTokens[i], 2);
+                memcpy(&tmp, &workLine.lineTokens[i], 2); //hi  low bytes need to be swaped now?
                 DEBUG_PRINTF("number=[%04xH] [%d] ", tmp, tmp);
                 i += 2;
                 break;
@@ -567,12 +572,12 @@ const char *tokenizeLine(char *line) {
                 i += (strlen(&workLine.lineTokens[i]));
                 break;
             case TOKENIZER_VARIABLE:
-                memcpy(&tmp, &workLine.lineTokens[i], 2);
+                memcpy(&tmp, &workLine.lineTokens[i], 2); 
                 DEBUG_PRINTF("var_id=[%04xH] [%d] ", tmp, tmp);
                 i += 2;
                 //DEBUG_PRINTF("var_id=[%d] ", workLine.lineTokens[i++]);
                 break;
-            case TOKENIZER_LINENUM:
+            case TOKENIZER_LINENUM:  // is this every used?
                 memcpy(&tmp, &workLine.lineTokens[i], 2);
                 DEBUG_PRINTF("number=[%04xH] [%d] ", tmp, tmp);
                 i += 4;
@@ -585,7 +590,12 @@ const char *tokenizeLine(char *line) {
     DEBUG_PRINTF("\n--\n");
 
     buff[bufferptr++] = TOKENIZER_LINENUM;
-    memcpy(&buff[bufferptr], &workLine.lineNumber, 2);
+    
+    buff[bufferptr]  = (workLine.lineNumber >> 8) & 0xff;
+    buff[bufferptr+1]  = (workLine.lineNumber 8) & 0xff;
+    
+    //memcpy(&buff[bufferptr], &workLine.lineNumber, 2);
+    
     DEBUG_PRINTF("\n--1\n");
 
     int tmp1 = tokencounter + 6;
@@ -595,6 +605,9 @@ const char *tokenizeLine(char *line) {
 
     bufferptr += 4;
 
+    buff[bufferptr]  = (workLine.lineNumber >> 8) & 0xff;
+    buff[bufferptr+1]  = (workLine.lineNumber 8) & 0xff;
+    
     memcpy(&buff[bufferptr], &workLine.lineTokens[0], tokencounter);
     DEBUG_PRINTF("\n--3\n");
     bufferptr += tokencounter;

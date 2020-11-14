@@ -166,16 +166,25 @@ char *filename;
     }
 }
 
+void regdump() {
+    int i;
+
+    printf("reg dump - ");
+    for (i = 0; i < REGISTERS; i++)
+        printf("%d=[%04x]", i, registers[i]);
+    printf("\n");
+}
+
 void dump(int start, int end) {
     int i;
 
-    printf("dump %d %d\n", start, end);
+    //printf("dump %d %d\n", start, end);
     for (i = start; i < end; i++) {
         if ((i & 0x0f) == 0)
             printf("\n %04x ", i);
         printf("%02x ", memory[i]);
     }
-    printf("\n\n");
+    printf("\n");
 }
 
 unsigned char memory_read(int address) {
@@ -185,6 +194,7 @@ unsigned char memory_read(int address) {
 void memory_write(int address, unsigned char value) {
     if (address > 0xdfff) {
         printf("Rom Write\n");
+        regdump();
         exit(0);
     }
     memory[address] = value;
@@ -271,11 +281,42 @@ void out_off() {
     out = 0;
     //printf("out off\n");
 }
+#define RUN 0
+#define HALT 1
+#define SINGLESTEP 2
+#define JUMPOVER 3
+int stepmode = 0;
+int jsrdepth = 0;
+int jsrover = 0;
 
-/*
- * 
- */
-
+void debug_mode(int mode) {
+    char c;
+    while (1) {
+        c = toupper(getchar());
+        if (c == 'C') {
+            return;
+        } else if (c == 'S') {
+            stepmode = SINGLESTEP;
+            jsrover = 0;
+            return;
+        } else if (c == 'R') {
+            stepmode = RUN;
+            return;
+        } else if (c == 'J') {
+            stepmode = JUMPOVER;
+            jsrover = jsrdepth;
+            return;
+        } else if (c == 'D') {
+            dump(0x0200, 0x021f);
+            dump(0x0f80, 0x0f8f);
+            dump(0x0400, 0x040F);
+            dump(0x1000, 0x10FF);
+            regdump();
+        } else {
+            return;
+        }
+    }
+}
 
 int main(int argc, char** argv) {
     int i, ins;
@@ -284,24 +325,47 @@ int main(int argc, char** argv) {
     unsigned char hi, lo;
     int src, dest;
     bool tmpCarry;
+    char c;
 
     in = 0;
     registers[PC].word = 0xf000;
     int singleStep = 0;
     int breakAddress = 0;
-    jsrdepth = 0;
     pushpopdepth = 0;
     pushpoprdepth = 0;
 
-
+    int regtrigger = 0;
 
     load_file("../Assembler/basic.img");
     load_file("../Assembler/monitor.img");
     dump(0xf000, 0xf0ff);
 
     while (1) {
+
         ins = memory_read(register_read_word(PC));
-        //DEBUG_PRINTF("Process opcode [%02x] at [%04x]\n", ins, registers[PC].word);
+        if((registers[7].word == 0x1002) && (registers[PC].word == 0xeaff))
+            debug_mode(SINGLESTEP);
+        if (stepmode != 0) {
+            if (stepmode == SINGLESTEP) {
+                for (int t = 3; t < jsrdepth; t++)
+                    printf("->");
+                printf("singlestep [%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word, acc, register_read_word(3), register_read_word(7));
+                debug_mode(SINGLESTEP);
+            }
+            if ((stepmode == JUMPOVER) && (jsrover <= jsrdepth)) {
+                for (int t = 3; t < jsrdepth; t++)
+                    printf("->");
+                printf("singlestep [%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word, acc, register_read_word(3), register_read_word(7));
+                debug_mode(SINGLESTEP);
+            }
+        }
+
+        if ((register_read_word(PC) >= 0xe000) && (register_read_word(PC) <= 0xEFFF)) {
+            for (int t = 3; t < jsrdepth; t++)
+                DEBUG_PRINTF("->");
+            DEBUG_PRINTF("Process opcode [%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word, acc, register_read_word(3), register_read_word(7));
+        }
+
         register_inc(PC);
         switch (ins) {
             case 0x00:
@@ -315,8 +379,13 @@ int main(int argc, char** argv) {
                 out_off();
                 break;
             case 0x03:
-                printf("halt opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+
+                printf("Halt[%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, register_read_word(3), register_read_word(7));
+                dump(0x0200, 0x021f);
+                dump(0x0f80, 0x0f8f);
+                dump(0x0400, 0x040F);
+                dump(0x1000, 0x1020);
+                debug_mode(HALT);
                 break;
             case 0x04:
                 jsrdepth++;
@@ -326,7 +395,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
 
                 DEBUG_PRINTF("JSR pc=%04x sp=%04x jsrd=%d %02x%02x\n", (register_read_word(PC) - 3), register_read_word(SP), jsrdepth, hi, lo);
-
+                //dump(0xdump0200, 0x020f);
                 memory_write(register_read_word(SP), register_read_hi(PC));
                 register_dec(SP);
                 memory_write(register_read_word(SP), register_read_lo(PC));
@@ -340,7 +409,7 @@ int main(int argc, char** argv) {
             case 0x05:
                 jsrdepth--;
                 DEBUG_PRINTF("RET pc=%04x sp=%04x jsrd=%d ", (register_read_word(PC) - 1), register_read_word(SP), jsrdepth);
-
+                //dump(0x0200, 0x020f);
                 register_inc(SP);
                 register_write_lo(PC, memory_read(register_read_word(SP)));
                 register_inc(SP);
@@ -356,7 +425,7 @@ int main(int argc, char** argv) {
             case 0x07:
                 reg = memory_read(register_read_word(PC)) & 0x07;
                 register_inc(PC);
-                DEBUG_PRINTF("PUSHR reg=%d pc=%04x pre-sp=%04x\n", reg, (register_read_word(PC) - 1), register_read_word(SP));
+                //DEBUG_PRINTF("PUSHR reg=%d pc=%04x pre-sp=%04x\n", reg, (register_read_word(PC) - 1), register_read_word(SP));
                 memory_write(register_read_word(SP), register_read_hi(reg));
                 register_dec(SP);
                 memory_write(register_read_word(SP), register_read_lo(reg));
@@ -366,7 +435,7 @@ int main(int argc, char** argv) {
             case 0x08:
                 reg = (memory_read(register_read_word(PC)) >> 4) & 0x07;
                 register_inc(PC);
-                DEBUG_PRINTF("POPR reg=%d pc=%04x pre-sp=%04x\n", reg, (register_read_word(PC) - 1), register_read_word(SP));
+                //DEBUG_PRINTF("POPR reg=%d pc=%04x pre-sp=%04x\n", reg, (register_read_word(PC) - 1), register_read_word(SP));
                 register_inc(SP);
                 register_write_lo(reg, memory_read(register_read_word(SP)));
                 register_inc(SP);
@@ -374,13 +443,13 @@ int main(int argc, char** argv) {
                 break;
             case 0x09:
                 pushpopdepth++;
-                DEBUG_PRINTF("PUSH pc=%04x pre-sp=%04x ppd=%d\n", (register_read_word(PC) - 1), register_read_word(SP), pushpopdepth);
+                //DEBUG_PRINTF("PUSH pc=%04x pre-sp=%04x ppd=%d\n", (register_read_word(PC) - 1), register_read_word(SP), pushpopdepth);
                 memory_write(register_read_word(SP), acc_read());
                 register_dec(SP);
                 break;
             case 0x0a:
                 pushpopdepth--;
-                DEBUG_PRINTF("POP pc=%04x pre-sp=%04x ppd=%d\n", (register_read_word(PC) - 1), register_read_word(SP), pushpopdepth);
+                //DEBUG_PRINTF("POP pc=%04x pre-sp=%04x ppd=%d\n", (register_read_word(PC) - 1), register_read_word(SP), pushpopdepth);
                 register_inc(SP);
                 acc_write(memory_read(register_read_word(SP)));
                 break;
@@ -780,7 +849,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 break;
             case 0xb5:
-                acc = ~memory_read(register_read_word(PC));
+                acc = ~acc;
                 break;
             case 0xb6:
                 acc = acc << 1;
@@ -967,7 +1036,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                acc= memory_read(register_read_word(IR));
+                acc = memory_read(register_read_word(IR));
                 break;
             case 0xed:
                 hi = memory_read(register_read_word(PC));
@@ -976,7 +1045,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                memory_write(register_read_word(IR),acc);
+                memory_write(register_read_word(IR), acc);
                 break;
             case 0xee:
                 hi = memory_read(register_read_word(PC));
@@ -985,7 +1054,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                treg= memory_read(register_read_word(IR));
+                treg = memory_read(register_read_word(IR));
                 break;
             case 0xef:
                 hi = memory_read(register_read_word(PC));
@@ -994,7 +1063,7 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                memory_write(register_read_word(IR),treg);
+                memory_write(register_read_word(IR), treg);
                 break;
             case 0xf0:
             case 0xf1:
@@ -1031,10 +1100,10 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                memory_write(register_read_word(IR),register_read_hi(reg));
-                register_inc(IR);  
-                memory_write(register_read_word(IR),register_read_lo(reg));
-                register_inc(IR); 
+                memory_write(register_read_word(IR), register_read_hi(reg));
+                register_inc(IR);
+                memory_write(register_read_word(IR), register_read_lo(reg));
+                register_inc(IR);
                 break;
         }
     }

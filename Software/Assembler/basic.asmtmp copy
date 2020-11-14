@@ -1,13 +1,13 @@
 ;
 ; BIOS Entry Points
 ;
-stringout:  EQU 0ffc0h
-charout:    EQU 0ffc4h
-uartout:    EQU 0ffc8h
-showaddr:   EQU 0ffcch
-toupper:    EQU 0ffd0h
-showr7:     EQU 0ffd4h
-showbyte:   equ 0ffd8h
+stringout:  EQU 0ff00h
+charout:    EQU 0ff04h
+uartout:    EQU 0ff08h
+showaddr:   EQU 0ff0ch
+toupper:    EQU 0ff10h
+showr7:     EQU 0ff14h
+showbyte:   equ 0ff18h
 
 ;
 ; Basic interpreter tokens
@@ -66,16 +66,13 @@ bas_txtptr:       EQU 0202h ; pointer into text line being parse
 bas_nxtptr:       EQU 0204h ;
 bas_tokptr:       EQU 0206h ; pointer into tmp token buffer
 bas_tokcounter:   EQU 0208h ; counter for tmp token buffer
-bas_currenttoken:  EQU 020Ah ; used in parsing
+bas_currentoken:  EQU 020Ah ; used in parsing
 bas_tokenbuffer:  EQU 020Ch ;Pointer to start of token buffer
 bas_bufferendhi:  EQU 020Eh ; HACK, above buffer should end on 0xXXFF boundry
                             ; this value should be + 1 end of buffer
                             ; if buffer is 0x1000-0x1fff this is
                             ; set to 0x2000. Used in moving buffer around
                             ; in add and remove line
-bas_newlinenum:   EQU 0210h ; line number of new line to be added
-bas_newlinelen:   EQU 0212h ; line length of new line to be added
-bas_insertptr:    EQU 0214H
 
 ;
 ; for next statement stack ptr and stack data
@@ -115,8 +112,9 @@ bas_tok_buf_start: EQU 1000h
 ;
 ; Basic interpreter token buffer end + 1
 ;
-;bas_tok_buf_end: EQU 2000h debug
-bas_tok_buf_end: EQU 1100h
+bas_tok_buf_end: EQU 2000h
+
+
 
 ;
 ; basic interpreter, add IO and peek/poke
@@ -154,56 +152,9 @@ bas_tok_buf_end: EQU 1100h
 ;
 ; Hack later pass in R7
 ;
-      MVIW R7,bas_tok_buf_start
+      MVIW R7,basic_test
       STR R7,bas_tokenbuffer
-      mviw r7,bas_tok_buf_end
-      str r7,bas_bufferendhi
       Ret
-;
-      ORG 0e030h
-;
-; tests - called from monitor
-;
-      jsr showr7
-      mviw r7,0010
-      jsr basu_find
-      jsr showr7
-      mviw r7,0010
-      jsr parse_removeline
-      ret
-;
-      org 0e050h
-;
-; parse line
-;
-      jsr parse_line
-      ret
-;
-      ORG 0e060h
-;
-      mviw R7,bas_tok_buf_start
-      mviw R6,BASIC_TEST
-      mviw R5,0400h
-bas_copyloop:
-      ldavr R6
-      stavr r7
-      incr r6
-      incr r7
-      decr r5
-      mvrha r5
-      brnz bas_copyloop
-      mvrla r5
-      brnz bas_copyloop
-      ret
-
-;
-; copy test code into main buffer
-;
-; Hack later pass in R7
-;
-;      MVIW R7,basic_test
-;      STR R7,bas_tokenbuffer
-;      Ret
 
 ;
 ; basic interpreter messages
@@ -246,7 +197,7 @@ exe_init:
 ; initialize tokenbufferptr to start of tokenBuffer (actual memory address)
 ;
 ;   tok_init:
-    LDR R3,bas_tokenbuffer
+    LDR R7,bas_tokenbuffer
     RET
 
 ;
@@ -562,7 +513,7 @@ exe_print_stmt_loop:
 ; exe_string may not be needed tokenbufferptr is at string ?
 ;
     jsr exe_string
-;    movrr r7,r2
+    movrr r7,r2
     jsr stringout
     jsr exe_next_token
     br exe_print_stmt_test
@@ -1112,13 +1063,13 @@ exe_next_token3:
   BRNEQ exe_next_token4
   incr r3
 
-exe_next_tok3_loop:
+exe_next_token3_loop:
   LDAVR R3
-  BRZ exe_next_tok3_done
+  BRZ exe_next_token3_done
   incr r3
-  BR exe_next_tok3_loop
+  BR exe_next_token3_loop
 
-exe_next_tok3_done:
+exe_next_token3_done:
   incr r3
   RET
 
@@ -1224,7 +1175,7 @@ baslist3:
     LDTI TOKENIZER_STRING
     BRNEQ baslist4
     incr r3
-    movrr r3,r7
+    movrr r3,r2
     jsr stringout
     ldai ' '
     jsr uartout
@@ -1576,7 +1527,14 @@ baslist_done:
     ret
 
 ;
+;
 ; Basic Interpreter Parser
+; R3   =  UTILITY PTR
+; These are TBD
+; R4.L =  INPUT TEXT LINE PTR
+; R4.H =  INPUT TEXT LINE NEXTPTR
+; R5.L =  TOKEN BUFFER PTR
+; R5.H =  CURRENT TOKEN
 ;
 parse_keywords:
       DB "let",0,TOKENIZER_LET
@@ -1606,10 +1564,8 @@ parse_keywords:
 ;
 parse_singlechar:
 ;
-    pushr r3
     LDR r3,bas_txtptr
     ldavr r3
-    popr r3
 ;
     ldti 0ah
     brneq parsechar1
@@ -1695,14 +1651,17 @@ parsechar15:
 ; under development fix ptr nextptr
 
 parse_get_next_tok:
-    pushr r3
-    LDR R3,bas_txtptr
+    LDR r3,bas_txtptr
+    ldavr r3
+    brnz parse_gnt1
+    ldai TOKENIZER_EOF
+    ret
+
+parse_gnt1:
 ;
 ; is digit
 ;
 ; chcek for number
-;
-parse_gnt1:
     ldavr r3
     jsr parse_isdigit
     brz parse_gnt2
@@ -1713,23 +1672,23 @@ parse_gnt1loop:
     brnz parse_gnt1loop
     STR r3,bas_nxtptr
     ldai TOKENIZER_NUMBER
-    popr r3
     ret
+;
+parse_gnt2:
 ;
 ; singlechar
 ;
-parse_gnt2:
    ldavr r3
    jsr parse_singlechar
    BRZ parse_gnt3
    incr r3
    STR r3,bas_nxtptr
-   popr r3
    ret
+;
+parse_gnt3:
 ;
 ; quote
 ;
-parse_gnt3:
     ldavr R3
     ldti '"'
     brneq parse_gnt4
@@ -1741,7 +1700,6 @@ parse_gnt3loop:
     incr r3
     STR r3,bas_nxtptr
     ldai TOKENIZER_STRING
-    popr r3
     ret
 ;
 parse_gnt4:
@@ -1778,7 +1736,6 @@ found:
     incr r4
     ldavr r4
     popr r4
-    popr r3
     ret
 
 nokeyowrdsfound:
@@ -1794,48 +1751,50 @@ nokeyowrdsfound:
     INCR r3
     str r3,bas_nxtptr
     LDAI tokenizer_variable
-    popr r3
     RET
-
 parse_gnt_error:
     ldai tokenizer_error
-    popr r3
     ret
 
 ;
 ; void TOKENIZER_GOTO (char * program)
 ;
-; under development, may not be needed
+; under development
 ;
-;parse_goto:
-;    str r3,bas_txtptr
-;    jsr parse_get_next_tok
-;    sta bas_currenttoken
-;    ret
+parse_goto:
+    str r3,bas_txtptr
+    jsr parse_get_next_tok
+    sta bas_currentoken
+    ret
 
 ;
 ; void tokenizer_init(int ptr)
+;
+; changed to set ptr to 0, assumes input line buffer is 256 byte aligned
+; so set ptrs to 0
+; ptr into line buffer R4.L
+; ptr int token buffer R5.L
+; token counter R5.H
 ;
 ; under development
 ;
 parse_init:
 
-    pushr r3
-    STR R7,bas_txtptr
+    MVIW r3,parse_input_line
+    STR R3,bas_txtptr
     MVIW r3,parse_token_buffer
     STR  R3,bas_tokptr
     mviw r3,0
     str r3,bas_tokcounter
     jsr parse_get_next_tok
-    sta bas_currenttoken
-    popr r3
+    sta bas_currentoken
     ret
 
 ;
 ; int tokenizer_token(void)
 :
 parse_token:
-    lda bas_currenttoken
+    lda bas_currentoken
     ret
 
 ;
@@ -1845,9 +1804,7 @@ parse_next:
     jsr parse_finished
     brz parse_next1
     ret
-
 parse_next1:
-    pushr r3
     ldr r3,bas_nxtptr
     str r3,bas_txtptr
 
@@ -1858,21 +1815,14 @@ parse_next1loop:
     incr r3
     br parse_next1loop
 
-
 parse_next2:
-    str r3,bas_txtptr
     jsr parse_get_next_tok
-    sta bas_currenttoken
+    sta bas_currentoken
 
     ldti TOKENIZER_REM
     breq parse_next3
-    popr r3
     ret
 
-;
-; this needs to be fixed
-; if rem return to parsel line then copy into token buffer
-;
 parse_next3:
     JSR parse_finished
     BRNZ parse_nextdone
@@ -1891,7 +1841,6 @@ parse_nextdone:
 parse_nextdone2:
     str r3,bas_nxtptr
     jsr parse_next
-    popr r3
     ret
 
 ;
@@ -1903,55 +1852,7 @@ parse_nextdone2:
 ;
 ; Should this advance the line ptr?
 ;
-
 parse_num:
-    pushr r3
-    pushr r4
-    pushr r5
-    pushr r6
-    mviw r6,0           ;accumlate val in r6
-    LDR r3,bas_txtptr
-    jsr parse_num_char
-    mvarl r6
-parse_num_loop:
-    jsr parse_num_char
-    push
-    ldti 0FFH
-    breq parse_num_done
-
-    movrr r6,r5
-    mviw r4,0ah
-    jsr parse_mul16
-    pop
-    mviw r6,0
-    mvarl r6
-    jsr parse_add16
-    movrr r7,r6
-    br parse_num_loop
-parse_num_done:
-    pop
-    movrr r6,r7
-    popr r6
-    popr r5
-    popr r4
-    popr r3
-    ret
-
-parse_num_char:
-    LDAVR R3
-    JSR parse_isdigit
-    BRNZ parse_num_char1
-    ldai 0ffh
-    ret
-parse_num_char1:
-    ldavr r3
-    SUBI '0'
-    incr r3
-    RET
-
-parse_num_old:
-    pushr r3
-    LDR r3,bas_txtptr
     JSR parse_getnibble
     SHL
     SHL
@@ -1979,7 +1880,6 @@ parse_num_old:
     pop
     ORT
     MVARL R7
-    popr r3
     RET
 
 ;
@@ -1988,8 +1888,16 @@ parse_num_old:
 ; return hex nibble in accumulator
 ;
 parse_getnibble:
+      MVIW r3,parse_input_line
+      mvrla r4
+      mvarl r3
+;
       LDAVR R3
-      incr r3
+;
+; Risk if input line is greater then 255 chars, maybe test at input
+;
+      incr r4
+
       LDTI '9'
       BRGT parse_af
       SUBI '0'
@@ -2002,8 +1910,6 @@ parse_af:
 ;
 ; void tokenizer_string(char *dest, int len)
 ;
-; not used, in line parse_line
-;
 parse_string:
     JSR parse_token
     LDTI TOKENIZER_STRING
@@ -2011,56 +1917,31 @@ parse_string:
     ret
 
 parse_string1:
-    pushr r3
-    LDR r3,bas_txtptr
+    MVIW r3,parse_input_line
+    mvrla r4
+    mvarl r3
+    ;
     LDAVR R3
 
 
 ;
 ; void tokenizer_error_print(void)
 ;
-; fix
-;
 parse_error_print:
-    halt
 
 ;
 ; int tokenizer_finished(void)
 ;
 parse_finished:
-    pushr r3
-    LDR r3,bas_txtptr
-    ldavr r3
-    brz parse_finished_yes
-    lda bas_currenttoken
-    ldti TOKENIZER_EOF
-    breq parse_finished_yes
-    popr r3
-    ldai 0
-    ret
-parse_finished_yes:
-    ldai 1
-    popr r3
-    ret
 
 ;
 ; int tokenizer_variable_num(void)
 ;
 parse_variable_num:
-      pushr r3
-      LDR r3,bas_txtptr
-      ldavr r3
-      subi 'A'
-      mvarl r7
-      ldai 0
-      mvarh r7
-      popr r3
-      ret
 
 ;
 ; char *const tokenizer_pos(void)
 ;
-; probably not used
 parse_pos:
 
 ;not used old
@@ -2071,122 +1952,26 @@ parse_pos:
 ;
 ; char *tokenizeLine(char *line)
 ;
-; assume input text string in parse_input_line
-;
-
 parse_line:
-    JSR PARSE_INIT
-    MVIW R3,6              ;all lines have a 6 bytes including EOL token
-    str r3,bas_tokcounter
     MVIW R3,parse_token_buffer
-
-    LDAI TOKENIZER_LINENUM ;start with linenum token
+    LDAI 0
+    mvarl R3
+    mvarl R4
+    MVARL R5
+    LDAI TOKENIZER_LINENUM
     STAVR R3
     INCR R3
 
-    JSR parse_num           ;store line number
-    str r7,bas_newlinenum
-    mvrla r7
-    stavr r3
-    incr r3
-    mvrha r7
-    stavr r3
-    incr r3
+    JSR parse_num ; testexamine
 
-    incr r3                ; skip over line length - fill in later
-    incr r3
+    ;
+    LDAVR R3
 
-parse_line_loop:
-    JSR parse_next
-    JSR parse_token
-    ldti TOKENIZER_CR
-    BREQ parse_line_done
+JSR parse_token
+LDTI TOKENIZER_STRING
+BREQ parse_string1
+ret
 
-    STAVR R3
-    INCR R3
-    ldr r5,bas_tokcounter
-    incr r5
-    str r5,bas_tokcounter
-
-    ldti TOKENIZER_NUMBER
-    BRNEQ parse_line1
-    JSR parse_num
-    mvrla r7
-    stavr r3
-    incr r3
-    mvrha r7
-    stavr r3
-    incr r3
-    ldr r5,bas_tokcounter
-    incr r5
-    incr r5
-    str r5,bas_tokcounter
-    BR parse_line_loop
-
-parse_line1:
-    ldti TOKENIZER_STRING
-    BRNEQ parse_line2
-    ldr r4,bas_txtptr
-    incr r4                   ;skip over opening "
-
-parse_line1loop:
-    ldavr r4
-    ldti '"'
-    breq parse_line1done
-    stavr r3
-    incr r3
-    incr r4
-    ldr r5,bas_tokcounter
-    incr r5
-    str r5,bas_tokcounter
-    BR parse_line1loop
-parse_line1done:
-    incr r4                   ;skip over closing "
-    ldai 0                    ;add null into token buffer
-    stavr R3
-    incr r3
-    ldr r5,bas_tokcounter
-    incr r5
-    str r5,bas_tokcounter
-    str r3,BAS_TOKPTR
-    str r4,bas_txtptr
-    BR parse_line_loop
-
-parse_line2:
-    ldti TOKENIZER_VARIABLE
-    BRNEQ parse_line_loop
-    JSR parse_variable_num
-    mvrla r7
-    stavr r3
-    incr r3
-    mvrha r7
-    stavr r3
-    incr r3
-    ldr r5,bas_tokcounter
-    incr r5
-    incr r5
-    str r5,bas_tokcounter
-    BR parse_line_loop
-
-parse_line_done:
-    ldai TOKENIZER_CR           ;tack CR to end of buffer
-    STAVR R3
-    INCR R3
-;    ldr r5,bas_tokcounter
-;    incr r5
-;    str r5,bas_tokcounter
-
-    mviw r3,parse_token_buffer ; write length into token buffer
-    incr r3
-    incr r3
-    incr r3
-    ldr r7,bas_tokcounter
-    str r7,bas_newlinelen
-    mvrla r7
-    stavr r3
-    incr r3
-    mvrha r7
-    stavr r3
 
 ;
 ; void addLine(char *buff)
@@ -2199,77 +1984,8 @@ parse_line_done:
 ; r5 linelength
 ;
 parse_addline:
-      ldr r7,BAS_NEWLINENUM
-      JSR parse_removeline      ; if line number already exists delete it
-      ldr r7,bas_newlinelen     ; if new line is 6 bytes line just delete nothing to add
-      mvrla r7
-      ldti 6
-      brneq parse_addline1
-      ret
-
-parse_addline1:                 ;find insert location
-;      halt
-      ldr r7,BAS_NEWLINENUM
-      ldr r3,bas_tokenBuffer
-
-parse_addlineloop:
-      str r3,bas_insertptr
-      incr r3                   ;get line number of line in token buffer into r6
-      ldavr r3
-      mvarl r6
-      incr r3
-      ldavr r3
-      mvarh r6
-      jsr parse_compare
-      ldti 0ffh
-      breq parse_addroom
-
-      incr r3                   ;get line length
-      ldavr r3
-      mviw r6,0                 ;set r6 to length - assumes < 256 bytes
-      mvarl r6
-      decr r6                   ;account for 3 bytes of linenum token and linenum
-      decr r6
-      decr r6
-addline_moveptr:              ; advance pointer to next line
-      incr r3
-      decr r6
-      mvrla r6
-      brnz addline_moveptr
-      br parse_addlineloop
 
 
-parse_addroom:               ; make room
-      mviw r7,BAS_TOK_BUF_END
-;      decr r7
-      ldr  r6,BAS_NEWLINELEN
-      jsr parse_sub16
-      mviw r5,BAS_TOK_BUF_END
-;      decr r5
-
-parse_roomloop:
-      decr r7
-      decr r5
-      ldavr r7
-      stavr r5
-
-      ldr r6,bas_insertptr
-      jsr PARSE_COMPARE
-      brnz parse_roomloop
-
-      ldr r7,bas_insertptr
-      MVIW R6,parse_token_buffer
-
-
-parse_insertloop:
-      ldavr r6
-      stavr r7
-      incr r6
-      incr r7
-      ldti 024h ; sub in actual eol token here
-      brneq parse_insertloop
-
-      ret
 
 ;
 ; void removeLine(int lineNum)
@@ -2291,8 +2007,6 @@ parse_removeline1:
     incr r7
     ldavr r7
     mvarh r6
-
-    decr r7         ;backup to start of line
     decr r7
     decr r7
     decr r7
@@ -2302,7 +2016,7 @@ parse_removeloop:
     stavr r5
     incr r5
     incr r7
-    MVRHA r7
+    mvarh r7
 
     ldt  bas_bufferendhi
 
@@ -2314,125 +2028,63 @@ parse_removeloop:
 ;
 
 
+
+;
 ; run & parse utilites
 ;
 
 ;
-; find in the token buffer linenum in r7
+; findin the token buffer linenum in r7
 ;
 basu_find:
-    pushr r5                  ; save r5
-    LDR  r5,bas_tokenBuffer   ; r5 ptr to token buffer
+;    jsr showr7
+    pushr r5
+    LDR  r5,bas_tokenBuffer
 
 basu_find_loop:
-    ldavr r5                  ;get token
-    ldti TOKENIZER_EOF        ;EOF
-    brneq basu_find_loop1     ;no continue
-    mviw r7,0                 ;return 0 in r7 and 0 in accumulator (why?)
+    ldavr r5
+    ldti 01
+    brneq basu_find_loop1
+    mviw r7,0
     mvrla r7
     popr r5
-    ret
 
+    ret
 basu_find_loop1:
-    incr r5                   ;skip past linenum token
-    mvrla r7                  ;test low byte of linenum
-    MVAT
-    ldavr r5
-    brneq basu_find1          ;not eqaul
     incr r5
-    mvrha r7                  ;test high byte of linenum
+    mvrla r7
     MVAT
     ldavr r5
-    brneq basu_find2          ;not equal
-    decr r5                   ;if equal backup to linenum token
+    brneq basu_find1
+    incr r5
+    mvrha r7
+    MVAT
+    ldavr r5
+    brneq basu_find2
     decr r5
-    movrr r5,r7               ;set r7 to point to start of line
-    ldai 1                    ;return 1 in accumulator
+    decr r5
+    movrr r5,r7
+    ldai 1
     popr r5
     ret
 
 basu_find1:
-    incr r5                   ;skip over linenum high byte
+    incr r5
 basu_find2:
-    incr r5                   ;get line length
+    incr r5
     ldavr r5
-    mviw r6,0                 ;set r6 to length - assumes < 256 bytes
+    mviw r6,0
     mvarl r6
-    decr r6                   ;account for 3 bytes of linenum token and linenum
     decr r6
     decr r6
-basu_find_moveptr:            ; advance pointer to next line
+    decr r6
+basu_find_moveptr:
     incr r5
     decr r6
     mvrla r6
     brnz basu_find_moveptr
     br basu_find_loop
 
-
-;
-; Multiple numbers in R4 and R5
-;
-; Return in R7
-;
-; R6 = Bit counter
-;
-parse_mul16:
-        pushr r6
-
-        MVIW R7,0
-        MVIW R6,10h
-;       jsr showregs
-
-parse_mulloop:
-;       jsr showregs
-
-        mvrla r5
-        andi  01h
-        brz parse_mulskip
-        jsr parse_muladd16
-
-parse_mulskip:
-;
-; clear carry flag HACK
-;
-        addi 0
-;
-        mvrla r4
-        cshl
-        mvarl r4
-        mvrha r4
-        cshl
-        mvarh r4
-
-        addi 0
-
-        mvrha r5
-        cshr
-        mvarh r5
-        mvrla r5
-        cshr
-        mvarl r5
-
-        decr r6
-        mvrla r6
-        brnz parse_mulloop
-        popr r6
-        ret
-
-parse_muladd16:
-
-        MVRLA R7
-        MVAT
-        mvrla r4
-        ADDT
-        mvarl r7
-
-        mvrha r7
-        MVAT
-        mvrha r4
-        addtc
-        mvarh r7
-        ret
 
 ;
 ; 16 bit add r6 and r7, return result in r7
@@ -2451,58 +2103,26 @@ parse_add16:
       ret
 
 ;
-; 16 bit subtract of r6 from r7, return result in r7
-;
-parse_sub16:
-      mvrha r6
-      inva
-      mvarh r6
-      mvrla r6
-      inva
-      mvarl r6
-      incr r6
-      br parse_add16
-
-;
-; is digit in accumulator hex
+; is digit
 ; returns 1 if yes and 0 if no
 ;
-; what about upper/lower case
+; hack for now include HEX
 ;
 ; destroys tmp register
-parse_ishex:
-   ldti '0'
-   brlt parse_ishex_no
-   ldti '9'
-   brgt parse_ishex_af
-   br parse_ishex_yes
-
-parse_ishex_af:
-    ldti 'A'
-    brlt parse_ishex_no
-    ldti 'F'
-    brgt parse_ishex_no
-
-parse_ishex_yes:
-    ldai 1
-    ret
-
-parse_ishex_no:
-    ldai 0
-    ret
-
-;
-; is digit in accumulator decimal
-; returns 1 if yes and 0 if no
-;
-; destroys tmp register
-;
 parse_isdigit:
    ldti '0'
    brlt parse_isdigit_no
    ldti '9'
-   brgt parse_isdigit_no
+   brgt parse_isdigit_af
+   br parse_isdigit_yes
 
+parse_isdigit_af:
+    ldti 'A'
+    brlt parse_isdigit_no
+    ldti 'F'
+    brgt parse_isdigit_no
+
+parse_isdigit_yes:
     ldai 1
     ret
 
@@ -2511,50 +2131,12 @@ parse_isdigit_no:
     ret
 
 ;
-; 16 bit compare r6 and r7
-;
-; returns in accumulator
-; r7=r6 00
-; r7>r6 01
-; r7<r6 ff
-;
-; destory Tmp
-;
-parse_compare:
-  mvrha r6
-  mvat
-  mvrha r7
-  brneq parse_compareh
-  mvrla r6
-  mvat
-  mvrla r7
-  brneq parse_comparel
-  ldai 0
-  ret
-
-parse_compareh:
-  brlt parse_compareh1
-  ldai 1
-  ret
-parse_compareh1:
-  ldai 0ffh
-  ret
-
-parse_comparel:
-  brlt parse_comparel1
-  ldai 1
-  ret
-parse_comparel1:
-  ldai 0ffh
-  ret
-
-;
 ; STRINGS
 ;
 CRLF: DB 0ah,0dh,0
 ;
 
-      ORG 0EE00h
+      ORG 0EC00h
 
 basic_test:
     DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
