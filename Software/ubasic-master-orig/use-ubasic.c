@@ -29,7 +29,7 @@
  */
 
 #include "ubasic.h"
-
+/*
 static const char program[] =
 "10 gosub 100\n\
 20 for i = 125 to 130\n\
@@ -40,6 +40,12 @@ static const char program[] =
 90 end\n\
 100 print \"subroutine\"\n\
 110 return\n";
+*/
+static const char program[] =
+"10 a=1\n\
+20 a=a+1\n\
+30 print a\n\
+40 if a < 10 then goto 20\n";
 
 /*---------------------------------------------------------------------------*/
 int

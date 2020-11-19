@@ -8,6 +8,9 @@ showaddr:   EQU 0ffcch
 toupper:    EQU 0ffd0h
 showr7:     EQU 0ffd4h
 showbyte:   equ 0ffd8h
+showregs:   equ 0ffdch
+showbytea:  equ 0ffe0h
+showcarry:  equ 0ffe4h
 
 ;
 ; Basic interpreter tokens
@@ -208,9 +211,9 @@ bas_copyloop:
 ;
 ; basic interpreter messages
 ;
-bas_msg1: db "unexpected token",0,0ah,0dh
+bas_msg1: db "Accept - unexpected token",0,0ah,0dh
 bas_msg2: db "line not found",0,0ah,0dh
-bas_msg3: db "Basic ins not found ",0ah,0dh
+bas_msg3: db "Basic token not supported ",0ah,0dh
 exe_stmt_msg: db "EXE STMT ",0
 ;
 ; Basic interpreter - execution engine
@@ -264,8 +267,12 @@ exe_accept:
     MVAT
     POP
     BREQ exe_accept_done
+    JSR showbytea
+    ldai '-'
+    JSR uartout
     mviw R7,bas_msg1
     JSR bas_error
+
 exe_accept_done:
     jsr exe_next_token
     RET
@@ -351,6 +358,11 @@ exe_term_astr:
 ;
 ; do mulitply f1 = f1 * f2
 ;
+    pushr r4
+    movrr r6,r4
+    jsr PARSE_MUL16
+    movrr r7,r5
+    popr r4
     BR exe_term_loop
 
 exe_term_slash:
@@ -410,6 +422,9 @@ exe_expr_plus:
 ;
 ; t1 = t1 + t2
 ;
+    movrr r5,r7
+    jsr parse_add16
+    movrr r7,r5
     BR exe_expr_loop
 
 exe_expr_minus:
@@ -419,6 +434,9 @@ exe_expr_minus:
 ;
 ; t1 = t1 - t2
 ;
+    movrr r5,r7
+    jsr parse_sub16
+    movrr r7,r5
     BR exe_expr_loop
 
 exe_expr_and:
@@ -428,6 +446,9 @@ exe_expr_and:
 ;
 ; t1 = t1 & t2
 ;
+movrr r5,r7
+jsr parse_sub16
+movrr r7,r5
     BR exe_expr_loop
 
 exe_expr_or:
@@ -477,6 +498,14 @@ exe_relation_lt:
 ;
 ; r1 = r1 < r2
 ;
+    movrr  r5,r7
+    jsr parse_compare
+    ldti 0ffh
+    BRNEQ exe_rel_nlt
+    mviw r5,01h
+    BR exe_relation_loop
+exe_rel_nlt:
+    mviw r5,00h
     BR exe_relation_loop
 
 exe_relation_gt:
@@ -486,7 +515,14 @@ exe_relation_gt:
 ;
 ; r1 = r1 > r2
 ;
-
+    movrr  r5,r7
+    jsr parse_compare
+    ldti 01h
+    BRNEQ exe_rel_ngt
+    mviw r5,01h
+    BR exe_relation_loop
+exe_rel_ngt:
+    mviw r5,00h
     BR exe_relation_loop
 
 exe_relation_eq:
@@ -496,6 +532,13 @@ exe_relation_eq:
 ;
 ; r1 = r1 == r2
 ;
+    movrr  r5,r7
+    jsr parse_compare
+    brnz exe_rel_ne
+    mviw r5,01h
+    BR exe_relation_loop
+exe_rel_ne:
+    mviw r5,00h
     BR exe_relation_loop
 
 exe_relation_done:
@@ -615,20 +658,33 @@ exe_print_stmt_done:
 ; void if_statement()
 ;
 exe_if_stmt:
-    halt
     LDAI TOKENIZER_IF
     JSR exe_accept
 
     JSR exe_relation
+    MVRLA R7
+    push
     LDAI TOKENIZER_THEN
     JSR exe_accept
+    pop
+
     LDTI 1
     BRNEQ exe_if_stmt1
     JSR exe_stmt
-exe_if_stmt1:
-    jsr TOKENIZER_NEXT
-;    ////////
+    ret
 
+exe_if_stmt1:
+    jsr exe_next_token
+    LDAVR R3
+    LDTI TOKENIZER_CR
+    BREQ EXE_IF_STMT2
+    LDTI TOKENIZER_EOF
+    BRNEQ EXE_IF_STMT1
+    RET
+
+exe_if_stmt2:
+    JSR EXE_NEXT_TOKEN
+    RET
 ;
 ; void let_statement()
 ;
@@ -959,10 +1015,12 @@ exe_stmt11:
     ret
 
 exe_stmt12:
+    jsr showbytea
+    ldai '='
+    jsr uartout
     MVIW R7,bas_msg3
     jsr stringout
-    jsr showaddr
-    jsr showbyte
+    JSR SHOWREGS
     jsr bas_error
 
 ;
@@ -1041,13 +1099,19 @@ exe_finished_yes:
 ; ACCUMULATOR Variable ref number
 ;
 ; Destroys R2 and accumulator, could be fixed with a push/pop
+; DANGER USING R2 - NOW FOR MEM-DIRECT ADDRESSING SWITCH TO ANOTHER R ?
 ;
 exe_set_variable:
-    MVIW R2,BASIC_VARS
+    MVIW R2,BASIC_VARS ; SEE COMMENT below about memory alignment
+    SHL ; memory location x 2 (2 byte vars)
     MVARL R2
 ;
     MVRLA R7
     STAVR R2
+    INCR r2
+    mvrha r7
+    stavr r2
+
     RET
 ;
 ; VARIABLE_TYPE ubasic_get_variable(int varnum)
@@ -1062,11 +1126,13 @@ exe_set_variable:
 ;
 exe_get_variable:
     MVIW R2,BASIC_VARS
+    shl
     MVARL R2
 ;
     LDAVR R2
     MVARL R7
-    LDAI 0
+    INCR R2
+    LDAVR R2
     MVARH R7
     RET
 
@@ -1074,12 +1140,14 @@ exe_get_variable:
 ; hack this needs work
 ;
 bas_error:
+  HALT
   RET
 
 ;
 ; Tokenizer execute support code
 ;
-
+; tokenizer_next - exe version
+;
 exe_next_token:
   ldavr r3
   ldti TOKENIZER_NUMBER
@@ -1656,7 +1724,7 @@ parsechar8:
     ldai TOKENIZER_MOD
     ret
 parsechar9:
-    ldti '()'
+    ldti '('
     brneq parsechar10
     ldai TOKENIZER_LEFTP
     ret
@@ -1798,6 +1866,7 @@ nokeyowrdsfound:
     RET
 
 parse_gnt_error:
+    halt
     ldai tokenizer_error
     popr r3
     ret
@@ -1829,6 +1898,7 @@ parse_init:
     jsr parse_get_next_tok
     sta bas_currenttoken
     popr r3
+    halt
     ret
 
 ;
@@ -1839,9 +1909,10 @@ parse_token:
     ret
 
 ;
-; void tokenizer_next(void)
+; void tokenizer_next(void) parser version
 ;
 parse_next:
+;    halt
     jsr parse_finished
     brz parse_next1
     ret
@@ -1912,9 +1983,11 @@ parse_num:
     mviw r6,0           ;accumlate val in r6
     LDR r3,bas_txtptr
     jsr parse_num_char
+;   jsr SHOWBYTEA
     mvarl r6
 parse_num_loop:
     jsr parse_num_char
+;   jsr showbytea
     push
     ldti 0FFH
     breq parse_num_done
@@ -1922,11 +1995,13 @@ parse_num_loop:
     movrr r6,r5
     mviw r4,0ah
     jsr parse_mul16
+;    jsr showr7
     pop
     mviw r6,0
     mvarl r6
     jsr parse_add16
     movrr r7,r6
+;    jsr showr7
     br parse_num_loop
 parse_num_done:
     pop
@@ -1935,6 +2010,7 @@ parse_num_done:
     popr r5
     popr r4
     popr r3
+;    jsr showr7
     ret
 
 parse_num_char:
@@ -2032,6 +2108,12 @@ parse_finished:
     LDR r3,bas_txtptr
     ldavr r3
     brz parse_finished_yes
+;    ldti 0ah
+;    breq parse_finished_yes
+;    ldti 0dh
+;    breq parse_finished_yes
+    ldti TOKENIZER_EOF
+    breq parse_finished_yes
     lda bas_currenttoken
     ldti TOKENIZER_EOF
     breq parse_finished_yes
@@ -2075,7 +2157,9 @@ parse_pos:
 ;
 
 parse_line:
+;    halt
     JSR PARSE_INIT
+;    halt
     MVIW R3,6              ;all lines have a 6 bytes including EOL token
     str r3,bas_tokcounter
     MVIW R3,parse_token_buffer
@@ -2085,6 +2169,7 @@ parse_line:
     INCR R3
 
     JSR parse_num           ;store line number
+;    HALT
     str r7,bas_newlinenum
     mvrla r7
     stavr r3
@@ -2095,12 +2180,14 @@ parse_line:
 
     incr r3                ; skip over line length - fill in later
     incr r3
+;   halt
 
 parse_line_loop:
     JSR parse_next
     JSR parse_token
     ldti TOKENIZER_CR
     BREQ parse_line_done
+;    halt
 
     STAVR R3
     INCR R3
@@ -2187,6 +2274,7 @@ parse_line_done:
     incr r3
     mvrha r7
     stavr r3
+;    halt
 
 ;
 ; void addLine(char *buff)
@@ -2214,6 +2302,9 @@ parse_addline1:                 ;find insert location
 
 parse_addlineloop:
       str r3,bas_insertptr
+      ldavr r3
+      ldti TOKENIZER_EOF
+      BREQ parse_addroom
       incr r3                   ;get line number of line in token buffer into r6
       ldavr r3
       mvarl r6
@@ -2231,6 +2322,7 @@ parse_addlineloop:
       decr r6                   ;account for 3 bytes of linenum token and linenum
       decr r6
       decr r6
+
 addline_moveptr:              ; advance pointer to next line
       incr r3
       decr r6
@@ -2259,7 +2351,7 @@ parse_roomloop:
 
       ldr r7,bas_insertptr
       MVIW R6,parse_token_buffer
-
+;      halt
 
 parse_insertloop:
       ldavr r6
@@ -2381,10 +2473,10 @@ parse_mul16:
 
         MVIW R7,0
         MVIW R6,10h
-;       jsr showregs
+;        jsr showregs
 
 parse_mulloop:
-;       jsr showregs
+;        jsr showregs
 
         mvrla r5
         andi  01h
@@ -2395,16 +2487,24 @@ parse_mulskip:
 ;
 ; clear carry flag HACK
 ;
-        addi 0
+        ldai 0      ;clear carry -  maybe add a clear carry ins
+        cshl
+        addi 0      ; may not be needed
 ;
         mvrla r4
+;        jsr showcarry
         cshl
+;        jsr showcarry
         mvarl r4
         mvrha r4
+;        jsr showcarry
         cshl
+;        jsr showcarry
         mvarh r4
 
-        addi 0
+        ldai 0      ;clear carry
+        cshl
+;        addi 0
 
         mvrha r5
         cshr
@@ -2420,6 +2520,8 @@ parse_mulskip:
         ret
 
 parse_muladd16:
+        ldai 0      ;clear carry
+        cshl
 
         MVRLA R7
         MVAT
@@ -2438,6 +2540,9 @@ parse_muladd16:
 ; 16 bit add r6 and r7, return result in r7
 ;
 parse_add16:
+
+      ldai 0      ;clear carry
+      cshl
       MVRLA R6
       MVAT
       mvrla r7
@@ -2557,6 +2662,19 @@ CRLF: DB 0ah,0dh,0
       ORG 0EE00h
 
 basic_test:
+
+;    DB  25h,0ah,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h,24h,25h,14h,00h
+;    DB  0ah,00h,06h,04h,00h,00h,24h,25h,1eh,00h,11h,00h,04h,00h,00h,23h
+;    DB  04h,00h,00h,17h,02h,01h,00h,24h,25h,28h,00h,13h,00h,07h,04h,00h
+;    DB  00h,21h,02h,0ah,00h,08h,0dh,02h,14h,00h,24h,01h,00h,00h,00h,00h
+
+;    DB  25h,0ah,00h,14h,00h,06h,1fh,02h,01h,00h,17h,02h,02h,00h,20h,17h
+;    DB  02h,03h,00h,24h,25h,14h,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h
+;    DB  24h,25h,1eh,00h,0dh,00h,04h,01h,00h,23h,02h,02h,00h,24h,25h,28h
+;    DB  00h,0eh,00h,06h,04h,00h,00h,17h,04h,01h,00h,24h,25h,32h,00h,15h
+;    DB  00h,04h,02h,00h,23h,04h,00h,00h,17h,04h,01h,00h,17h,02h,05h,00h
+;    DB  24h,25h,3ch,00h,0ah,00h,06h,04h,02h,00h,24h,01h,00h,00h,00h,00h
+
     DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
     DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
     DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
@@ -2566,7 +2684,7 @@ basic_test:
     DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
     DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
     DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
-    DB  0dh,02h,7dh,00h,24h,25h,5ah,00h,12h,00h,06h,03h,6eh,65h,78h,74h
+    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
     DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
     DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
     DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h

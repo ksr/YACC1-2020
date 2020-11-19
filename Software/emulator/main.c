@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <termios.h>
+#include <unistd.h>
 
 #define DEBUG 0
 
@@ -197,6 +199,10 @@ void memory_write(int address, unsigned char value) {
         regdump();
         exit(0);
     }
+    if ((address == 0x0204) && (value == 0)) {
+        printf("argh\n");
+        regdump();
+    }
     memory[address] = value;
 }
 
@@ -292,7 +298,7 @@ int jsrover = 0;
 void debug_mode(int mode) {
     char c;
     while (1) {
-        c = toupper(getchar());
+        c = toupper(mygetchar());
         if (c == 'C') {
             return;
         } else if (c == 'S') {
@@ -317,6 +323,42 @@ void debug_mode(int mode) {
         }
     }
 }
+struct termios orig_termios;
+
+void enableRawMode() {
+    tcgetattr(STDIN_FILENO, &orig_termios);
+    //atexit(disableRawMode);
+    struct termios raw = orig_termios;
+    raw.c_iflag &= ~(ICRNL | IXON);
+    //raw.c_oflag &= ~(OPOST);
+    //raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
+    raw.c_lflag &= ~(ICANON | IEXTEN | ISIG);
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
+int mygetchar() {
+    enableRawMode();
+    char c;
+
+    while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q') {
+        /*    if (iscntrl(c)) {
+              printf("%d\n", c);
+            } else {
+              printf("%d ('%c')\n", c, c);
+            }
+         * */
+        //printf("%02x\n",c);
+        if (c == 0x0d)
+            c = 0x0a;
+        return (c);
+    }
+
+}
+
+void myputchar(char c) {
+    write(STDOUT_FILENO, &c, 1);
+    //printf("me\n");
+}
 
 int main(int argc, char** argv) {
     int i, ins;
@@ -326,6 +368,14 @@ int main(int argc, char** argv) {
     int src, dest;
     bool tmpCarry;
     char c;
+
+    enableRawMode();
+    int cc;
+
+    //while (1) {
+    //    myputchar(mygetchar());
+    //    printf(" cc=%d",cc++);
+    // }
 
     in = 0;
     registers[PC].word = 0xf000;
@@ -343,7 +393,7 @@ int main(int argc, char** argv) {
     while (1) {
 
         ins = memory_read(register_read_word(PC));
-        if((registers[7].word == 0x1002) && (registers[PC].word == 0xeaff))
+        if ((registers[7].word == 0x1002) && (registers[PC].word == 0xeaff))
             debug_mode(SINGLESTEP);
         if (stepmode != 0) {
             if (stepmode == SINGLESTEP) {
@@ -380,7 +430,7 @@ int main(int argc, char** argv) {
                 break;
             case 0x03:
 
-                printf("Halt[%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, register_read_word(3), register_read_word(7));
+                printf("\nHalt[%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, register_read_word(3), register_read_word(7));
                 dump(0x0200, 0x021f);
                 dump(0x0f80, 0x0f8f);
                 dump(0x0400, 0x040F);
@@ -606,7 +656,7 @@ int main(int argc, char** argv) {
                 portaddr = ins & 0x0f;
                 port[portaddr] = acc;
                 if (portaddr == 2) {
-                    putchar(port[portaddr]);
+                    myputchar(port[portaddr]);
                     DEBUG_PRINTF(" ");
                 }
                 break;
@@ -632,7 +682,7 @@ int main(int argc, char** argv) {
 
 
                 if ((port[0] == 0x40) && (portaddr == 1))
-                    putchar(port[portaddr]);
+                    myputchar(port[portaddr]);
                 break;
             case 0x80:
             case 0x81:
@@ -674,7 +724,7 @@ int main(int argc, char** argv) {
                     acc = 0xff;
                 }
                 if (portaddr == 2) {
-                    acc = getchar(); // get a char
+                    acc = mygetchar(); // get a char
                 }
                 break;
             case 0xa0:

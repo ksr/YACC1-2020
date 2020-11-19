@@ -145,7 +145,7 @@ alltests:
 ;         jsr rshrtest
 ;         jsr cshltest
 ;         JSR cshrtest
-;         JSR pshltest
+;         JSR pshrtest
 ;         JSR additest
 ;         JSR addictest
 ;         JSR subtest
@@ -301,6 +301,14 @@ add16tests:
 ; add r4 and r5
 ;
 
+      mviw r4,01234h
+      mviw r5,05678h
+      jsr do_add16_util
+
+      mviw r4,01288h
+      mviw r5,05699h
+      jsr do_add16_util
+
       mviw r4,0FFFAh
       mviw r5,0FFFCh
       jsr do_add16_util
@@ -321,6 +329,9 @@ do_add16_util:
       ret
 
 do_add16:
+      ldai 0      ;clear carry
+      cshl
+;      addi 0
       MVRLA R4
       MVAT
       mvrla r5
@@ -731,13 +742,13 @@ rshrloop:
           BRNZ rshrloop
           RET
 ;
-; shift left and propagate sign bit
+; shift right and propagate sign bit
 ;
-pshltest:
-          MVIW   R7,PSHIFT_LEFTHELP
+pshrtest:
+          MVIW   R7,PSHIFT_RIGHTHELP
           JSR    stringout
           MVIB   R3,10
-pshlloop:
+pshrloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
@@ -746,7 +757,7 @@ pshlloop:
 
           DECR R3
           MVRLA R3
-          BRNZ pshlloop
+          BRNZ pshrloop
           RET
 ;
 ; ring shift left through carry bit
@@ -759,7 +770,7 @@ cshlloop:
           JSR switchtoggle
           OUTI P0,(SWITCHLED)
           INP P1
-          CSHR
+          CSHL
           OUTA  P1
 
           DECR R3
@@ -849,10 +860,10 @@ cmpres:
 ; added for emulator eat cr
 ;
 eat_nl:
-      BRDEV eat_nl_done
-      PUSH
-      JSR uartin
-      pop
+;1      BRDEV eat_nl_done
+;1      PUSH
+;1      JSR uartin
+;1      pop
 eat_nl_done:
       ret
 ;
@@ -968,6 +979,8 @@ cmd_exit:
       DB 0
 
 cmd_basic:
+        MVIW R7,CRLF
+        JSR stringout
        jsr basic_run
        BR cmdloop
 
@@ -978,14 +991,19 @@ cmd_basicparse:
         ;until CR
         ;be sure line ends with a NULL or CR
         ;what does parse require???
+        MVIW R7,BASIC_PARSEMSG
+        JSR stringout
 
         mviw r3,line_buffer
 parse_inputloop:
         jsr uartin
         stavr r3
         incr r3
-        ldti 0ah
+        ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+;       halt
         brneq parse_inputloop
+        mviw r7,line_buffer
+        jsr show16
         mviw r7,line_buffer
         JSR BASIC_PARSE
         mviw r7,0400H
@@ -996,14 +1014,20 @@ do_parse:
         BR cmdloop
 
 cmd_basiclist:
+        MVIW R7,CRLF
+        JSR stringout
         JSR basic_list
         BR cmdloop
 
 cmd_basic_copy:
+        MVIW R7,CRLF
+        JSR stringout
         JSR basic_copy
         BR cmdloop
 
 cmd_basic_test:
+        MVIW R7,CRLF
+        JSR stringout
         JSR basic_test
         BR cmdloop
 
@@ -1061,6 +1085,8 @@ examinecont:
       JSR showaddr
       LDAI ' '
       JSR uartout
+
+      JSR SHOWBYTE
 
       JSR uartin
       LDTI 01bh
@@ -1333,6 +1359,7 @@ showr7:     Push
 ;
 showregs:
             pushr r7
+            pushr r7
             MVIW R7,CRLF
             JSR stringout
             MOVRR r0,r7
@@ -1351,9 +1378,15 @@ showregs:
             jsr showaddr
             popr r7
             jsr showaddr
+            push
+            ldai ' '
+            jsr uartout
+            pop
+            jsr showcarry
 
             MVIW R7,CRLF
             JSR stringout
+            popr r7
             RET
 ;
 ; display upto 16 bytes point to by R7 (old r3), stops on a 16 byte boundry
@@ -1422,6 +1455,22 @@ showbytea:  PUSH
             JSR shownibble
             POP
             RET
+;
+; Show carry flag
+;
+showcarry:
+            Push
+            brc show_yescarry
+            ldai 'X'
+            JSR uartout
+            pop
+            ret
+show_yescarry:
+            ldai 'C'
+            JSR uartout
+            pop
+            ret
+
 ;
 ; Display nibble in accumulator ((this looks wrong) destructive)
 ;  destroys tmp register  - maybe add pusht - popt
@@ -1538,6 +1587,11 @@ emulator3:
         BRZ   uartin
         OUTI  P0,(UARTCS)
         INP   P1
+        ldti 0dh          ; cobvert 0x0d to 0x0a
+        brneq uartinc
+        ldai 0ah
+uartinc:
+        JSR   LEDOUT
 ;
 ; emulator
 ;
@@ -1679,16 +1733,16 @@ GOMSG: DB 0ah,0dh,"GO ADDRESS:",0
 EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
 CONTMSG: DB "CONTINUE MODE",0
 gettestpromopt: DB "Enter Test number:",0
+BASIC_PARSEMSG: DB 0ah,0dh,"Enter Line:",0
 ;
 helpmenu:
-DB "0      - Exit monitor (emulator only)",0ah,0dh
+DB "0      - Exit (emulator only)",0ah,0dh
 DB "H      - This help menu",0ah,0dh,0ah,0dh
-
-DB "B AAAA - Show 256 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
-DB "         followed by CR display next 256 bytes",0ah,0dh
+DB "B AAAA - Show 256 bytes of memory (16 byte aligned)",0ah,0dh
+DB "         CR display next 256 bytes",0ah,0dh
 DB "C      - Copy BASIC test program into interpreter buffer",0ah,0dh
-DB "D AAAA - Show 16 bytes of memory at address AAAA (16 byte aligned)",0ah,0dh
-DB "         followed by CR display next 16 bytes",0ah,0dh
+DB "D AAAA - Show 16 bytes of memory at (16 byte aligned)",0ah,0dh
+DB "         CR display next 16 bytes",0ah,0dh
 DB "E AAAA - show contents of location AAAA (Output AAAA:XX)",0ah,0dh
 DB "         if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
 DB "         if followed by CR display next location",0ah,0dh
@@ -1696,11 +1750,11 @@ DB "F AAAA   Fill contents 256 bytes of memory at address AAAA with 0(16 byte al
 DB "         if followed by CR fill next 256 bytes",0ah,0dh
 DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
 DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
-DB "L      - List current BASIC program",0ah,0dh
-DB "P      - Enter a program line to BASIC program",0ah,0dh
+DB "L      - List BASIC program",0ah,0dh
+DB "P      - Enter program line to BASIC",0ah,0dh
 DB "R      - Show registers",0ah,0dh
 DB "T      - Test menu",0ah,0DH
-DB "Y      - run BASIC test code (tmp)",0ah,0DH
+DB "Y      - run BASIC test code",0ah,0DH
 DB "Z      - Run program with Basic interpreter",0ah,0DH
 DB 0
 ;
@@ -1709,7 +1763,7 @@ DB 0
 COMPAREHELP: DB "Compare Tests",0ah,0dh,0
 RSHIFT_LEFTHELP: DB "Ring Shift Left",0ah,0dh,0
 RSHIFT_RIGHTHELP: DB "Ring Shift Right",0ah,0dh,0
-PSHIFT_LEFTHELP: DB "PROP Shift Left",0ah,0dh,0
+PSHIFT_RIGHTHELP: DB "PROP Shift Right",0ah,0dh,0
 CSHIFT_LEFTHELP: DB "CARRY Shift Left",0ah,0dh,0
 CSHIFT_RIGHTHELP: DB "CARRY Shift Right",0ah,0dh,0
 SUBHELP: DB "SUBTRACT",0ah,0dh,0
@@ -1720,6 +1774,7 @@ ADDIHELP: DB "Add immediate 02h to input number",0ah,0dh,0
 ADDICHELP: DB "Add immediate with carry 02h to input number",0ah,0dh,0
 MOVRRHELP: DB "MOVERR TEST",0ah,0dh,0
 TESTMSG: DB "Run test code",0ah,0dh,0
+
 
 ;
 ; TEST MENU
@@ -1735,7 +1790,7 @@ testmenu:
       DW rshrtest,rshrmenu
       DW cshltest,cshlmenu
       DW cshrtest,cshrmenu
-      DW pshltest,pshlmenu
+      DW pshrtest,pshrmenu
       DW subtest,submenu
       DW cmptest,cmpmenu
       DW additest,addimenu
@@ -1761,7 +1816,7 @@ rshlmenu: DB "RSHL",0
 rshrmenu: DB "RSHR",0
 cshlmenu: DB "CSHL",0
 cshrmenu: DB "CSHR",0
-pshlmenu: DB "PSHL",0
+pshrmenu: DB "PSHR",0
 submenu: DB "SUB",0
 cmpmenu: DB "Compare Branch",0
 addimenu: DB "ADDI",0
@@ -1873,6 +1928,15 @@ e_showr7:
     ret
 e_showbyte:
     jsr showbyte
+    ret
+e_ showregs:
+    jsr SHOWREGS
+    ret
+e_showbytea:
+    jsr showbytea
+    ret
+e_showcarry:
+    jsr showcarry
     ret
 ;
 ; The End
