@@ -199,10 +199,11 @@ void memory_write(int address, unsigned char value) {
         regdump();
         exit(0);
     }
-    if ((address == 0x0204) && (value == 0)) {
+ /*   if ((address == 0x0204) && (value == 0)) {
         printf("argh\n");
         regdump();
     }
+ */
     memory[address] = value;
 }
 

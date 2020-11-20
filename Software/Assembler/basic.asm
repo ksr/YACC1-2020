@@ -69,8 +69,8 @@ bas_txtptr:       EQU 0202h ; pointer into text line being parse
 bas_nxtptr:       EQU 0204h ;
 bas_tokptr:       EQU 0206h ; pointer into tmp token buffer
 bas_tokcounter:   EQU 0208h ; counter for tmp token buffer
-bas_currenttoken:  EQU 020Ah ; used in parsing
-bas_tokenbuffer:  EQU 020Ch ;Pointer to start of token buffer
+bas_currenttoken: EQU 020Ah ; used in parsing
+bas_tokenbuffer:  EQU 020Ch ; Pointer to start of token buffer
 bas_bufferendhi:  EQU 020Eh ; HACK, above buffer should end on 0xXXFF boundry
                             ; this value should be + 1 end of buffer
                             ; if buffer is 0x1000-0x1fff this is
@@ -118,8 +118,9 @@ bas_tok_buf_start: EQU 1000h
 ;
 ; Basic interpreter token buffer end + 1
 ;
-;bas_tok_buf_end: EQU 2000h debug
-bas_tok_buf_end: EQU 1100h
+bas_tok_buf_end: EQU 2000h
+; OR
+;bas_tok_buf_end: EQU 1100h ;smaller for easy debugging - 256 byte buffer
 
 ;
 ; basic interpreter, add IO and peek/poke
@@ -130,15 +131,12 @@ bas_tok_buf_end: EQU 1100h
 ;
 
 ;
-; Entry Points
+; BASIC Entry Points
 ;
   ORG 0e000h
 ;
 ; list
 ;
-;      mviw r7,basic_test ; hack this address should probably be passed in
-                         ; or a global variable
-
       ldr r7,bas_tokenbuffer
       JSR  basic_list
       Ret
@@ -158,14 +156,17 @@ bas_tok_buf_end: EQU 1100h
 ; Hack later pass in R7
 ;
       MVIW R7,bas_tok_buf_start
+      ldai TOKENIZER_EOF          ;write EOF to start of buffer
+      stavr r7
       STR R7,bas_tokenbuffer
       mviw r7,bas_tok_buf_end
       str r7,bas_bufferendhi
       Ret
+
 ;
       ORG 0e030h
 ;
-; tests - called from monitor
+; tests - called from monitor - used to test snippets of code
 ;
       jsr showr7
       mviw r7,0010
@@ -174,6 +175,7 @@ bas_tok_buf_end: EQU 1100h
       mviw r7,0010
       jsr parse_removeline
       ret
+
 ;
       org 0e050h
 ;
@@ -181,12 +183,16 @@ bas_tok_buf_end: EQU 1100h
 ;
       jsr parse_line
       ret
+
 ;
       ORG 0e060h
+;
+; Copy test program into token Buffer, copies 0x0400 bytes
 ;
       mviw R7,bas_tok_buf_start
       mviw R6,BASIC_TEST
       mviw R5,0400h
+
 bas_copyloop:
       ldavr R6
       stavr r7
@@ -198,15 +204,6 @@ bas_copyloop:
       mvrla r5
       brnz bas_copyloop
       ret
-
-;
-; copy test code into main buffer
-;
-; Hack later pass in R7
-;
-;      MVIW R7,basic_test
-;      STR R7,bas_tokenbuffer
-;      Ret
 
 ;
 ; basic interpreter messages
@@ -222,34 +219,26 @@ exe_stmt_msg: db "EXE STMT ",0
 ; R1 - Stack Pointer
 ; R2 - Direct addressing mode
 ; R3 - Basic Interpreter Token Buffer ptr
-; R4 - working register
-; R5 - working register
+; R4 - working register  ; or is this for-next stack ptr
+; R5 - working register  ; or is this gosub stack ptr
 ; R6 - Working register
 ; R7 - parameter passing & return value
 ;
-exe:
-
+;exe: Is this label needed
 ;
 ; void ubasic_init()
 ;
 ; Setup basic interpreter execution engine
 ;
-; destorys R4 and accumulator
-; ?? Should these pointers be zero based or actual address in memory
-;
 exe_init:
+    push
     MVIW R5,bas_gosubstack
-;    movrr r6,r9
     MVIW R4,bas_forstack
-;    movrr r6,r8
     MVIW R6,bas_run_ended
     LDAI 0
     STAVR R6
-;
-; initialize tokenbufferptr to start of tokenBuffer (actual memory address)
-;
-;   tok_init:
     LDR R3,bas_tokenbuffer
+    pop
     RET
 
 ;
@@ -267,12 +256,15 @@ exe_accept:
     MVAT
     POP
     BREQ exe_accept_done
+;
+; debug information
+;
     JSR showbytea
     ldai '-'
     JSR uartout
     mviw R7,bas_msg1
     JSR bas_error
-
+;
 exe_accept_done:
     jsr exe_next_token
     RET
@@ -388,6 +380,7 @@ exe_term_done:
     popr r6
     popr r5
     ret
+
 ;
 ; static VARIABLE_TYPE expr()
 ;
@@ -465,6 +458,7 @@ exe_expr_done:
     popr r6
     popr r5
     ret
+
 ;
 ; int relation ()
 ;
@@ -472,7 +466,6 @@ exe_expr_done:
 ; R6 = r2
 ; R7 = return value
 ;
-
 exe_relation:
     pushr r5
     pushr r6
@@ -552,10 +545,12 @@ exe_relation_done:
 ;
 ; call with line in R7
 ; return with val in R7 - tokenbuffer ptr
+; THIS CAN BE REMOVED SINCE IT IS ONLY A SINGLE CALL
 ;
 exe_index_find:
     JSR basu_find
     RET
+
 ;
 ; void jump_linenum(linenum)
 ;
@@ -577,9 +572,10 @@ exe_jump_line:
     STAVR R6
     ret
 exe_jump_line1:
-;   jsr tok_goto
+;   jsr tok_goto ; WHAT IS THIS
     movrr r7,r3
     ret
+
 ;
 ; void goto_statement()
 ;
@@ -589,6 +585,7 @@ exe_goto_stmt:
     JSR exe_expr
     JSR exe_jump_line
     RET
+
 ;
 ; void print_statment()
 ;
@@ -604,14 +601,16 @@ exe_print_stmt_loop:
 ; this should return string to print in r2
 ; exe_string may not be needed tokenbufferptr is at string ?
 ;
-    jsr exe_string
-;    movrr r7,r2
+
+;   jsr exe_string
+    movrr r3,r7
+    incr r7
+;   movrr r7,r2
     jsr stringout
     jsr exe_next_token
     br exe_print_stmt_test
 
 exe_print_stmt1:
-
     ldti TOKENIZER_COMMA
     BRNEQ exe_print_stmt2
     LDAI ' '
@@ -685,23 +684,24 @@ exe_if_stmt1:
 exe_if_stmt2:
     JSR EXE_NEXT_TOKEN
     RET
+
 ;
 ; void let_statement()
 ;
 exe_let_stmt:
-  jsr exe_variable_num
-  mvarl r7
-  movrr r7,r6
-  ldai TOKENIZER_VARIABLE
-  jsr exe_accept
-  ldai TOKENIZER_EQ
-  jsr exe_accept
-  jsr exe_expr
-  mvrla r6
-  JSR exe_set_variable
-  ldai TOKENIZER_CR
-  jsr exe_accept
-  ret
+    jsr exe_variable_num
+    mvarl r7
+    movrr r7,r6
+    ldai TOKENIZER_VARIABLE
+    jsr exe_accept
+    ldai TOKENIZER_EQ
+    jsr exe_accept
+    jsr exe_expr
+    mvrla r6
+    JSR exe_set_variable
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    ret
 
 ;
 ; void gosub_statement()
@@ -715,10 +715,6 @@ exe_gosub_stmt:
     ldai TOKENIZER_CR
     jsr exe_accept
 ;
-; setup to use for storage area via R4
-;
-;   movrr R9,R4
-;
 ; save current token buffer ptr to gosub stack
 ;
    mvrla r3
@@ -730,8 +726,6 @@ exe_gosub_stmt:
 ;
 ; write new gosub stack ptr location back
 ;
-;   MOVRR R4,R9
-
    JSR exe_jump_line
    RET
 
@@ -744,8 +738,6 @@ exe_return_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-;   movrr R9,R4
-
    decr r5
    decr r5
 
@@ -756,8 +748,6 @@ exe_return_stmt:
    mvarh r3
 
    decr r5
-;   movrr r4,r9
-
    ret
 
 ;
@@ -765,9 +755,6 @@ exe_return_stmt:
 ;
 exe_next_stmt:
 ;
-; setup to use for storage area via R4
-;
-;    movrr r8,r4
 ; backup to the TO Value
     decr r4
     decr r4
@@ -789,7 +776,7 @@ exe_next_stmt:
     ldai TOKENIZER_VARIABLE
     jsr exe_accept
 ;
-; get variable value, inc by 1 and store
+; get variable value, inc by 1 and store - ADD STEP VALUE
 ;
     mvrla r6
     jsr exe_get_variable
@@ -805,7 +792,7 @@ exe_next_stmt:
     mvarh r6
     incr r4
 ;
-; for now only compare low byte hack
+; for now only compare low byte HACK use compare code
 ;
     mvrla r6
     mvat
@@ -825,9 +812,6 @@ exe_next_done:
   decr r4
   decr r4
   decr r4
-  decr r4
-  decr r4
-;  movrr r4,r8
   ldai TOKENIZER_CR
   jsr exe_accept
   ret
@@ -839,60 +823,56 @@ exe_for_stmt:
 ;
 ; setup to use for storage area via R4
 ;
-;    movrr r8,r4
-;
-; eat FOR
-;
-  ldai TOKENIZER_FOR
-  jsr exe_accept
+    ldai TOKENIZER_FOR    ; eat FOR
+    jsr exe_accept
 ;
 ; get variable id (in accumulator) and hold in r6 lo
 ;
-  jsr exe_variable_num
-  mvarl r6
+    jsr exe_variable_num
+    mvarl r6
 ;
-; store variable id in for storage hack only lo byte, hi byte 0
+; store variable id in FOR storage - hack only lo byte, hi byte 0
 ;
-  stavr r4
-  incr r4
-  ldai 0
-  stavr r4
-  incr r4
+    stavr r4
+    incr r4
+    ldai 0
+    stavr r4
+    incr r4
 ;
 ; eat variable id and = then get starting value
 ;
-  ldai TOKENIZER_VARIABLE
-  jsr exe_accept
-  ldai TOKENIZER_EQ
-  jsr exe_accept
-  jsr exe_expr
+    ldai TOKENIZER_VARIABLE
+    jsr exe_accept
+    ldai TOKENIZER_EQ
+    jsr exe_accept
+    jsr exe_expr
 ;
 ; set variable to starting value
 ;
-  mvrla r6
-  JSR exe_set_variable
+    mvrla r6
+    JSR exe_set_variable
 ;
 ; eat TO and get to value
 ;
-  ldai TOKENIZER_TO
-  jsr exe_accept
-  jsr exe_expr
+    ldai TOKENIZER_TO
+    jsr exe_accept
+    jsr exe_expr
 ;
-; store to value in for storage area
+; store to value in FOR storage area
 ;
-  mvrla r7
-  stavr r4
-  incr r4
-  mvrha r7
-  stavr r4
-  incr r4
+    mvrla r7
+    stavr r4
+    incr r4
+    mvrha r7
+    stavr r4
+    incr r4
 ;
 ; EAT EOL
 ;
-  ldai TOKENIZER_CR
-  jsr exe_accept
+    ldai TOKENIZER_CR
+    jsr exe_accept
 ;
-; store instruction after for in for storage area
+; store ptr to instruction after FOR in for storage area
 ;
     mvrla r3
     stavr r4
@@ -903,29 +883,29 @@ exe_for_stmt:
 ;
 ;   save for stackptr
 ;
-;    movrr r4,r8
-;
     ret
+
 ;
 ; void peek_statment()
 ;
 exe_peek_stmt:
-  halt
+    halt
 
 ;
 ; void poke_statement()
 ;
 exe_poke_stmt:
-  halt
+    halt
 
 ;
 ; void end_statement()
 ;
 exe_end_stmt:
-  mviw r6,bas_run_ended
-  LDAI 1
-  STAVR r6
-  ret
+    mviw r6,bas_run_ended
+    LDAI 1
+    STAVR r6
+    ret
+
 ;
 ; void statment()
 ;
@@ -939,7 +919,6 @@ exe_stmt:
 ;    MVIW R7,CRLF
 ;    JSR STRINGOUT
 ;    POP
-
 
     LDTI TOKENIZER_PRINT
     BRNEQ exe_stmt1
@@ -1102,9 +1081,9 @@ exe_finished_yes:
 ; DANGER USING R2 - NOW FOR MEM-DIRECT ADDRESSING SWITCH TO ANOTHER R ?
 ;
 exe_set_variable:
-    MVIW R2,BASIC_VARS ; SEE COMMENT below about memory alignment
-    SHL ; memory location x 2 (2 byte vars)
-    MVARL R2
+    MVIW R2,BASIC_VARS  ; SEE COMMENT below about memory alignment
+    SHL                 ; memory location x 2 (2 byte vars)
+    MVARL R2            ; change to add16 to remove align issue
 ;
     MVRLA R7
     STAVR R2
@@ -1196,7 +1175,7 @@ exe_next_token4:
 
 ;
 ; numbers stored low byte followed by high byte in memory
-
+;
 exe_num:
     incr r3
     ldavr r3
@@ -1218,12 +1197,10 @@ exe_variable_num:
     decr r3
     ret
 
-exe_string:
-    movrr r3,r7
-    incr r7
-    ret
-
-
+;exe_string:
+;    movrr r3,r7
+;    incr r7
+;    ret
 
 
 ;
@@ -1749,6 +1726,7 @@ parsechar13:
     ldai TOKENIZER_GT
     ret
 parsechar14:
+    HALT
     ldti '='
     brneq parsechar15
     ldai TOKENIZER_EQ
@@ -1820,8 +1798,8 @@ parse_gnt4:
     mviw r4,parse_keywords
 top:
     ldavr r4
-    brz nokeyowrdsfound
     LDR r3,bas_txtptr
+    brz nokeyowrdsfound  
 pcmploop:
     ldavr r4
     brz found
@@ -1854,6 +1832,7 @@ nokeyowrdsfound:
 ;
 ;  check for variables
 ;
+    halt
     ldavr r3
     ldti 'A'
     BRLT parse_gnt_error
@@ -1898,7 +1877,7 @@ parse_init:
     jsr parse_get_next_tok
     sta bas_currenttoken
     popr r3
-    halt
+;    halt
     ret
 
 ;
