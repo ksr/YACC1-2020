@@ -81,7 +81,7 @@ bas_newlinelen:   EQU 0212h ; line length of new line to be added
 bas_insertptr:    EQU 0214H
 
 ;
-; for next statement stack ptr and stack data
+; FOR-NEXT statement stack ptr and stack data
 ;
 ; for next stack data
 ; format
@@ -94,7 +94,7 @@ bas_forstackptr: EQU 0280h
 bas_forstack: EQU 0282h
 
 ;
-; gosub stack ptr and data
+; GOSUB stack ptr and data
 ;
 ; gosub STACK
 ; format
@@ -140,6 +140,7 @@ bas_tok_buf_end: EQU 2000h
       ldr r7,bas_tokenbuffer
       JSR  basic_list
       Ret
+
 ;
       ORG 0e010h
 ;
@@ -279,11 +280,10 @@ exe_accept_done:
 ; return value in R7
 ;
 exe_varfactor:
-; get variable number id (one byte for now a-z) into accumulator
+    jsr exe_variable_num    ; get variable number id (one byte for now a-z)
+                            ;into accumulator
 ;
-    jsr exe_variable_num
-;
-; variable id in accumulator, return in r7
+; variable id in accumulator, return value in r7
 ;
     jsr exe_get_variable
     LDAI TOKENIZER_VARIABLE
@@ -296,10 +296,7 @@ exe_varfactor:
 ;
 exe_factor:
 ;
-; get current token into accumulator
-;
-    LDAVR R3
-;
+    LDAVR R3               ;get current token into accumulator
     LDTI TOKENIZER_NUMBER
     BRNEQ exe_factor1
     JSR exe_num
@@ -439,9 +436,9 @@ exe_expr_and:
 ;
 ; t1 = t1 & t2
 ;
-movrr r5,r7
-jsr parse_sub16
-movrr r7,r5
+    movrr r5,r7
+    jsr parse_and16
+    movrr r7,r5
     BR exe_expr_loop
 
 exe_expr_or:
@@ -451,6 +448,10 @@ exe_expr_or:
 ;
 ; t1 = t1 | t2
 ;
+    movrr r5,r7
+    jsr parse_or16
+    movrr r7,r5
+    BR exe_expr_loop
     BR exe_expr_loop
 
 exe_expr_done:
@@ -601,11 +602,8 @@ exe_print_stmt_loop:
 ; this should return string to print in r2
 ; exe_string may not be needed tokenbufferptr is at string ?
 ;
-
-;   jsr exe_string
     movrr r3,r7
     incr r7
-;   movrr r7,r2
     jsr stringout
     jsr exe_next_token
     br exe_print_stmt_test
@@ -637,7 +635,6 @@ exe_print_stmt3:
 exe_print_stmt4:
     jsr exe_expr
     JSR showr7
-;   br exe_print_stmt_test // falls through
 
 exe_print_stmt_test:
     LDAVR R3
@@ -910,15 +907,7 @@ exe_end_stmt:
 ; void statment()
 ;
 exe_stmt:
-;    MVIW R7,exe_stmt_msg
-;    JSR stringout
-;    JSR showaddr
     LDAVR R3
-;    PUSH
-;    JSR showbytea
-;    MVIW R7,CRLF
-;    JSR STRINGOUT
-;    POP
 
     LDTI TOKENIZER_PRINT
     BRNEQ exe_stmt1
@@ -1006,14 +995,6 @@ exe_stmt12:
 ; void line_statement (void)
 ;
 exe_line_stmt:
-;line_statement(void) {
-;    DEBUG_PRINTF("----------- Line number %d ---------\n", tokenizer_num());
-;#ifdef unused
-;    index_add(tokenizer_num(), tokenizer_pos());
-;#endif
-;    accept(TOKENIZER_LINENUM);
-;    statement();
-;    return;
     LDAI TOKENIZER_LINENUM
     jsr exe_accept
     jsr exe_stmt
@@ -1023,25 +1004,8 @@ exe_line_stmt:
 ; void ubasic_run()
 ;
 basic_run:
-;    mviw r7,000ah
-;    jsr basu_find
-;    jsr showr7
-;    mviw R7,CRLF
-;    jsr stringout
-
-;    mviw r7,0014h
-;    jsr basu_find
-;    jsr showr7
-;    mviw R7,CRLF
-;    jsr stringout
-
     JSR exe_init
 
-;    mviw r7,0080h
-;    jsr basu_find
-;    jsr showr7
-;    mviw R7,CRLF
-;    jsr stringout
 exe_run:
     jsr exe_finished
     LDTI 1
@@ -1196,12 +1160,6 @@ exe_variable_num:
     ldavr r3
     decr r3
     ret
-
-;exe_string:
-;    movrr r3,r7
-;    incr r7
-;    ret
-
 
 ;
 ; List out token buffer in human readable form
@@ -1726,7 +1684,6 @@ parsechar13:
     ldai TOKENIZER_GT
     ret
 parsechar14:
-    HALT
     ldti '='
     brneq parsechar15
     ldai TOKENIZER_EQ
@@ -1799,7 +1756,7 @@ parse_gnt4:
 top:
     ldavr r4
     LDR r3,bas_txtptr
-    brz nokeyowrdsfound  
+    brz nokeyowrdsfound
 pcmploop:
     ldavr r4
     brz found
@@ -1832,7 +1789,6 @@ nokeyowrdsfound:
 ;
 ;  check for variables
 ;
-    halt
     ldavr r3
     ldti 'A'
     BRLT parse_gnt_error
@@ -1877,7 +1833,6 @@ parse_init:
     jsr parse_get_next_tok
     sta bas_currenttoken
     popr r3
-;    halt
     ret
 
 ;
@@ -1891,7 +1846,6 @@ parse_token:
 ; void tokenizer_next(void) parser version
 ;
 parse_next:
-;    halt
     jsr parse_finished
     brz parse_next1
     ret
@@ -2136,9 +2090,7 @@ parse_pos:
 ;
 
 parse_line:
-;    halt
     JSR PARSE_INIT
-;    halt
     MVIW R3,6              ;all lines have a 6 bytes including EOL token
     str r3,bas_tokcounter
     MVIW R3,parse_token_buffer
@@ -2148,7 +2100,6 @@ parse_line:
     INCR R3
 
     JSR parse_num           ;store line number
-;    HALT
     str r7,bas_newlinenum
     mvrla r7
     stavr r3
@@ -2159,14 +2110,12 @@ parse_line:
 
     incr r3                ; skip over line length - fill in later
     incr r3
-;   halt
 
 parse_line_loop:
     JSR parse_next
     JSR parse_token
     ldti TOKENIZER_CR
     BREQ parse_line_done
-;    halt
 
     STAVR R3
     INCR R3
@@ -2253,7 +2202,6 @@ parse_line_done:
     incr r3
     mvrha r7
     stavr r3
-;    halt
 
 ;
 ; void addLine(char *buff)
@@ -2275,7 +2223,6 @@ parse_addline:
       ret
 
 parse_addline1:                 ;find insert location
-;      halt
       ldr r7,BAS_NEWLINENUM
       ldr r3,bas_tokenBuffer
 
@@ -2330,7 +2277,6 @@ parse_roomloop:
 
       ldr r7,bas_insertptr
       MVIW R6,parse_token_buffer
-;      halt
 
 parse_insertloop:
       ldavr r6
@@ -2516,7 +2462,7 @@ parse_muladd16:
         ret
 
 ;
-; 16 bit add r6 and r7, return result in r7
+; 16 bit ADD r6 and r7, return result in r7
 ;
 parse_add16:
 
@@ -2535,7 +2481,7 @@ parse_add16:
       ret
 
 ;
-; 16 bit subtract of r6 from r7, return result in r7
+; 16 bit SUB of r6 from r7, return result in r7
 ;
 parse_sub16:
       mvrha r6
@@ -2546,6 +2492,39 @@ parse_sub16:
       mvarl r6
       incr r6
       br parse_add16
+
+;
+; 16 bit AND r6 and r7, return result in r7
+;
+parse_and16:
+      MVRLA R6
+      MVAT
+      mvrla r7
+      ANDT
+      mvarl r7
+      mvrha r6
+      MVAT
+      mvrha r7
+      ANDT
+      mvarh r7
+      ret
+
+;
+; 16 bit OR r6 and r7, return result in r7
+;
+parse_or16:
+      MVRLA R6
+      MVAT
+      mvrla r7
+      ORT
+      mvarl r7
+      mvrha r6
+      MVAT
+      mvrha r7
+      ORT
+      mvarh r7
+      ret
+
 
 ;
 ; is digit in accumulator hex
