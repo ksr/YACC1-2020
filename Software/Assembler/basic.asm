@@ -11,6 +11,7 @@ showbyte:   equ 0ffd8h
 showregs:   equ 0ffdch
 showbytea:  equ 0ffe0h
 showcarry:  equ 0ffe4h
+uartin:     equ 0ffe8h
 
 ;
 ; Basic interpreter tokens
@@ -53,6 +54,8 @@ TOKENIZER_GT: EQU 34
 TOKENIZER_EQ: EQU 35
 TOKENIZER_CR: EQU 36
 TOKENIZER_LINENUM: EQU 37
+TOKENIZER_LIST: EQU 38
+TOKENIZER_RUN: EQU 39
 
 ;
 ; BASIC interpreter user variables area
@@ -170,9 +173,14 @@ bas_tok_buf_end: EQU 2000h
 ; tests - called from monitor - used to test snippets of code
 ;
       jsr bigtest
-
       ret
-
+;
+      org 0e040h
+;
+; very basic cmd line driver
+;
+      jsr basic_interprter
+      ret
 ;
       org 0e050h
 ;
@@ -241,6 +249,8 @@ bas_msg1: db "Accept - unexpected token",0,0ah,0dh
 bas_msg2: db "line not found",0,0ah,0dh
 bas_msg3: db "Basic token not supported ",0ah,0dh
 exe_stmt_msg: db "EXE STMT ",0
+parse_cmd_error: db "UNKNOWN COMMAND",0,0ah,0DH
+
 ;
 ; Basic interpreter - execution engine
 ; Register Usage
@@ -280,6 +290,8 @@ exe_accept:
     push
 ;
 ; get current token into accumulator
+;
+; FIX: Switch to BRNEQ to error state and save a branch
 ;
     LDAVR R3
     MVAT
@@ -1770,7 +1782,10 @@ parse_keywords:
       DB "peek",0,TOKENIZER_PEEK
       DB "poke",0,TOKENIZER_POKE
       DB "end",0,TOKENIZER_END
+      DB "list",0,TOKENIZER_LIST
+      DB "run",0,TOKENIZER_RUN
       DB 0,0,TOKENIZER_ERROR
+
 
 ;
 ; int singlechar (void)
@@ -1973,7 +1988,7 @@ nokeyowrdsfound:
     RET
 
 parse_gnt_error:
-    halt
+;    halt
     ldai tokenizer_error
     popr r3
     ret
@@ -1991,6 +2006,8 @@ parse_gnt_error:
 
 ;
 ; void tokenizer_init(int ptr)
+;
+; paramater ptr : R7 Points to text input line
 ;
 ; under development
 ;
@@ -2202,8 +2219,8 @@ parse_string1:
 ;
 ; fix
 ;
-parse_error_print:
-    halt
+;parse_error_print:
+;    halt
 
 ;
 ; int tokenizer_finished(void)
@@ -2263,10 +2280,39 @@ parse_pos:
 
 parse_line:
     JSR PARSE_INIT
+
     MVIW R3,6              ;all lines have a 6 bytes including EOL token
     str r3,bas_tokcounter
     MVIW R3,parse_token_buffer
 
+    pushr r3
+    LDR r3,bas_txtptr
+    ldavr r3
+    jsr parse_isdigit
+    popr r3
+    ldti 1
+    breq parse_code
+    jsr parse_get_next_tok
+
+    ldti tokenizer_list
+    brneq parse_line_run
+    ldr r7,bas_tokenbuffer
+    JSR  basic_list
+    RET
+
+parse_line_run:
+    ldti TOKENIZER_RUN
+    brneq parse_line_error
+    jsr basic_run
+    RET
+parse_line_error:
+    mviw r7,parse_cmd_error
+    jsr stringout
+    mviw r7,CRLF
+    jsr stringout
+    ret
+
+parse_code:
     LDAI TOKENIZER_LINENUM ;start with linenum token
     STAVR R3
     INCR R3
@@ -2783,13 +2829,40 @@ parse_comparel1:
   ldai 0ffh
   ret
 
+basic_prompt: db ">>>",0
+basic_interprter:
+        ;build input string
+        ;point register to BUFFER
+        ;loop fetch chars
+        ;until CR
+        ;be sure line ends with a NULL or CR
+        ;what does parse require???
+        MVIW R7,basic_prompt
+        JSR stringout
+
+        mviw r3,parse_input_line
+
+parse_inputloop:
+        jsr uartin
+        stavr r3
+        incr r3
+        ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+        brneq parse_inputloop
+        MVIW R7,CRLF
+        JSR STRINGOUT
+
+        mviw r7,parse_input_line
+        JSR parse_line
+
+        BR basic_interprter
+
 ;
 ; STRINGS
 ;
 CRLF: DB 0ah,0dh,0
 ;
 
-      ORG 0EE00h
+      ORG 0EF00h
 
 basic_test:
 

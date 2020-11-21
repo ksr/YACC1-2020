@@ -5,6 +5,7 @@ basic_list:   EQU 0e000h
 basic_run:    EQU 0e010h
 basic_cold:   EQU 0e020h
 basic_test:   EQU 0e030h
+basic_interprter: EQU 0e040h
 basic_parse:  EQU 0e050h
 basic_copy:   EQU 0e060h
 ;
@@ -914,6 +915,8 @@ testexamine:
       BREQ fillblock
       LDTI 'G'
       BREQ go
+      ldti 'I'
+      BREQ interpreter
       LDTI 'L'
       BREQ cmd_basiclist
       LDTI 'P'
@@ -1007,11 +1010,15 @@ parse_inputloop:
         mviw r7,line_buffer
         JSR BASIC_PARSE
         mviw r7,0400H
-        jsr show256
+;        jsr show256
         BR cmdloop
 do_parse:
         JSR basic_parse
         BR cmdloop
+
+interpreter:
+        JSR BASIC_INTERPRTER
+        BR CMDLOOP
 
 cmd_basiclist:
         MVIW R7,CRLF
@@ -1750,6 +1757,7 @@ DB "F AAAA   Fill contents 256 bytes of memory at address AAAA with 0(16 byte al
 DB "         if followed by CR fill next 256 bytes",0ah,0dh
 DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
 DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
+DB "I      - BASIC Interpreter",0ah,0dh 
 DB "L      - List BASIC program",0ah,0dh
 DB "P      - Enter program line to BASIC",0ah,0dh
 DB "R      - Show registers",0ah,0dh
@@ -1937,6 +1945,9 @@ e_showbytea:
     ret
 e_showcarry:
     jsr showcarry
+    ret
+e_uartin:
+    jsr uartin
     ret
 ;
 ; The End
