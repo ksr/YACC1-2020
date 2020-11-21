@@ -169,12 +169,8 @@ bas_tok_buf_end: EQU 2000h
 ;
 ; tests - called from monitor - used to test snippets of code
 ;
-      jsr showr7
-      mviw r7,0010
-      jsr basu_find
-      jsr showr7
-      mviw r7,0010
-      jsr parse_removeline
+      jsr bigtest
+
       ret
 
 ;
@@ -205,6 +201,38 @@ bas_copyloop:
       mvrla r5
       brnz bas_copyloop
       ret
+
+bigtest:
+    mviw r7,01234h
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r7,010h
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r7,07654h
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r7,00h
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r7,0FFFEh
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r7,08012h
+    jsr exe_itoa
+    mviw r7,CRLF
+    jsr stringout
+    ret
 
 ;
 ; basic interpreter messages
@@ -634,7 +662,8 @@ exe_print_stmt3:
 
 exe_print_stmt4:
     jsr exe_expr
-    JSR showr7
+    ;JSR showr7
+    jsr exe_itoa
 
 exe_print_stmt_test:
     LDAVR R3
@@ -790,11 +819,17 @@ exe_next_stmt:
     incr r4
 ;
 ; for now only compare low byte HACK use compare code
+; r7=r6 00
+; r7>r6 01
+; r7<r6 ff
 ;
-    mvrla r6
-    mvat
-    mvrla r7
-    brgt exe_next_done
+     jsr parse_compare
+     ldti 01
+     breq exe_next_done
+;    mvrla r6
+;    mvat
+;    mvrla r7
+;    brgt exe_next_done
 ;
     ldavr r4
     mvarl r3
@@ -885,12 +920,36 @@ exe_for_stmt:
 ;
 ; void peek_statment()
 ;
+;peek_statement(void) {
+;    VARIABLE_TYPE peek_addr;
+;    int var;
+;
+;    accept(TOKENIZER_PEEK);
+;    peek_addr = expr();
+;    accept(TOKENIZER_COMMA);
+;    var = tokenizer_variable_num();
+;    accept(TOKENIZER_VARIABLE);
+;    accept(TOKENIZER_CR);
+
+;    ubasic_set_variable(var, peek_function(peek_addr));
+
 exe_peek_stmt:
     halt
 
 ;
 ; void poke_statement()
 ;
+;poke_statement(void) {
+;    VARIABLE_TYPE poke_addr;
+;    VARIABLE_TYPE value;
+;
+;    accept(TOKENIZER_POKE);
+;    poke_addr = expr();
+;    accept(TOKENIZER_COMMA);
+;    value = expr();
+;    accept(TOKENIZER_CR);
+
+;    poke_function(poke_addr, value);
 exe_poke_stmt:
     halt
 
@@ -1161,6 +1220,90 @@ exe_variable_num:
     decr r3
     ret
 
+
+;
+; Convert number in r7 to ASCII
+;
+; for for negative numbers
+;
+dividers: DW 02710h,03e8h,0064h,000Ah,0000h
+
+exe_itoa:
+      push
+      mvrha r7
+      andi 080h
+      brz exe_itoa_pos
+
+      mvrha r7
+      inva
+      mvarh r7
+      mvrla r7
+      inva
+      mvarl r7
+      incr r7
+      ldai '-'
+      jsr charout
+
+exe_itoa_pos:
+      pushr r4    ; dividers ptr
+      pushr r5    ; value holder
+      mviw r5,0
+      ldai 1
+      mvarh r5
+      pushr r6    ;
+      mviw  r4,dividers
+
+exe_itoa_loop:
+      ldavr r4
+      mvarh r6
+      incr r4
+      ldavr r4
+      mvarl r6
+      decr r4
+      jsr parse_compare
+      ldti 0ffh
+      breq exe_itoa_next
+      ldai 0
+      mvarh r5
+      jsr PARSE_SUB16
+      incr r5
+      br exe_itoa_loop
+
+exe_itoa_next:
+      mvrha r5
+      brnz exe_itoa_notyet
+      mvrla r5
+      addi '0'
+      JSR charout
+      ldai 0
+      mvarh r5
+
+exe_itoa_notyet:
+      ldai 0
+      mvarl r5
+      incr r4
+      incr r4
+      ldavr r4
+      brnz exe_itoa_loop
+      incr r4
+      ldavr r4
+      decr r4
+      brnz exe_itoa_loop
+
+;      mvrha r5
+;      brz exe_itoa_noones
+      mvrla r7
+      addi '0'
+      JSR charout
+exe_itoa_noones:
+      popr r6
+      popr r5
+      popr r4
+      pop
+      RET
+
+
+
 ;
 ; List out token buffer in human readable form
 ;
@@ -1218,7 +1361,8 @@ baslist2:
     ldavr r3
     mvarh r7
     INCR R3
-    jsr showr7
+;    jsr showr7
+    jsr exe_itoa
     ldai ' '
     jsr uartout
     BR baslist_loop
@@ -1561,7 +1705,8 @@ baslist37:
     INCR R3
     incr r3
     incr r3
-    jsr showr7
+    jsr exe_itoa
+    ;jsr showr7
     ldai ' '
     jsr uartout
     BR baslist_loop
