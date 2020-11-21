@@ -921,20 +921,28 @@ exe_for_stmt:
 ; void peek_statment()
 ;
 ;peek_statement(void) {
-;    VARIABLE_TYPE peek_addr;
-;    int var;
 ;
-;    accept(TOKENIZER_PEEK);
-;    peek_addr = expr();
-;    accept(TOKENIZER_COMMA);
-;    var = tokenizer_variable_num();
-;    accept(TOKENIZER_VARIABLE);
-;    accept(TOKENIZER_CR);
-
-;    ubasic_set_variable(var, peek_function(peek_addr));
-
 exe_peek_stmt:
-    halt
+    ldai TOKENIZER_PEEK   ; eat PEEK
+    jsr exe_accept
+    jsr exe_expr
+    LDAVR R7
+    MVARL R7
+    LDAI 0
+    MVARH R7
+    PUSHR R7
+
+    ldai TOKENIZER_COMMA   ; eat COMMA
+    jsr exe_accept
+    jsr exe_variable_num
+    popr r7
+
+    jsr  EXE_SET_VARIABLE
+    ldai TOKENIZER_VARIABLE
+    jsr EXE_ACCEPT
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    RET
 
 ;
 ; void poke_statement()
@@ -950,8 +958,27 @@ exe_peek_stmt:
 ;    accept(TOKENIZER_CR);
 
 ;    poke_function(poke_addr, value);
+
 exe_poke_stmt:
-    halt
+    ldai TOKENIZER_POKE   ; eat PEEK
+    jsr exe_accept
+
+    jsr exe_expr
+    PUSHR R7
+
+    ldai TOKENIZER_COMMA   ; eat COMMA
+    jsr exe_accept
+
+    jsr exe_expr
+    MVRLA R7
+
+    POPR R7
+
+    STAVR R7
+
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    RET
 
 ;
 ; void end_statement()
