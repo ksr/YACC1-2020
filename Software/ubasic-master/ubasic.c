@@ -147,6 +147,14 @@ factor(void) {
 
     DEBUG_PRINTF("factor: token %d\n", tokenizer_token());
     switch (tokenizer_token()) {
+        case TOKENIZER_MINUS:
+            accept(TOKENIZER_MINUS);
+            r = -factor();
+            break;
+            case TOKENIZER_PLUS:
+            accept(TOKENIZER_PLUS);
+            r = factor();
+            break;
         case TOKENIZER_NUMBER:
             r = tokenizer_num();
             DEBUG_PRINTF("factor: number %d\n", r);
@@ -265,6 +273,7 @@ relation(void) {
 
 /*---------------------------------------------------------------------------*/
 #ifdef unused
+
 static void
 index_free(void) {
     if (line_index_head != NULL) {
@@ -279,13 +288,15 @@ index_free(void) {
     }
 }
 #endif
+
 /*---------------------------------------------------------------------------*/
 
-int index_find(int linenum){
-    return(tokenizer_find(linenum));
+int index_find(int linenum) {
+    return (tokenizer_find(linenum));
 }
 
 #ifdef unused
+
 static char const*
 index_find(int linenum) {
 
@@ -319,6 +330,7 @@ index_find(int linenum) {
 
 /*---------------------------------------------------------------------------*/
 #ifdef unused
+
 static void
 index_add(int linenum, char const* sourcepos) {
     if (line_index_head != NULL && index_find(linenum)) {
@@ -346,6 +358,7 @@ index_add(int linenum, char const* sourcepos) {
 
 /*---------------------------------------------------------------------------*/
 #ifdef unused
+
 static void
 jump_linenum_slow(int linenum) {
     new_tokenizer_init(program_ptr);
@@ -363,6 +376,7 @@ jump_linenum_slow(int linenum) {
     }
 }
 #endif
+
 /*---------------------------------------------------------------------------*/
 static void
 jump_linenum(int linenum) {
@@ -372,9 +386,9 @@ jump_linenum(int linenum) {
         new_tokenizer_goto(pos);
     } else {
         /* We'll try to find a yet-unindexed line to jump to. */
-        printf("Line not found %d\n",linenum);
+        printf("Line not found %d\n", linenum);
         accept(TOKENIZER_CR);
-        ended=1;
+        ended = 1;
         //tokenizer_next();
         return;
         //KEN what happens when line not found
@@ -437,17 +451,17 @@ if_statement(void) {
     } else {
         do {
             tokenizer_next();
-            printf("IF 0 %02x\n",tokenizer_token());
+            printf("IF 0 %02x\n", tokenizer_token());
         } while (tokenizer_token() != TOKENIZER_ELSE &&
                 tokenizer_token() != TOKENIZER_CR &&
                 tokenizer_token() != TOKENIZER_ENDOFINPUT);
         if (tokenizer_token() == TOKENIZER_ELSE) {
             tokenizer_next();
-            printf("IF 1 %02x\n",tokenizer_token());
+            printf("IF 1 %02x\n", tokenizer_token());
             statement();
         } else if (tokenizer_token() == TOKENIZER_CR) {
             tokenizer_next();
-            printf("IF 2 %02x\n",tokenizer_token());
+            printf("IF 2 %02x\n", tokenizer_token());
         }
     }
 }
@@ -475,7 +489,7 @@ gosub_statement(void) {
     linenum = tokenizer_num(); // KEN can this be expr for computed gossub
     accept(TOKENIZER_NUMBER);
     accept(TOKENIZER_CR);
-    DEBUG_PRINTF("-- %d --\n",tokenizer_num());
+    DEBUG_PRINTF("-- %d --\n", tokenizer_num());
     if (gosub_stack_ptr < MAX_GOSUB_STACK_DEPTH) {
         gosub_stack[gosub_stack_ptr] = tokenizer_num();
         gosub_stack_ptr++;
@@ -491,7 +505,7 @@ return_statement(void) {
     accept(TOKENIZER_RETURN);
     if (gosub_stack_ptr > 0) {
         gosub_stack_ptr--;
-        DEBUG_PRINTF("-- %d --\n",gosub_stack[gosub_stack_ptr]);
+        DEBUG_PRINTF("-- %d --\n", gosub_stack[gosub_stack_ptr]);
         jump_linenum(gosub_stack[gosub_stack_ptr]);
     } else {
         DEBUG_PRINTF("return_statement: non-matching return\n");
