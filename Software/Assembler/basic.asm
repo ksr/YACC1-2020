@@ -1978,13 +1978,13 @@ parse_get_next_tok:
 ;
 parse_gnt1:
     ldavr r3
-    ldti '-'
-    brneq parse_gnt1_chkpos
-    incr r3
-    ldavr r3
-    jsr parse_isdigit
-    brz parse_gnt1_notneg
-    br parse_gnt1
+;    ldti '-'
+;    brneq parse_gnt1_chkpos
+;    incr r3
+;    ldavr r3
+;    jsr parse_isdigit
+;    brz parse_gnt1_notneg
+;    br parse_gnt1
 
 parse_gnt1_chkpos:
     jsr parse_isdigit
@@ -2000,8 +2000,9 @@ parse_gnt1loop:
     popr r3
     ret
 
-parse_gnt1_notneg:
-    decr r3
+;parse_gnt1_notneg:
+;    decr r3
+
 ;
 ; singlechar
 ;
@@ -2202,13 +2203,13 @@ parse_num:
     mviw r6,0           ;accumlate val in r6
     LDR r3,bas_txtptr
     MVIW R4,0000h
-    STR R4,bas_negflag
+;    STR R4,bas_negflag
     LDAVR R3
-    ldti '-'
-    brneq parse_num_pos
-    MVIW R4,0ffffh
-    STR R4,bas_negflag
-    incr r3
+;  ldti '-'
+;    brneq parse_num_pos
+;    MVIW R4,0ffffh
+;    STR R4,bas_negflag
+;    incr r3
 
 parse_num_pos:
     jsr parse_num_char
@@ -2236,10 +2237,10 @@ parse_num_loop:
 parse_num_done:
     pop
     movrr r6,r7
-    ldr r4,bas_negflag
-    mvrla r4
-    brz parse_num_done1
-    jsr parse_neg
+;    ldr r4,bas_negflag
+;    mvrla r4
+;    brz parse_num_done1
+;    jsr parse_neg
 parse_num_done1:
     popr r6
     popr r5

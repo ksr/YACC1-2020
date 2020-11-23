@@ -190,14 +190,14 @@ yacc1 -> Native
   184 e040:             ;
   185 e040:             ; very basic cmd line driver
   186 e040:             ;
-  187 e040: 04 ee f9          jsr basic_interprter
+  187 e040: 04 ee cf          jsr basic_interprter
   188 e043: 05                ret
   189 e044:             ;
   190 e044:                   org 0e050h
   191 e050:             ;
   192 e050:             ; parse line
   193 e050:             ;
-  194 e050: 04 ec 28          jsr parse_line
+  194 e050: 04 eb fe          jsr parse_line
   195 e053: 05                ret
   196 e054:             
   197 e054:             ;
@@ -224,21 +224,21 @@ yacc1 -> Native
   218 e077:             bigtest:
   219 e077: 1d 00 69        mviw r5,0105
   220 e07a: 1c 00 0a        mviw r4,0010
-  221 e07d: 04 ed f6        jsr parse_div16
+  221 e07d: 04 ed cc        jsr parse_div16
   222 e080: 04 ff dc        jsr showregs
-  223 e083: 1f ef 23        mviw r7,CRLF
+  223 e083: 1f ee f9        mviw r7,CRLF
   224 e086: 04 ff c0        jsr stringout
   225 e089:             
   226 e089: 1d 00 69        mviw r5,0105
   227 e08c: 1c 00 0a        mviw r4,0010
-  228 e08f: 04 ee 17        jsr parse_mod16
+  228 e08f: 04 ed ed        jsr parse_mod16
   229 e092: 04 ff dc        jsr showregs
-  230 e095: 1f ef 23        mviw r7,CRLF
+  230 e095: 1f ee f9        mviw r7,CRLF
   231 e098: 04 ff c0        jsr stringout
   232 e09b:             
   233 e09b: 1f 12 34        mviw r7,01234h
   234 e09e: 04 e5 d5        jsr exe_itoa
-  235 e0a1: 1f ef 23        mviw r7,CRLF
+  235 e0a1: 1f ee f9        mviw r7,CRLF
   236 e0a4: 04 ff c0        jsr stringout
   237 e0a7:             
   238 e0a7:             
@@ -375,7 +375,7 @@ yacc1 -> Native
   348 e14f: aa e1 5d        BRNEQ exe_factor1B
   349 e152: 04 e1 19        JSR exe_accept
   350 e155: 04 e1 3e        JSR EXE_FACTOR
-  351 e158: 04 ee 89        JSR PARSE_NEG
+  351 e158: 04 ee 5f        JSR PARSE_NEG
   352 e15b: 0c              MVTA
   353 e15c: 05              RET
   354 e15d:             
@@ -433,7 +433,7 @@ yacc1 -> Native
   406 e1a4:             ;
   407 e1a4: 07 04           pushr r4
   408 e1a6: 0f 46           movrr r6,r4
-  409 e1a8: 04 ee 36        jsr PARSE_MUL16
+  409 e1a8: 04 ee 0c        jsr PARSE_MUL16
   410 e1ab: 0f 57           movrr r7,r5
   411 e1ad: 08 40           popr r4
   412 e1af: a0 e1 89        BR exe_term_loop
@@ -447,7 +447,7 @@ yacc1 -> Native
   420 e1ba:             ;
   421 e1ba: 07 04           pushr r4
   422 e1bc: 0f 46           movrr r6,r4
-  423 e1be: 04 ed f6        jsr PARSE_DIV16
+  423 e1be: 04 ed cc        jsr PARSE_DIV16
   424 e1c1: 0f 57           movrr r7,r5
   425 e1c3: 08 40           popr r4
   426 e1c5: a0 e1 89        BR exe_term_loop
@@ -461,7 +461,7 @@ yacc1 -> Native
   434 e1d0:             ;
   435 e1d0: 07 04           pushr r4
   436 e1d2: 0f 46           movrr r6,r4
-  437 e1d4: 04 ee 17        jsr PARSE_MOD16
+  437 e1d4: 04 ed ed        jsr PARSE_MOD16
   438 e1d7: 0f 57           movrr r7,r5
   439 e1d9: 08 40           popr r4
   440 e1db: a0 e1 89        BR exe_term_loop
@@ -507,7 +507,7 @@ yacc1 -> Native
   480 e20e:             ; t1 = t1 + t2
   481 e20e:             ;
   482 e20e: 0f 75           movrr r5,r7
-  483 e210: 04 ee 71        jsr parse_add16
+  483 e210: 04 ee 47        jsr parse_add16
   484 e213: 0f 57           movrr r7,r5
   485 e215: a0 e1 ee        BR exe_expr_loop
   486 e218:             
@@ -519,7 +519,7 @@ yacc1 -> Native
   492 e220:             ; t1 = t1 - t2
   493 e220:             ;
   494 e220: 0f 75           movrr r5,r7
-  495 e222: 04 ee 7f        jsr parse_sub16
+  495 e222: 04 ee 55        jsr parse_sub16
   496 e225: 0f 57           movrr r7,r5
   497 e227: a0 e1 ee        BR exe_expr_loop
   498 e22a:             
@@ -531,7 +531,7 @@ yacc1 -> Native
   504 e232:             ; t1 = t1 & t2
   505 e232:             ;
   506 e232: 0f 75           movrr r5,r7
-  507 e234: 04 ee 91        jsr parse_and16
+  507 e234: 04 ee 67        jsr parse_and16
   508 e237: 0f 57           movrr r7,r5
   509 e239: a0 e1 ee        BR exe_expr_loop
   510 e23c:             
@@ -543,7 +543,7 @@ yacc1 -> Native
   516 e244:             ; t1 = t1 | t2
   517 e244:             ;
   518 e244: 0f 75           movrr r5,r7
-  519 e246: 04 ee 9c        jsr parse_or16
+  519 e246: 04 ee 72        jsr parse_or16
   520 e249: 0f 57           movrr r7,r5
   521 e24b: a0 e1 ee        BR exe_expr_loop
   522 e24e: a0 e1 ee        BR exe_expr_loop
@@ -587,7 +587,7 @@ yacc1 -> Native
   560 e27c:             ; r1 = r1 < r2
   561 e27c:             ;
   562 e27c: 0f 75           movrr  r5,r7
-  563 e27e: 04 ee d4        jsr parse_compare
+  563 e27e: 04 ee aa        jsr parse_compare
   564 e281: 0d ff           ldti 0ffh
   565 e283: aa e2 8c        BRNEQ exe_rel_nlt
   566 e286: 1d 00 01        mviw r5,01h
@@ -604,7 +604,7 @@ yacc1 -> Native
   577 e29a:             ; r1 = r1 > r2
   578 e29a:             ;
   579 e29a: 0f 75           movrr  r5,r7
-  580 e29c: 04 ee d4        jsr parse_compare
+  580 e29c: 04 ee aa        jsr parse_compare
   581 e29f: 0d 01           ldti 01h
   582 e2a1: aa e2 aa        BRNEQ exe_rel_ngt
   583 e2a4: 1d 00 01        mviw r5,01h
@@ -621,7 +621,7 @@ yacc1 -> Native
   594 e2b8:             ; r1 = r1 == r2
   595 e2b8:             ;
   596 e2b8: 0f 75           movrr  r5,r7
-  597 e2ba: 04 ee d4        jsr parse_compare
+  597 e2ba: 04 ee aa        jsr parse_compare
   598 e2bd: a2 e2 c6        brnz exe_rel_ne
   599 e2c0: 1d 00 01        mviw r5,01h
   600 e2c3: a0 e2 61        BR exe_relation_loop
@@ -643,7 +643,7 @@ yacc1 -> Native
   616 e2d3:             ; THIS CAN BE REMOVED SINCE IT IS ONLY A SINGLE CALL
   617 e2d3:             ;
   618 e2d3:             exe_index_find:
-  619 e2d3: 04 ed ba        JSR basu_find
+  619 e2d3: 04 ed 90        JSR basu_find
   620 e2d6: 05              RET
   621 e2d7:             
   622 e2d7:             ;
@@ -740,7 +740,7 @@ yacc1 -> Native
   713 e352: a0 e3 02        br exe_print_stmt_loop
   714 e355:             
   715 e355:             exe_print_stmt_done:
-  716 e355: 1f ef 23        mviw R7,CRLF
+  716 e355: 1f ee f9        mviw R7,CRLF
   717 e358: 04 ff c0        jsr stringout
   718 e35b: 04 e5 8e        jsr exe_next_token
   719 e35e: 05              ret
@@ -889,7 +889,7 @@ yacc1 -> Native
   862 e3f3:             ; r7>r6 01
   863 e3f3:             ; r7<r6 ff
   864 e3f3:             ;
-  865 e3f3: 04 ee d4         jsr parse_compare
+  865 e3f3: 04 ee aa         jsr parse_compare
   866 e3f6: 0d 01            ldti 01
   867 e3f8: a8 e4 02         breq exe_next_done
   868 e3fb:             ;    mvrla r6
@@ -994,13 +994,13 @@ yacc1 -> Native
   967 e44f:             
   968 e44f: 1f 03 00        mviw r7,parse_input_line
   969 e452:             
-  970 e452: 04 ef 12        jsr get_inputline
+  970 e452: 04 ee e8        jsr get_inputline
   971 e455:             
   972 e455: 1f 03 00        mviw r7,parse_input_line
   973 e458: ff 02 02        str r7,bas_txtptr
   974 e45b:             
   975 e45b:             
-  976 e45b: 04 eb 70        jsr parse_num
+  976 e45b: 04 eb 5f        jsr parse_num
   977 e45e: 0a              pop
   978 e45f: 04 e5 76        jsr  EXE_SET_VARIABLE
   979 e462:             
@@ -1387,12 +1387,12 @@ yacc1 -> Native
  1358 e5fa: 44                ldavr r4
  1359 e5fb: 36                mvarl r6
  1360 e5fc: 5c                decr r4
- 1361 e5fd: 04 ee d4          jsr parse_compare
+ 1361 e5fd: 04 ee aa          jsr parse_compare
  1362 e600: 0d ff             ldti 0ffh
  1363 e602: a8 e6 0f          breq exe_itoa_next
  1364 e605: 0e 00             ldai 0
  1365 e607: 3d                mvarh r5
- 1366 e608: 04 ee 7f          jsr PARSE_SUB16
+ 1366 e608: 04 ee 55          jsr PARSE_SUB16
  1367 e60b: 55                incr r5
  1368 e60c: a0 e5 f7          br exe_itoa_loop
  1369 e60f:             
@@ -1841,7 +1841,7 @@ yacc1 -> Native
  1795 e922:             baslist36:
  1796 e922: 0d 24           LDTI TOKENIZER_CR
  1797 e924: aa e9 31        BRNEQ baslist37
- 1798 e927: 1f ef 23        mviw R7,CRLF
+ 1798 e927: 1f ee f9        mviw R7,CRLF
  1799 e92a: 04 ff c0        jsr stringout
  1800 e92d: 53              INCR R3
  1801 e92e: a0 e6 ab        BR baslist_loop
@@ -2043,1114 +2043,1115 @@ yacc1 -> Native
  1978 ea74:             ;
  1979 ea74:             parse_gnt1:
  1980 ea74: 43              ldavr r3
- 1981 ea75: 0d 2d           ldti '-'
- 1982 ea77: aa ea 85        brneq parse_gnt1_chkpos
- 1983 ea7a: 53              incr r3
- 1984 ea7b: 43              ldavr r3
- 1985 ea7c: 04 ee c4        jsr parse_isdigit
- 1986 ea7f: a1 ea 9b        brz parse_gnt1_notneg
- 1987 ea82: a0 ea 74        br parse_gnt1
- 1988 ea85:             
- 1989 ea85:             parse_gnt1_chkpos:
- 1990 ea85: 04 ee c4        jsr parse_isdigit
- 1991 ea88: a1 ea 9c        brz parse_gnt2
- 1992 ea8b:             
- 1993 ea8b:             parse_gnt1loop:
- 1994 ea8b: 53              incr R3
- 1995 ea8c: 43              ldavr r3
- 1996 ea8d: 04 ee c4        jsr parse_isdigit
- 1997 ea90: a2 ea 8b        brnz parse_gnt1loop
- 1998 ea93: fb 02 04        STR r3,bas_nxtptr
- 1999 ea96: 0e 02           ldai TOKENIZER_NUMBER
- 2000 ea98: 08 30           popr r3
- 2001 ea9a: 05              ret
- 2002 ea9b:             
- 2003 ea9b:             parse_gnt1_notneg:
- 2004 ea9b: 5b              decr r3
- 2005 ea9c:             ;
- 2006 ea9c:             ; singlechar
- 2007 ea9c:             ;
- 2008 ea9c:             parse_gnt2:
- 2009 ea9c: 43             ldavr r3
- 2010 ea9d: 04 e9 e4       jsr parse_singlechar
- 2011 eaa0: a1 ea aa       BRZ parse_gnt3
- 2012 eaa3: 53             incr r3
- 2013 eaa4: fb 02 04       STR r3,bas_nxtptr
- 2014 eaa7: 08 30          popr r3
- 2015 eaa9: 05             ret
- 2016 eaaa:             ;
- 2017 eaaa:             ; quote
- 2018 eaaa:             ;
- 2019 eaaa:             parse_gnt3:
- 2020 eaaa: 43              ldavr R3
- 2021 eaab: 0d 22           ldti '"'
- 2022 eaad: aa ea c0        brneq parse_gnt4
- 2023 eab0:             parse_gnt3loop:
- 2024 eab0: 53              incr r3
- 2025 eab1: 43              ldavr R3
- 2026 eab2: 0d 22           ldti '"'
- 2027 eab4: aa ea b0        brneq parse_gnt3loop
- 2028 eab7: 53              incr r3
- 2029 eab8: fb 02 04        STR r3,bas_nxtptr
- 2030 eabb: 0e 03           ldai TOKENIZER_STRING
- 2031 eabd: 08 30           popr r3
- 2032 eabf: 05              ret
- 2033 eac0:             ;
- 2034 eac0:             parse_gnt4:
- 2035 eac0:             ;
- 2036 eac0:             ; keyword search
- 2037 eac0:             ;
- 2038 eac0: 07 04           pushr r4
- 2039 eac2: 1c e9 68        mviw r4,parse_keywords
- 2040 eac5:             top:
- 2041 eac5: 44              ldavr r4
- 2042 eac6: f3 02 02        LDR r3,bas_txtptr
- 2043 eac9: a1 ea ed        brz nokeyowrdsfound
- 2044 eacc:             pcmploop:
- 2045 eacc: 44              ldavr r4
- 2046 eacd: a1 ea e3        brz found
- 2047 ead0: 0b              MVAT
- 2048 ead1: 43              ldavr r3
- 2049 ead2: aa ea da        brneq skiptoend
- 2050 ead5: 54              incr r4
- 2051 ead6: 53              incr r3
- 2052 ead7: a0 ea cc        br pcmploop
- 2053 eada:             
- 2054 eada:             skiptoend:
- 2055 eada:             ;  skip to end of string and skip over token
- 2056 eada:             skiploop:
- 2057 eada: 44              ldavr r4
- 2058 eadb: 54              incr r4
- 2059 eadc: a2 ea da        brnz skiploop
- 2060 eadf: 54              incr r4
- 2061 eae0: a0 ea c5        br top
- 2062 eae3:             
- 2063 eae3:             found:
- 2064 eae3: fb 02 04        str r3,bas_nxtptr
- 2065 eae6: 54              incr r4
- 2066 eae7: 44              ldavr r4
- 2067 eae8: 08 40           popr r4
- 2068 eaea: 08 30           popr r3
- 2069 eaec: 05              ret
- 2070 eaed:             
- 2071 eaed:             nokeyowrdsfound:
- 2072 eaed: 08 40           popr r4
- 2073 eaef:             ;
- 2074 eaef:             ;  check for variables
- 2075 eaef:             ;
- 2076 eaef: 43              ldavr r3
- 2077 eaf0: 0d 41           ldti 'A'
- 2078 eaf2: a7 eb 03        BRLT parse_gnt_error
- 2079 eaf5: 0d 5a           ldti 'Z'
- 2080 eaf7: a9 eb 03        BRGT parse_gnt_error
- 2081 eafa: 53              INCR r3
- 2082 eafb: fb 02 04        str r3,bas_nxtptr
- 2083 eafe: 0e 04           LDAI tokenizer_variable
- 2084 eb00: 08 30           popr r3
- 2085 eb02: 05              RET
- 2086 eb03:             
- 2087 eb03:             parse_gnt_error:
- 2088 eb03:             ;    halt
- 2089 eb03: 0e 00           ldai tokenizer_error
- 2090 eb05: 08 30           popr r3
- 2091 eb07: 05              ret
- 2092 eb08:             
- 2093 eb08:             ;
- 2094 eb08:             ; void TOKENIZER_GOTO (char * program)
- 2095 eb08:             ;
- 2096 eb08:             ; under development, may not be needed
- 2097 eb08:             ;
- 2098 eb08:             ;parse_goto:
- 2099 eb08:             ;    str r3,bas_txtptr
- 2100 eb08:             ;    jsr parse_get_next_tok
- 2101 eb08:             ;    sta bas_currenttoken
- 2102 eb08:             ;    ret
- 2103 eb08:             
- 2104 eb08:             ;
- 2105 eb08:             ; void tokenizer_init(int ptr)
- 2106 eb08:             ;
- 2107 eb08:             ; paramater ptr : R7 Points to text input line
- 2108 eb08:             ;
- 2109 eb08:             ; under development
- 2110 eb08:             ;
- 2111 eb08:             parse_init:
- 2112 eb08:             
- 2113 eb08: 07 03           pushr r3
- 2114 eb0a: ff 02 02        STR R7,bas_txtptr
- 2115 eb0d: 1b 04 00        MVIW r3,parse_token_buffer
- 2116 eb10: fb 02 06        STR  R3,bas_tokptr
- 2117 eb13: 1b 00 00        mviw r3,0
- 2118 eb16: fb 02 08        str r3,bas_tokcounter
- 2119 eb19: 04 ea 6f        jsr parse_get_next_tok
- 2120 eb1c: ed 02 0a        sta bas_currenttoken
- 2121 eb1f: 08 30           popr r3
- 2122 eb21: 05              ret
- 2123 eb22:             
- 2124 eb22:             ;
- 2125 eb22:             ; int tokenizer_token(void)
- 2126 eb22:             :
- 2127 eb22:             parse_token:
- 2128 eb22: ec 02 0a        lda bas_currenttoken
- 2129 eb25: 05              ret
- 2130 eb26:             
- 2131 eb26:             ;
- 2132 eb26:             ; void tokenizer_next(void) parser version
- 2133 eb26:             ;
- 2134 eb26:             parse_next:
- 2135 eb26: 04 eb f9        jsr parse_finished
- 2136 eb29: a1 eb 2d        brz parse_next1
- 2137 eb2c: 05              ret
- 2138 eb2d:             
- 2139 eb2d:             parse_next1:
- 2140 eb2d: 07 03           pushr r3
- 2141 eb2f: f3 02 04        ldr r3,bas_nxtptr
- 2142 eb32: fb 02 02        str r3,bas_txtptr
- 2143 eb35:             
- 2144 eb35:             parse_next1loop:
- 2145 eb35: 43              ldavr r3
- 2146 eb36: 0d 20           ldti ' '
- 2147 eb38: aa eb 3f        brneq parse_next2
- 2148 eb3b: 53              incr r3
- 2149 eb3c: a0 eb 35        br parse_next1loop
- 2150 eb3f:             
- 2151 eb3f:             
- 2152 eb3f:             parse_next2:
- 2153 eb3f: fb 02 02        str r3,bas_txtptr
- 2154 eb42: 04 ea 6f        jsr parse_get_next_tok
- 2155 eb45: ed 02 0a        sta bas_currenttoken
- 2156 eb48:             
- 2157 eb48: 0d 11           ldti TOKENIZER_REM
- 2158 eb4a: a8 eb 50        breq parse_next3
- 2159 eb4d: 08 30           popr r3
- 2160 eb4f: 05              ret
- 2161 eb50:             
- 2162 eb50:             ;
- 2163 eb50:             ; this needs to be fixed
- 2164 eb50:             ; if rem return to parsel line then copy into token buffer
- 2165 eb50:             ;
- 2166 eb50:             parse_next3:
- 2167 eb50: 04 eb f9        JSR parse_finished
- 2168 eb53: a2 eb 60        BRNZ parse_nextdone
- 2169 eb56: 43              ldavr r3
- 2170 eb57: 0d 0a           ldti  0ah
- 2171 eb59: a8 eb 60        breq parse_nextdone
- 2172 eb5c: 53              incr r3
- 2173 eb5d: a0 eb 50        br parse_next3
- 2174 eb60:             
- 2175 eb60:             parse_nextdone:
- 2176 eb60: 43              ldavr r3
- 2177 eb61: 0d 0a           ldti  0ah
- 2178 eb63: aa eb 67        brneq parse_nextdone2
- 2179 eb66: 53              incr r3
- 2180 eb67:             
- 2181 eb67:             parse_nextdone2:
- 2182 eb67: fb 02 04        str r3,bas_nxtptr
- 2183 eb6a: 04 eb 26        jsr parse_next
- 2184 eb6d: 08 30           popr r3
- 2185 eb6f: 05              ret
- 2186 eb70:             
- 2187 eb70:             ;
- 2188 eb70:             ; VARIABLE_TYPE tokenizer_num(void)
- 2189 eb70:             ;
- 2190 eb70:             ; Hack for now input characters are ascii hex format HHHH
- 2191 eb70:             ;
- 2192 eb70:             ; value returned in R7
- 2193 eb70:             ;
- 2194 eb70:             ; Should this advance the line ptr?
- 2195 eb70:             ;
- 2196 eb70:             
- 2197 eb70:             parse_num:
- 2198 eb70: 07 03           pushr r3
- 2199 eb72: 07 04           pushr r4
- 2200 eb74: 07 05           pushr r5
- 2201 eb76: 07 06           pushr r6
- 2202 eb78: 1e 00 00        mviw r6,0           ;accumlate val in r6
- 2203 eb7b: f3 02 02        LDR r3,bas_txtptr
- 2204 eb7e: 1c 00 00        MVIW R4,0000h
- 2205 eb81: fc 02 16        STR R4,bas_negflag
- 2206 eb84: 43              LDAVR R3
- 2207 eb85: 0d 2d           ldti '-'
- 2208 eb87: aa eb 91        brneq parse_num_pos
- 2209 eb8a: 1c ff ff        MVIW R4,0ffffh
- 2210 eb8d: fc 02 16        STR R4,bas_negflag
- 2211 eb90: 53              incr r3
- 2212 eb91:             
- 2213 eb91:             parse_num_pos:
- 2214 eb91: 04 eb c9        jsr parse_num_char
- 2215 eb94:             ;   jsr SHOWBYTEA
- 2216 eb94: 36              mvarl r6
- 2217 eb95:             parse_num_loop:
- 2218 eb95: 04 eb c9        jsr parse_num_char
- 2219 eb98:             ;   jsr showbytea
- 2220 eb98: 09              push
- 2221 eb99: 0d ff           ldti 0FFH
- 2222 eb9b: a8 eb b3        breq parse_num_done
- 2223 eb9e:             
- 2224 eb9e: 0f 56           movrr r6,r5
- 2225 eba0: 1c 00 0a        mviw r4,0ah
- 2226 eba3: 04 ee 36        jsr parse_mul16
- 2227 eba6:             ;    jsr showr7
- 2228 eba6: 0a              pop
- 2229 eba7: 1e 00 00        mviw r6,0
- 2230 ebaa: 36              mvarl r6
- 2231 ebab: 04 ee 71        jsr parse_add16
- 2232 ebae: 0f 67           movrr r7,r6
- 2233 ebb0:             ;    jsr showr7
- 2234 ebb0: a0 eb 95        br parse_num_loop
- 2235 ebb3:             
- 2236 ebb3:             parse_num_done:
- 2237 ebb3: 0a              pop
- 2238 ebb4: 0f 76           movrr r6,r7
- 2239 ebb6: f4 02 16        ldr r4,bas_negflag
- 2240 ebb9: 24              mvrla r4
- 2241 ebba: a1 eb c0        brz parse_num_done1
- 2242 ebbd: 04 ee 89        jsr parse_neg
- 2243 ebc0:             parse_num_done1:
- 2244 ebc0: 08 60           popr r6
- 2245 ebc2: 08 50           popr r5
- 2246 ebc4: 08 40           popr r4
- 2247 ebc6: 08 30           popr r3
- 2248 ebc8:             
- 2249 ebc8:             ;    jsr showr7
- 2250 ebc8: 05              ret
- 2251 ebc9:             
- 2252 ebc9:             parse_num_char:
- 2253 ebc9: 43              LDAVR R3
- 2254 ebca: 04 ee c4        JSR parse_isdigit
- 2255 ebcd: a2 eb d3        BRNZ parse_num_char1
- 2256 ebd0: 0e ff           ldai 0ffh
- 2257 ebd2: 05              ret
- 2258 ebd3:             parse_num_char1:
- 2259 ebd3: 43              ldavr r3
- 2260 ebd4: b1 30           SUBI '0'
- 2261 ebd6: 53              incr r3
- 2262 ebd7: 05              RET
- 2263 ebd8:             
- 2264 ebd8:             ;
- 2265 ebd8:             ; add error checking
- 2266 ebd8:             ;
- 2267 ebd8:             ; return hex nibble in accumulator
- 2268 ebd8:             ;
- 2269 ebd8:             parse_getnibble:
- 2270 ebd8: 43                LDAVR R3
- 2271 ebd9: 53                incr r3
- 2272 ebda: 0d 39             LDTI '9'
- 2273 ebdc: a9 eb e2          BRGT parse_af
- 2274 ebdf: b1 30             SUBI '0'
- 2275 ebe1: 05                RET
- 2276 ebe2:             parse_af:
- 2277 ebe2: 04 ff d0          JSR toupper
- 2278 ebe5: b1 41             SUBI 'A'
- 2279 ebe7: b0 0a             ADDI 10
- 2280 ebe9: 05                RET
- 2281 ebea:             ;
- 2282 ebea:             ; void tokenizer_string(char *dest, int len)
- 2283 ebea:             ;
- 2284 ebea:             ; not used, in line parse_line
- 2285 ebea:             ;
- 2286 ebea:             parse_string:
- 2287 ebea: 04 eb 22        JSR parse_token
- 2288 ebed: 0d 03           LDTI TOKENIZER_STRING
- 2289 ebef: a8 eb f3        BREQ parse_string1
- 2290 ebf2: 05              ret
- 2291 ebf3:             
- 2292 ebf3:             parse_string1:
- 2293 ebf3: 07 03           pushr r3
- 2294 ebf5: f3 02 02        LDR r3,bas_txtptr
- 2295 ebf8: 43              LDAVR R3
- 2296 ebf9:             
- 2297 ebf9:             
- 2298 ebf9:             ;
- 2299 ebf9:             ; void tokenizer_error_print(void)
- 2300 ebf9:             ;
- 2301 ebf9:             ; fix
- 2302 ebf9:             ;
- 2303 ebf9:             ;parse_error_print:
- 2304 ebf9:             ;    halt
- 2305 ebf9:             
- 2306 ebf9:             ;
- 2307 ebf9:             ; int tokenizer_finished(void)
- 2308 ebf9:             ;
- 2309 ebf9:             parse_finished:
- 2310 ebf9: 07 03           pushr r3
- 2311 ebfb: f3 02 02        LDR r3,bas_txtptr
- 2312 ebfe: 43              ldavr r3
- 2313 ebff: a1 ec 14        brz parse_finished_yes
- 2314 ec02:             ;    ldti 0ah
- 2315 ec02:             ;    breq parse_finished_yes
- 2316 ec02:             ;    ldti 0dh
- 2317 ec02:             ;    breq parse_finished_yes
- 2318 ec02: 0d 01           ldti TOKENIZER_EOF
- 2319 ec04: a8 ec 14        breq parse_finished_yes
- 2320 ec07: ec 02 0a        lda bas_currenttoken
- 2321 ec0a: 0d 01           ldti TOKENIZER_EOF
- 2322 ec0c: a8 ec 14        breq parse_finished_yes
- 2323 ec0f: 08 30           popr r3
- 2324 ec11: 0e 00           ldai 0
- 2325 ec13: 05              ret
- 2326 ec14:             parse_finished_yes:
- 2327 ec14: 0e 01           ldai 1
- 2328 ec16: 08 30           popr r3
- 2329 ec18: 05              ret
- 2330 ec19:             
- 2331 ec19:             ;
- 2332 ec19:             ; int tokenizer_variable_num(void)
- 2333 ec19:             ;
- 2334 ec19:             parse_variable_num:
- 2335 ec19: 07 03             pushr r3
- 2336 ec1b: f3 02 02          LDR r3,bas_txtptr
- 2337 ec1e: 43                ldavr r3
- 2338 ec1f: b1 41             subi 'A'
- 2339 ec21: 37                mvarl r7
- 2340 ec22: 0e 00             ldai 0
- 2341 ec24: 3f                mvarh r7
- 2342 ec25: 08 30             popr r3
- 2343 ec27: 05                ret
- 2344 ec28:             
- 2345 ec28:             ;
- 2346 ec28:             ; char *const tokenizer_pos(void)
- 2347 ec28:             ;
- 2348 ec28:             ; probably not used
- 2349 ec28:             parse_pos:
- 2350 ec28:             
- 2351 ec28:             ;not used old
- 2352 ec28:             ; char *tokenize(char *program)
- 2353 ec28:             ;
- 2354 ec28:             ; parse:
- 2355 ec28:             
- 2356 ec28:             ;
- 2357 ec28:             ; char *tokenizeLine(char *line)
- 2358 ec28:             ;
- 2359 ec28:             ; assume input text string in parse_input_line
- 2360 ec28:             ;
- 2361 ec28:             
- 2362 ec28:             parse_line:
- 2363 ec28: 04 eb 08        JSR PARSE_INIT
- 2364 ec2b:             
- 2365 ec2b: 1b 00 06        MVIW R3,6              ;all lines have a 6 bytes including EOL token
- 2366 ec2e: fb 02 08        str r3,bas_tokcounter
- 2367 ec31: 1b 04 00        MVIW R3,parse_token_buffer
- 2368 ec34:             
- 2369 ec34: 07 03           pushr r3
- 2370 ec36: f3 02 02        LDR r3,bas_txtptr
- 2371 ec39: 43              ldavr r3
- 2372 ec3a: 04 ee c4        jsr parse_isdigit
- 2373 ec3d: 08 30           popr r3
- 2374 ec3f: 0d 01           ldti 1
- 2375 ec41: a8 ec 88        breq parse_code
- 2376 ec44: 04 ea 6f        jsr parse_get_next_tok
- 2377 ec47:             
- 2378 ec47:             parse_line_list:
- 2379 ec47: 0d 26           ldti tokenizer_list
- 2380 ec49: aa ec 55        brneq parse_line_exit
- 2381 ec4c: f7 02 0c        ldr r7,bas_tokenbuffer
- 2382 ec4f: 04 e6 a7        JSR  basic_list
- 2383 ec52: 0e 00           ldai 0
- 2384 ec54: 05              RET
- 2385 ec55:             
- 2386 ec55:             parse_line_exit:
- 2387 ec55: 0d 29           ldti TOKENIZER_EXIT
- 2388 ec57: aa ec 60        brneq parse_line_run
- 2389 ec5a: 04 e5 4f        jsr basic_run
- 2390 ec5d: 0e 01           ldai 1
- 2391 ec5f: 05              RET
- 2392 ec60:             
- 2393 ec60:             parse_line_run:
- 2394 ec60: 0d 27           ldti TOKENIZER_RUN
- 2395 ec62: aa ec 6b        brneq parse_line_new
- 2396 ec65: 04 e5 4f        jsr basic_run
- 2397 ec68: 0e 00           ldai 0
- 2398 ec6a: 05              RET
- 2399 ec6b:             
- 2400 ec6b:             parse_line_new:
- 2401 ec6b: 0d 28           ldti TOKENIZER_NEW
- 2402 ec6d: aa ec 79        brneq parse_line_error
- 2403 ec70: 1f 10 00        MVIW R7,bas_tok_buf_start
- 2404 ec73: 0e 01           ldai TOKENIZER_EOF          ;write EOF to start of buffer
- 2405 ec75: 4f              stavr r7
- 2406 ec76: 0e 00           ldai 0
- 2407 ec78: 05              RET
- 2408 ec79:             
- 2409 ec79:             parse_line_error:
- 2410 ec79: 1f e0 f5        mviw r7,parse_cmd_error
- 2411 ec7c: 04 ff c0        jsr stringout
- 2412 ec7f: 1f ef 23        mviw r7,CRLF
- 2413 ec82: 04 ff c0        jsr stringout
- 2414 ec85: 0e 00           ldai 0
- 2415 ec87: 05              ret
- 2416 ec88:             
- 2417 ec88:             parse_code:
- 2418 ec88: 0e 25           LDAI TOKENIZER_LINENUM ;start with linenum token
- 2419 ec8a: 4b              STAVR R3
- 2420 ec8b: 53              INCR R3
- 2421 ec8c:             
- 2422 ec8c: 04 eb 70        JSR parse_num           ;store line number
- 2423 ec8f: ff 02 10        str r7,bas_newlinenum
- 2424 ec92: 27              mvrla r7
- 2425 ec93: 4b              stavr r3
- 2426 ec94: 53              incr r3
- 2427 ec95: 2f              mvrha r7
- 2428 ec96: 4b              stavr r3
- 2429 ec97: 53              incr r3
- 2430 ec98:             
- 2431 ec98: 53              incr r3                ; skip over line length - fill in later
- 2432 ec99: 53              incr r3
- 2433 ec9a:             
- 2434 ec9a:             parse_line_loop:
- 2435 ec9a: 04 eb 26        JSR parse_next
- 2436 ec9d: 04 eb 22        JSR parse_token
- 2437 eca0: 0d 24           ldti TOKENIZER_CR
- 2438 eca2: a8 ed 11        BREQ parse_line_done
- 2439 eca5:             
- 2440 eca5: 4b              STAVR R3
- 2441 eca6: 53              INCR R3
- 2442 eca7: f5 02 08        ldr r5,bas_tokcounter
- 2443 ecaa: 55              incr r5
- 2444 ecab: fd 02 08        str r5,bas_tokcounter
- 2445 ecae:             
- 2446 ecae: 0d 02           ldti TOKENIZER_NUMBER
- 2447 ecb0: aa ec c7        BRNEQ parse_line1
- 2448 ecb3: 04 eb 70        JSR parse_num
- 2449 ecb6: 27              mvrla r7
- 2450 ecb7: 4b              stavr r3
- 2451 ecb8: 53              incr r3
- 2452 ecb9: 2f              mvrha r7
- 2453 ecba: 4b              stavr r3
- 2454 ecbb: 53              incr r3
- 2455 ecbc: f5 02 08        ldr r5,bas_tokcounter
- 2456 ecbf: 55              incr r5
- 2457 ecc0: 55              incr r5
- 2458 ecc1: fd 02 08        str r5,bas_tokcounter
- 2459 ecc4: a0 ec 9a        BR parse_line_loop
- 2460 ecc7:             
- 2461 ecc7:             parse_line1:
- 2462 ecc7: 0d 03           ldti TOKENIZER_STRING
- 2463 ecc9: aa ec f8        BRNEQ parse_line2
- 2464 eccc: f4 02 02        ldr r4,bas_txtptr
- 2465 eccf: 54              incr r4                   ;skip over opening "
- 2466 ecd0:             
- 2467 ecd0:             parse_line1loop:
- 2468 ecd0: 44              ldavr r4
- 2469 ecd1: 0d 22           ldti '"'
- 2470 ecd3: a8 ec e3        breq parse_line1done
- 2471 ecd6: 4b              stavr r3
- 2472 ecd7: 53              incr r3
- 2473 ecd8: 54              incr r4
- 2474 ecd9: f5 02 08        ldr r5,bas_tokcounter
- 2475 ecdc: 55              incr r5
- 2476 ecdd: fd 02 08        str r5,bas_tokcounter
- 2477 ece0: a0 ec d0        BR parse_line1loop
- 2478 ece3:             parse_line1done:
- 2479 ece3: 54              incr r4                   ;skip over closing "
- 2480 ece4: 0e 00           ldai 0                    ;add null into token buffer
- 2481 ece6: 4b              stavr R3
- 2482 ece7: 53              incr r3
- 2483 ece8: f5 02 08        ldr r5,bas_tokcounter
- 2484 eceb: 55              incr r5
- 2485 ecec: fd 02 08        str r5,bas_tokcounter
- 2486 ecef: fb 02 06        str r3,BAS_TOKPTR
- 2487 ecf2: fc 02 02        str r4,bas_txtptr
- 2488 ecf5: a0 ec 9a        BR parse_line_loop
- 2489 ecf8:             
- 2490 ecf8:             parse_line2:
- 2491 ecf8: 0d 04           ldti TOKENIZER_VARIABLE
- 2492 ecfa: aa ec 9a        BRNEQ parse_line_loop
- 2493 ecfd: 04 ec 19        JSR parse_variable_num
- 2494 ed00: 27              mvrla r7
- 2495 ed01: 4b              stavr r3
- 2496 ed02: 53              incr r3
- 2497 ed03: 2f              mvrha r7
- 2498 ed04: 4b              stavr r3
- 2499 ed05: 53              incr r3
- 2500 ed06: f5 02 08        ldr r5,bas_tokcounter
- 2501 ed09: 55              incr r5
- 2502 ed0a: 55              incr r5
- 2503 ed0b: fd 02 08        str r5,bas_tokcounter
- 2504 ed0e: a0 ec 9a        BR parse_line_loop
- 2505 ed11:             
- 2506 ed11:             parse_line_done:
- 2507 ed11: 0e 24           ldai TOKENIZER_CR           ;tack CR to end of buffer
- 2508 ed13: 4b              STAVR R3
- 2509 ed14: 53              INCR R3
- 2510 ed15:             ;    ldr r5,bas_tokcounter
- 2511 ed15:             ;    incr r5
- 2512 ed15:             ;    str r5,bas_tokcounter
- 2513 ed15:             
- 2514 ed15: 1b 04 00        mviw r3,parse_token_buffer ; write length into token buffer
- 2515 ed18: 53              incr r3
- 2516 ed19: 53              incr r3
- 2517 ed1a: 53              incr r3
- 2518 ed1b: f7 02 08        ldr r7,bas_tokcounter
- 2519 ed1e: ff 02 12        str r7,bas_newlinelen
- 2520 ed21: 27              mvrla r7
- 2521 ed22: 4b              stavr r3
- 2522 ed23: 53              incr r3
- 2523 ed24: 2f              mvrha r7
- 2524 ed25: 4b              stavr r3
- 2525 ed26:             
- 2526 ed26:             ;
- 2527 ed26:             ; void addLine(char *buff)
- 2528 ed26:             ; since addline is only called from parse_tokenizeline where are these
- 2529 ed26:             ; values are know, pass them in or
- 2530 ed26:             ; maybe merge addLine to bottom of parse_tokenizeline
- 2531 ed26:             ;
- 2532 ed26:             ; r7 points to line to insert
- 2533 ed26:             ; r6 linenumber
- 2534 ed26:             ; r5 linelength
- 2535 ed26:             ;
- 2536 ed26:             parse_addline:
- 2537 ed26: f7 02 10          ldr r7,BAS_NEWLINENUM
- 2538 ed29: 04 ed 92          JSR parse_removeline      ; if line number already exists delete it
- 2539 ed2c: f7 02 12          ldr r7,bas_newlinelen     ; if new line is 6 bytes line just delete nothing to add
- 2540 ed2f: 27                mvrla r7
- 2541 ed30: 0d 06             ldti 6
- 2542 ed32: aa ed 38          brneq parse_addline1
- 2543 ed35: 0e 00             ldai 0
- 2544 ed37: 05                ret
- 2545 ed38:             
- 2546 ed38:             parse_addline1:                 ;find insert location
- 2547 ed38: f7 02 10          ldr r7,BAS_NEWLINENUM
- 2548 ed3b: f3 02 0c          ldr r3,bas_tokenBuffer
- 2549 ed3e:             
- 2550 ed3e:             parse_addlineloop:
- 2551 ed3e: fb 02 14          str r3,bas_insertptr
- 2552 ed41: 43                ldavr r3
- 2553 ed42: 0d 01             ldti TOKENIZER_EOF
- 2554 ed44: a8 ed 67          BREQ parse_addroom
- 2555 ed47: 53                incr r3                   ;get line number of line in token buffer into r6
- 2556 ed48: 43                ldavr r3
- 2557 ed49: 36                mvarl r6
- 2558 ed4a: 53                incr r3
- 2559 ed4b: 43                ldavr r3
- 2560 ed4c: 3e                mvarh r6
- 2561 ed4d: 04 ee d4          jsr parse_compare
- 2562 ed50: 0d ff             ldti 0ffh
- 2563 ed52: a8 ed 67          breq parse_addroom
- 2564 ed55:             
- 2565 ed55: 53                incr r3                   ;get line length
- 2566 ed56: 43                ldavr r3
- 2567 ed57: 1e 00 00          mviw r6,0                 ;set r6 to length - assumes < 256 bytes
- 2568 ed5a: 36                mvarl r6
- 2569 ed5b: 5e                decr r6                   ;account for 3 bytes of linenum token and linenum
- 2570 ed5c: 5e                decr r6
- 2571 ed5d: 5e                decr r6
- 2572 ed5e:             
- 2573 ed5e:             addline_moveptr:              ; advance pointer to next line
- 2574 ed5e: 53                incr r3
- 2575 ed5f: 5e                decr r6
- 2576 ed60: 26                mvrla r6
- 2577 ed61: a2 ed 5e          brnz addline_moveptr
- 2578 ed64: a0 ed 3e          br parse_addlineloop
- 2579 ed67:             
- 2580 ed67:             
- 2581 ed67:             parse_addroom:               ; make room
- 2582 ed67: 1f 20 00          mviw r7,BAS_TOK_BUF_END
- 2583 ed6a:             ;      decr r7
- 2584 ed6a: f6 02 12          ldr  r6,BAS_NEWLINELEN
- 2585 ed6d: 04 ee 7f          jsr parse_sub16
- 2586 ed70: 1d 20 00          mviw r5,BAS_TOK_BUF_END
- 2587 ed73:             ;      decr r5
- 2588 ed73:             
- 2589 ed73:             parse_roomloop:
- 2590 ed73: 5f                decr r7
- 2591 ed74: 5d                decr r5
- 2592 ed75: 47                ldavr r7
- 2593 ed76: 4d                stavr r5
- 2594 ed77:             
- 2595 ed77: f6 02 14          ldr r6,bas_insertptr
- 2596 ed7a: 04 ee d4          jsr PARSE_COMPARE
- 2597 ed7d: a2 ed 73          brnz parse_roomloop
- 2598 ed80:             
- 2599 ed80: f7 02 14          ldr r7,bas_insertptr
- 2600 ed83: 1e 04 00          MVIW R6,parse_token_buffer
- 2601 ed86:             
- 2602 ed86:             parse_insertloop:
- 2603 ed86: 46                ldavr r6
- 2604 ed87: 4f                stavr r7
- 2605 ed88: 56                incr r6
- 2606 ed89: 57                incr r7
- 2607 ed8a: 0d 24             ldti 024h ; sub in actual eol token here
- 2608 ed8c: aa ed 86          brneq parse_insertloop
- 2609 ed8f: 0e 00             ldai 0
- 2610 ed91: 05                ret
- 2611 ed92:             
- 2612 ed92:             ;
- 2613 ed92:             ; void removeLine(int lineNum)
- 2614 ed92:             ;
- 2615 ed92:             parse_removeline:
- 2616 ed92: 04 ed ba        JSR basu_find
- 2617 ed95: 2f              mvrha R7
- 2618 ed96: a2 ed 9e        brnz parse_removeline1
- 2619 ed99: 27              mvrla R7
- 2620 ed9a: a2 ed 9e        brnz parse_removeline1
- 2621 ed9d: 05              ret
- 2622 ed9e:             parse_removeline1:
- 2623 ed9e: 0f 57           movrr R7,R5     ; R5 = destination ptr
- 2624 eda0: 57              incr r7
- 2625 eda1: 57              incr r7
- 2626 eda2: 57              incr r7
- 2627 eda3: 47              ldavr r7
- 2628 eda4: 36              mvarl r6        ; R6 = remove length
- 2629 eda5: 57              incr r7
- 2630 eda6: 47              ldavr r7
- 2631 eda7: 3e              mvarh r6
- 2632 eda8:             
- 2633 eda8: 5f              decr r7         ;backup to start of line
- 2634 eda9: 5f              decr r7
- 2635 edaa: 5f              decr r7
- 2636 edab: 5f              decr r7
- 2637 edac: 04 ee 71        JSR parse_add16
- 2638 edaf:             parse_removeloop:
- 2639 edaf: 47              ldavr r7
- 2640 edb0: 4d              stavr r5
- 2641 edb1: 55              incr r5
- 2642 edb2: 57              incr r7
- 2643 edb3: 2f              MVRHA r7
- 2644 edb4:             
- 2645 edb4: ee 02 0e        ldt  bas_bufferendhi
- 2646 edb7:             
- 2647 edb7: aa ed af        brneq parse_removeloop
- 2648 edba:             ;
- 2649 edba:             ; no need to explicitly set TOKENIZER_ENDOFINPUT should have been copied
- 2650 edba:             ; since we are moving complete contents of buffer
- 2651 edba:             ; Make sure it is set during addline
- 2652 edba:             ;
- 2653 edba:             
- 2654 edba:             
- 2655 edba:             ; run & parse utilites
- 2656 edba:             ;
- 2657 edba:             
- 2658 edba:             ;
- 2659 edba:             ; find in the token buffer linenum in r7
- 2660 edba:             ;
- 2661 edba:             basu_find:
- 2662 edba: 07 05           pushr r5                  ; save r5
- 2663 edbc: f5 02 0c        LDR  r5,bas_tokenBuffer   ; r5 ptr to token buffer
- 2664 edbf:             
- 2665 edbf:             basu_find_loop:
- 2666 edbf: 45              ldavr r5                  ;get token
- 2667 edc0: 0d 01           ldti TOKENIZER_EOF        ;EOF
- 2668 edc2: aa ed cc        brneq basu_find_loop1     ;no continue
- 2669 edc5: 1f 00 00        mviw r7,0                 ;return 0 in r7 and 0 in accumulator (why?)
- 2670 edc8: 27              mvrla r7
- 2671 edc9: 08 50           popr r5
- 2672 edcb: 05              ret
- 2673 edcc:             
- 2674 edcc:             basu_find_loop1:
- 2675 edcc: 55              incr r5                   ;skip past linenum token
- 2676 edcd: 27              mvrla r7                  ;test low byte of linenum
- 2677 edce: 0b              MVAT
- 2678 edcf: 45              ldavr r5
- 2679 edd0: aa ed e3        brneq basu_find1          ;not eqaul
- 2680 edd3: 55              incr r5
- 2681 edd4: 2f              mvrha r7                  ;test high byte of linenum
- 2682 edd5: 0b              MVAT
- 2683 edd6: 45              ldavr r5
- 2684 edd7: aa ed e4        brneq basu_find2          ;not equal
- 2685 edda: 5d              decr r5                   ;if equal backup to linenum token
- 2686 eddb: 5d              decr r5
- 2687 eddc: 0f 75           movrr r5,r7               ;set r7 to point to start of line
- 2688 edde: 0e 01           ldai 1                    ;return 1 in accumulator
- 2689 ede0: 08 50           popr r5
- 2690 ede2: 05              ret
- 2691 ede3:             
- 2692 ede3:             basu_find1:
- 2693 ede3: 55              incr r5                   ;skip over linenum high byte
- 2694 ede4:             basu_find2:
- 2695 ede4: 55              incr r5                   ;get line length
- 2696 ede5: 45              ldavr r5
- 2697 ede6: 1e 00 00        mviw r6,0                 ;set r6 to length - assumes < 256 bytes
- 2698 ede9: 36              mvarl r6
- 2699 edea: 5e              decr r6                   ;account for 3 bytes of linenum token and linenum
- 2700 edeb: 5e              decr r6
- 2701 edec: 5e              decr r6
- 2702 eded:             basu_find_moveptr:            ; advance pointer to next line
- 2703 eded: 55              incr r5
- 2704 edee: 5e              decr r6
- 2705 edef: 26              mvrla r6
- 2706 edf0: a2 ed ed        brnz basu_find_moveptr
- 2707 edf3: a0 ed bf        br basu_find_loop
- 2708 edf6:             
- 2709 edf6:             ;
- 2710 edf6:             ; Divide r5 by r4 return answer in r7
- 2711 edf6:             ;
- 2712 edf6:             ; return result in r7
- 2713 edf6:             ;
- 2714 edf6:             parse_div16:
- 2715 edf6: 07 06             pushr r6
- 2716 edf8: 0f 75             movrr r5,r7
- 2717 edfa: 0f 64             movrr r4,r6
- 2718 edfc: 1c 00 00          mviw r4,0
- 2719 edff:             ;
- 2720 edff:             ; 16 bit SUB of r6 from r7, return result in r7
- 2721 edff:             ;
- 2722 edff:             ; r7=r6 00
- 2723 edff:             ; r7>r6 01
- 2724 edff:             ; r7<r6 ff
- 2725 edff:             ;
- 2726 edff:             divloop:
- 2727 edff: 04 ee d4        jsr parse_compare
- 2728 ee02: 0d ff           ldti 0FFH
- 2729 ee04: a8 ee 12        breq div_done
- 2730 ee07: 07 06           pushr r6
- 2731 ee09: 04 ee 7f        jsr parse_sub16
- 2732 ee0c: 08 60           popr r6
- 2733 ee0e: 54              incr r4
- 2734 ee0f: a0 ed ff        br divloop
- 2735 ee12:             div_done:
- 2736 ee12: 08 60           popr r6
- 2737 ee14: 0f 74           MOVRR r4,r7
- 2738 ee16: 05              ret
- 2739 ee17:             
- 2740 ee17:             ;
- 2741 ee17:             ; mod r5 by r4 return answer in r7
- 2742 ee17:             ;
- 2743 ee17:             ; return result in r7
- 2744 ee17:             ;
- 2745 ee17:             parse_mod16:
- 2746 ee17: 07 06             pushr r6
- 2747 ee19: 0f 75             movrr r5,r7
- 2748 ee1b: 0f 64             movrr r4,r6
- 2749 ee1d: 1c 00 00          mviw r4,0
- 2750 ee20:             ;
- 2751 ee20:             ; 16 bit SUB of r6 from r7, return result in r7
- 2752 ee20:             ;
- 2753 ee20:             modloop:
- 2754 ee20: 04 ee d4        jsr parse_compare
- 2755 ee23: 0d ff           ldti 0FFH
- 2756 ee25: a8 ee 33        breq mod_done
- 2757 ee28: 07 06           pushr r6
- 2758 ee2a: 04 ee 7f        jsr parse_sub16
- 2759 ee2d: 08 60           popr r6
- 2760 ee2f: 54              incr r4
- 2761 ee30: a0 ee 20        br modloop
- 2762 ee33:             mod_done:
- 2763 ee33: 08 60           popr r6
- 2764 ee35: 05              ret
- 2765 ee36:             
- 2766 ee36:             ;
- 2767 ee36:             ; Multiple numbers in R4 and R5
- 2768 ee36:             ;
- 2769 ee36:             ; Return in R7
- 2770 ee36:             ;
- 2771 ee36:             ; R6 = Bit counter
- 2772 ee36:             ;
- 2773 ee36:             parse_mul16:
- 2774 ee36: 07 06               pushr r6
- 2775 ee38:             
- 2776 ee38: 1f 00 00            MVIW R7,0
- 2777 ee3b: 1e 00 10            MVIW R6,10h
- 2778 ee3e:             ;        jsr showregs
- 2779 ee3e:             
- 2780 ee3e:             parse_mulloop:
- 2781 ee3e:             ;        jsr showregs
- 2782 ee3e:             
- 2783 ee3e: 25                  mvrla r5
- 2784 ee3f: b3 01               andi  01h
- 2785 ee41: a1 ee 47            brz parse_mulskip
- 2786 ee44: 04 ee 63            jsr parse_muladd16
- 2787 ee47:             
- 2788 ee47:             parse_mulskip:
- 2789 ee47:             ;
- 2790 ee47:             ; clear carry flag HACK
- 2791 ee47:             ;
- 2792 ee47: 0e 00               ldai 0      ;clear carry -  maybe add a clear carry ins
- 2793 ee49: e0                  cshl
- 2794 ee4a: b0 00               addi 0      ; may not be needed
- 2795 ee4c:             ;
- 2796 ee4c: 24                  mvrla r4
- 2797 ee4d:             ;        jsr showcarry
- 2798 ee4d: e0                  cshl
- 2799 ee4e:             ;        jsr showcarry
- 2800 ee4e: 34                  mvarl r4
- 2801 ee4f: 2c                  mvrha r4
- 2802 ee50:             ;        jsr showcarry
- 2803 ee50: e0                  cshl
- 2804 ee51:             ;        jsr showcarry
- 2805 ee51: 3c                  mvarh r4
- 2806 ee52:             
- 2807 ee52: 0e 00               ldai 0      ;clear carry
- 2808 ee54: e0                  cshl
- 2809 ee55:             ;        addi 0
- 2810 ee55:             
- 2811 ee55: 2d                  mvrha r5
- 2812 ee56: e1                  cshr
- 2813 ee57: 3d                  mvarh r5
- 2814 ee58: 25                  mvrla r5
- 2815 ee59: e1                  cshr
- 2816 ee5a: 35                  mvarl r5
- 2817 ee5b:             
- 2818 ee5b: 5e                  decr r6
- 2819 ee5c: 26                  mvrla r6
- 2820 ee5d: a2 ee 3e            brnz parse_mulloop
- 2821 ee60: 08 60               popr r6
- 2822 ee62: 05                  ret
- 2823 ee63:             
- 2824 ee63:             parse_muladd16:
- 2825 ee63: 0e 00               ldai 0      ;clear carry
- 2826 ee65: e0                  cshl
- 2827 ee66:             
- 2828 ee66: 27                  MVRLA R7
- 2829 ee67: 0b                  MVAT
- 2830 ee68: 24                  mvrla r4
- 2831 ee69: b8                  ADDT
- 2832 ee6a: 37                  mvarl r7
- 2833 ee6b:             
- 2834 ee6b: 2f                  mvrha r7
- 2835 ee6c: 0b                  MVAT
- 2836 ee6d: 2c                  mvrha r4
- 2837 ee6e: e3                  addtc
- 2838 ee6f: 3f                  mvarh r7
- 2839 ee70: 05                  ret
- 2840 ee71:             
- 2841 ee71:             ;
- 2842 ee71:             ; 16 bit ADD r6 and r7, return result in r7
- 2843 ee71:             ;
- 2844 ee71:             parse_add16:
- 2845 ee71:             
- 2846 ee71: 0e 00             ldai 0      ;clear carry
- 2847 ee73: e0                cshl
- 2848 ee74: 26                MVRLA R6
- 2849 ee75: 0b                MVAT
- 2850 ee76: 27                mvrla r7
- 2851 ee77: b8                ADDT
- 2852 ee78: 37                mvarl r7
- 2853 ee79: 2e                mvrha r6
- 2854 ee7a: 0b                MVAT
- 2855 ee7b: 2f                mvrha r7
- 2856 ee7c: e3                addtc
- 2857 ee7d: 3f                mvarh r7
- 2858 ee7e: 05                ret
- 2859 ee7f:             
- 2860 ee7f:             ;
- 2861 ee7f:             ; 16 bit SUB of r6 from r7, return result in r7
- 2862 ee7f:             ;
- 2863 ee7f:             parse_sub16:
- 2864 ee7f: 2e                mvrha r6
- 2865 ee80: b5                inva
- 2866 ee81: 3e                mvarh r6
- 2867 ee82: 26                mvrla r6
- 2868 ee83: b5                inva
- 2869 ee84: 36                mvarl r6
- 2870 ee85: 56                incr r6
- 2871 ee86: a0 ee 71          br parse_add16
- 2872 ee89:             
- 2873 ee89:             ;
- 2874 ee89:             ; convert positive in r7 to negative
- 2875 ee89:             ;
- 2876 ee89:             parse_neg:
- 2877 ee89: 2f                mvrha r7
- 2878 ee8a: b5                inva
- 2879 ee8b: 3f                mvarh r7
- 2880 ee8c: 27                mvrla r7
- 2881 ee8d: b5                inva
- 2882 ee8e: 37                mvarl r7
- 2883 ee8f: 57                incr r7
- 2884 ee90: 05                ret
- 2885 ee91:             
- 2886 ee91:             ;
- 2887 ee91:             ; 16 bit AND r6 and r7, return result in r7
- 2888 ee91:             ;
- 2889 ee91:             parse_and16:
- 2890 ee91: 26                MVRLA R6
- 2891 ee92: 0b                MVAT
- 2892 ee93: 27                mvrla r7
- 2893 ee94: bb                ANDT
- 2894 ee95: 37                mvarl r7
- 2895 ee96: 2e                mvrha r6
- 2896 ee97: 0b                MVAT
- 2897 ee98: 2f                mvrha r7
- 2898 ee99: bb                ANDT
- 2899 ee9a: 3f                mvarh r7
- 2900 ee9b: 05                ret
- 2901 ee9c:             
- 2902 ee9c:             ;
- 2903 ee9c:             ; 16 bit OR r6 and r7, return result in r7
- 2904 ee9c:             ;
- 2905 ee9c:             parse_or16:
- 2906 ee9c: 26                MVRLA R6
- 2907 ee9d: 0b                MVAT
- 2908 ee9e: 27                mvrla r7
- 2909 ee9f: ba                ORT
- 2910 eea0: 37                mvarl r7
- 2911 eea1: 2e                mvrha r6
- 2912 eea2: 0b                MVAT
- 2913 eea3: 2f                mvrha r7
- 2914 eea4: ba                ORT
- 2915 eea5: 3f                mvarh r7
- 2916 eea6: 05                ret
- 2917 eea7:             
- 2918 eea7:             
- 2919 eea7:             ;
- 2920 eea7:             ; is digit in accumulator hex
- 2921 eea7:             ; returns 1 if yes and 0 if no
- 2922 eea7:             ;
- 2923 eea7:             ; what about upper/lower case
- 2924 eea7:             ;
- 2925 eea7:             ; destroys tmp register
- 2926 eea7:             parse_ishex:
- 2927 eea7: 0d 30          ldti '0'
- 2928 eea9: a7 ee c1       brlt parse_ishex_no
- 2929 eeac: 0d 39          ldti '9'
- 2930 eeae: a9 ee b4       brgt parse_ishex_af
- 2931 eeb1: a0 ee be       br parse_ishex_yes
- 2932 eeb4:             
- 2933 eeb4:             parse_ishex_af:
- 2934 eeb4: 0d 41           ldti 'A'
- 2935 eeb6: a7 ee c1        brlt parse_ishex_no
- 2936 eeb9: 0d 46           ldti 'F'
- 2937 eebb: a9 ee c1        brgt parse_ishex_no
- 2938 eebe:             
- 2939 eebe:             parse_ishex_yes:
- 2940 eebe: 0e 01           ldai 1
- 2941 eec0: 05              ret
- 2942 eec1:             
- 2943 eec1:             parse_ishex_no:
- 2944 eec1: 0e 00           ldai 0
- 2945 eec3: 05              ret
- 2946 eec4:             
- 2947 eec4:             ;
- 2948 eec4:             ; is digit in accumulator decimal
- 2949 eec4:             ; returns 1 if yes and 0 if no
- 2950 eec4:             ;
- 2951 eec4:             ; destroys tmp register
- 2952 eec4:             ;
- 2953 eec4:             parse_isdigit:
- 2954 eec4: 0d 30          ldti '0'
- 2955 eec6: a7 ee d1       brlt parse_isdigit_no
- 2956 eec9: 0d 39          ldti '9'
- 2957 eecb: a9 ee d1       brgt parse_isdigit_no
- 2958 eece:             
- 2959 eece: 0e 01           ldai 1
- 2960 eed0: 05              ret
- 2961 eed1:             
- 2962 eed1:             parse_isdigit_no:
- 2963 eed1: 0e 00           ldai 0
- 2964 eed3: 05              ret
- 2965 eed4:             
- 2966 eed4:             ;
- 2967 eed4:             ; 16 bit compare r6 and r7
- 2968 eed4:             ;
- 2969 eed4:             ; returns in accumulator
- 2970 eed4:             ; r7=r6 00
- 2971 eed4:             ; r7>r6 01
- 2972 eed4:             ; r7<r6 ff
- 2973 eed4:             ;
- 2974 eed4:             ; destory Tmp
- 2975 eed4:             ;
- 2976 eed4:             parse_compare:
- 2977 eed4: 2e            mvrha r6
- 2978 eed5: 0b            mvat
- 2979 eed6: 2f            mvrha r7
- 2980 eed7: aa ee e3      brneq parse_compareh
- 2981 eeda: 26            mvrla r6
- 2982 eedb: 0b            mvat
- 2983 eedc: 27            mvrla r7
- 2984 eedd: aa ee ec      brneq parse_comparel
- 2985 eee0: 0e 00         ldai 0
- 2986 eee2: 05            ret
- 2987 eee3:             
- 2988 eee3:             parse_compareh:
- 2989 eee3: a7 ee e9      brlt parse_compareh1
- 2990 eee6: 0e 01         ldai 1
- 2991 eee8: 05            ret
- 2992 eee9:             parse_compareh1:
- 2993 eee9: 0e ff         ldai 0ffh
- 2994 eeeb: 05            ret
- 2995 eeec:             
- 2996 eeec:             parse_comparel:
- 2997 eeec: a7 ee f2      brlt parse_comparel1
- 2998 eeef: 0e 01         ldai 1
- 2999 eef1: 05            ret
- 3000 eef2:             parse_comparel1:
- 3001 eef2: 0e ff         ldai 0ffh
- 3002 eef4: 05            ret
- 3003 eef5:             
- 3004 eef5: 3e 3e 3e 00 basic_prompt: db ">>>",0
- 3005 eef9:             basic_interprter:
- 3006 eef9:                     ;build input string
- 3007 eef9:                     ;point register to BUFFER
- 3008 eef9:                     ;loop fetch chars
- 3009 eef9:                     ;until CR
- 3010 eef9:                     ;be sure line ends with a NULL or CR
- 3011 eef9:                     ;what does parse require???
- 3012 eef9: 1f ee f5            MVIW R7,basic_prompt
- 3013 eefc: 04 ff c0            JSR stringout
- 3014 eeff:             
- 3015 eeff: 1f 03 00            mviw r7,parse_input_line
- 3016 ef02:             
- 3017 ef02:             parse_inputloop:
- 3018 ef02: 04 ef 12            jsr get_inputline
- 3019 ef05:             
- 3020 ef05: 1f 03 00            mviw r7,parse_input_line
- 3021 ef08: 04 ec 28            JSR parse_line
- 3022 ef0b:             
- 3023 ef0b: a1 ee f9            BRZ basic_interprter
- 3024 ef0e: 05                  RET
- 3025 ef0f:             
- 3026 ef0f: 1b 03 00            mviw r3,parse_input_line
- 3027 ef12:             
- 3028 ef12:             get_inputline:
- 3029 ef12: 04 ff e8            jsr uartin
- 3030 ef15: 4f                  stavr r7
- 3031 ef16: 57                  incr r7
- 3032 ef17: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
- 3033 ef19: aa ef 12            brneq get_inputline
- 3034 ef1c: 1f ef 23            MVIW R7,CRLF
- 3035 ef1f: 04 ff c0            JSR STRINGOUT
- 3036 ef22: 05                  RET
- 3037 ef23:             
- 3038 ef23:             ;
- 3039 ef23:             ; STRINGS
- 3040 ef23:             ;
- 3041 ef23: 0a 0d 00    CRLF: DB 0ah,0dh,0
- 3042 ef26:             ;
- 3043 ef26:             
- 3044 ef26:                   ORG 0EF00h
- 3045 ef00:             
- 3046 ef00:             basic_test:
- 3047 ef00:             
- 3048 ef00:             ;    DB  25h,0ah,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h,24h,25h,14h,00h
- 3049 ef00:             ;    DB  0ah,00h,06h,04h,00h,00h,24h,25h,1eh,00h,11h,00h,04h,00h,00h,23h
- 3050 ef00:             ;    DB  04h,00h,00h,17h,02h,01h,00h,24h,25h,28h,00h,13h,00h,07h,04h,00h
- 3051 ef00:             ;    DB  00h,21h,02h,0ah,00h,08h,0dh,02h,14h,00h,24h,01h,00h,00h,00h,00h
- 3052 ef00:             
- 3053 ef00:             ;    DB  25h,0ah,00h,14h,00h,06h,1fh,02h,01h,00h,17h,02h,02h,00h,20h,17h
- 3054 ef00:             ;    DB  02h,03h,00h,24h,25h,14h,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h
- 3055 ef00:             ;    DB  24h,25h,1eh,00h,0dh,00h,04h,01h,00h,23h,02h,02h,00h,24h,25h,28h
- 3056 ef00:             ;    DB  00h,0eh,00h,06h,04h,00h,00h,17h,04h,01h,00h,24h,25h,32h,00h,15h
- 3057 ef00:             ;    DB  00h,04h,02h,00h,23h,04h,00h,00h,17h,04h,01h,00h,17h,02h,05h,00h
- 3058 ef00:             ;    DB  24h,25h,3ch,00h,0ah,00h,06h,04h,02h,00h,24h,01h,00h,00h,00h,00h
- 3059 ef00:             
- 3060 ef00:             ;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
- 3061 ef00:             ;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
- 3062 ef00:             ;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
- 3063 ef00:             ;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
- 3064 ef00:             ;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
- 3065 ef00:             ;    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
- 3066 ef00:             ;    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
- 3067 ef00:             ;    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
- 3068 ef00:             ;    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
- 3069 ef00:             ;    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
- 3070 ef00:             ;    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
- 3071 ef00:             ;    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
- 3072 ef00:             ;    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
- 3073 ef00:             ;    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
- 3074 ef00:             ;    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
- 3075 ef00:             
- 3076 ef00:             ;
- 3077 ef00:             ; The End
- 3078 ef00:             ;
- 3079 ef00:               ORG 0EFFFh
- 3080 efff:             ZZZZ:
- 3081 efff: 00            DB   0
+ 1981 ea75:             ;    ldti '-'
+ 1982 ea75:             ;    brneq parse_gnt1_chkpos
+ 1983 ea75:             ;    incr r3
+ 1984 ea75:             ;    ldavr r3
+ 1985 ea75:             ;    jsr parse_isdigit
+ 1986 ea75:             ;    brz parse_gnt1_notneg
+ 1987 ea75:             ;    br parse_gnt1
+ 1988 ea75:             
+ 1989 ea75:             parse_gnt1_chkpos:
+ 1990 ea75: 04 ee 9a        jsr parse_isdigit
+ 1991 ea78: a1 ea 8b        brz parse_gnt2
+ 1992 ea7b:             
+ 1993 ea7b:             parse_gnt1loop:
+ 1994 ea7b: 53              incr R3
+ 1995 ea7c: 43              ldavr r3
+ 1996 ea7d: 04 ee 9a        jsr parse_isdigit
+ 1997 ea80: a2 ea 7b        brnz parse_gnt1loop
+ 1998 ea83: fb 02 04        STR r3,bas_nxtptr
+ 1999 ea86: 0e 02           ldai TOKENIZER_NUMBER
+ 2000 ea88: 08 30           popr r3
+ 2001 ea8a: 05              ret
+ 2002 ea8b:             
+ 2003 ea8b:             ;parse_gnt1_notneg:
+ 2004 ea8b:             ;    decr r3
+ 2005 ea8b:             
+ 2006 ea8b:             ;
+ 2007 ea8b:             ; singlechar
+ 2008 ea8b:             ;
+ 2009 ea8b:             parse_gnt2:
+ 2010 ea8b: 43             ldavr r3
+ 2011 ea8c: 04 e9 e4       jsr parse_singlechar
+ 2012 ea8f: a1 ea 99       BRZ parse_gnt3
+ 2013 ea92: 53             incr r3
+ 2014 ea93: fb 02 04       STR r3,bas_nxtptr
+ 2015 ea96: 08 30          popr r3
+ 2016 ea98: 05             ret
+ 2017 ea99:             ;
+ 2018 ea99:             ; quote
+ 2019 ea99:             ;
+ 2020 ea99:             parse_gnt3:
+ 2021 ea99: 43              ldavr R3
+ 2022 ea9a: 0d 22           ldti '"'
+ 2023 ea9c: aa ea af        brneq parse_gnt4
+ 2024 ea9f:             parse_gnt3loop:
+ 2025 ea9f: 53              incr r3
+ 2026 eaa0: 43              ldavr R3
+ 2027 eaa1: 0d 22           ldti '"'
+ 2028 eaa3: aa ea 9f        brneq parse_gnt3loop
+ 2029 eaa6: 53              incr r3
+ 2030 eaa7: fb 02 04        STR r3,bas_nxtptr
+ 2031 eaaa: 0e 03           ldai TOKENIZER_STRING
+ 2032 eaac: 08 30           popr r3
+ 2033 eaae: 05              ret
+ 2034 eaaf:             ;
+ 2035 eaaf:             parse_gnt4:
+ 2036 eaaf:             ;
+ 2037 eaaf:             ; keyword search
+ 2038 eaaf:             ;
+ 2039 eaaf: 07 04           pushr r4
+ 2040 eab1: 1c e9 68        mviw r4,parse_keywords
+ 2041 eab4:             top:
+ 2042 eab4: 44              ldavr r4
+ 2043 eab5: f3 02 02        LDR r3,bas_txtptr
+ 2044 eab8: a1 ea dc        brz nokeyowrdsfound
+ 2045 eabb:             pcmploop:
+ 2046 eabb: 44              ldavr r4
+ 2047 eabc: a1 ea d2        brz found
+ 2048 eabf: 0b              MVAT
+ 2049 eac0: 43              ldavr r3
+ 2050 eac1: aa ea c9        brneq skiptoend
+ 2051 eac4: 54              incr r4
+ 2052 eac5: 53              incr r3
+ 2053 eac6: a0 ea bb        br pcmploop
+ 2054 eac9:             
+ 2055 eac9:             skiptoend:
+ 2056 eac9:             ;  skip to end of string and skip over token
+ 2057 eac9:             skiploop:
+ 2058 eac9: 44              ldavr r4
+ 2059 eaca: 54              incr r4
+ 2060 eacb: a2 ea c9        brnz skiploop
+ 2061 eace: 54              incr r4
+ 2062 eacf: a0 ea b4        br top
+ 2063 ead2:             
+ 2064 ead2:             found:
+ 2065 ead2: fb 02 04        str r3,bas_nxtptr
+ 2066 ead5: 54              incr r4
+ 2067 ead6: 44              ldavr r4
+ 2068 ead7: 08 40           popr r4
+ 2069 ead9: 08 30           popr r3
+ 2070 eadb: 05              ret
+ 2071 eadc:             
+ 2072 eadc:             nokeyowrdsfound:
+ 2073 eadc: 08 40           popr r4
+ 2074 eade:             ;
+ 2075 eade:             ;  check for variables
+ 2076 eade:             ;
+ 2077 eade: 43              ldavr r3
+ 2078 eadf: 0d 41           ldti 'A'
+ 2079 eae1: a7 ea f2        BRLT parse_gnt_error
+ 2080 eae4: 0d 5a           ldti 'Z'
+ 2081 eae6: a9 ea f2        BRGT parse_gnt_error
+ 2082 eae9: 53              INCR r3
+ 2083 eaea: fb 02 04        str r3,bas_nxtptr
+ 2084 eaed: 0e 04           LDAI tokenizer_variable
+ 2085 eaef: 08 30           popr r3
+ 2086 eaf1: 05              RET
+ 2087 eaf2:             
+ 2088 eaf2:             parse_gnt_error:
+ 2089 eaf2:             ;    halt
+ 2090 eaf2: 0e 00           ldai tokenizer_error
+ 2091 eaf4: 08 30           popr r3
+ 2092 eaf6: 05              ret
+ 2093 eaf7:             
+ 2094 eaf7:             ;
+ 2095 eaf7:             ; void TOKENIZER_GOTO (char * program)
+ 2096 eaf7:             ;
+ 2097 eaf7:             ; under development, may not be needed
+ 2098 eaf7:             ;
+ 2099 eaf7:             ;parse_goto:
+ 2100 eaf7:             ;    str r3,bas_txtptr
+ 2101 eaf7:             ;    jsr parse_get_next_tok
+ 2102 eaf7:             ;    sta bas_currenttoken
+ 2103 eaf7:             ;    ret
+ 2104 eaf7:             
+ 2105 eaf7:             ;
+ 2106 eaf7:             ; void tokenizer_init(int ptr)
+ 2107 eaf7:             ;
+ 2108 eaf7:             ; paramater ptr : R7 Points to text input line
+ 2109 eaf7:             ;
+ 2110 eaf7:             ; under development
+ 2111 eaf7:             ;
+ 2112 eaf7:             parse_init:
+ 2113 eaf7:             
+ 2114 eaf7: 07 03           pushr r3
+ 2115 eaf9: ff 02 02        STR R7,bas_txtptr
+ 2116 eafc: 1b 04 00        MVIW r3,parse_token_buffer
+ 2117 eaff: fb 02 06        STR  R3,bas_tokptr
+ 2118 eb02: 1b 00 00        mviw r3,0
+ 2119 eb05: fb 02 08        str r3,bas_tokcounter
+ 2120 eb08: 04 ea 6f        jsr parse_get_next_tok
+ 2121 eb0b: ed 02 0a        sta bas_currenttoken
+ 2122 eb0e: 08 30           popr r3
+ 2123 eb10: 05              ret
+ 2124 eb11:             
+ 2125 eb11:             ;
+ 2126 eb11:             ; int tokenizer_token(void)
+ 2127 eb11:             :
+ 2128 eb11:             parse_token:
+ 2129 eb11: ec 02 0a        lda bas_currenttoken
+ 2130 eb14: 05              ret
+ 2131 eb15:             
+ 2132 eb15:             ;
+ 2133 eb15:             ; void tokenizer_next(void) parser version
+ 2134 eb15:             ;
+ 2135 eb15:             parse_next:
+ 2136 eb15: 04 eb cf        jsr parse_finished
+ 2137 eb18: a1 eb 1c        brz parse_next1
+ 2138 eb1b: 05              ret
+ 2139 eb1c:             
+ 2140 eb1c:             parse_next1:
+ 2141 eb1c: 07 03           pushr r3
+ 2142 eb1e: f3 02 04        ldr r3,bas_nxtptr
+ 2143 eb21: fb 02 02        str r3,bas_txtptr
+ 2144 eb24:             
+ 2145 eb24:             parse_next1loop:
+ 2146 eb24: 43              ldavr r3
+ 2147 eb25: 0d 20           ldti ' '
+ 2148 eb27: aa eb 2e        brneq parse_next2
+ 2149 eb2a: 53              incr r3
+ 2150 eb2b: a0 eb 24        br parse_next1loop
+ 2151 eb2e:             
+ 2152 eb2e:             
+ 2153 eb2e:             parse_next2:
+ 2154 eb2e: fb 02 02        str r3,bas_txtptr
+ 2155 eb31: 04 ea 6f        jsr parse_get_next_tok
+ 2156 eb34: ed 02 0a        sta bas_currenttoken
+ 2157 eb37:             
+ 2158 eb37: 0d 11           ldti TOKENIZER_REM
+ 2159 eb39: a8 eb 3f        breq parse_next3
+ 2160 eb3c: 08 30           popr r3
+ 2161 eb3e: 05              ret
+ 2162 eb3f:             
+ 2163 eb3f:             ;
+ 2164 eb3f:             ; this needs to be fixed
+ 2165 eb3f:             ; if rem return to parsel line then copy into token buffer
+ 2166 eb3f:             ;
+ 2167 eb3f:             parse_next3:
+ 2168 eb3f: 04 eb cf        JSR parse_finished
+ 2169 eb42: a2 eb 4f        BRNZ parse_nextdone
+ 2170 eb45: 43              ldavr r3
+ 2171 eb46: 0d 0a           ldti  0ah
+ 2172 eb48: a8 eb 4f        breq parse_nextdone
+ 2173 eb4b: 53              incr r3
+ 2174 eb4c: a0 eb 3f        br parse_next3
+ 2175 eb4f:             
+ 2176 eb4f:             parse_nextdone:
+ 2177 eb4f: 43              ldavr r3
+ 2178 eb50: 0d 0a           ldti  0ah
+ 2179 eb52: aa eb 56        brneq parse_nextdone2
+ 2180 eb55: 53              incr r3
+ 2181 eb56:             
+ 2182 eb56:             parse_nextdone2:
+ 2183 eb56: fb 02 04        str r3,bas_nxtptr
+ 2184 eb59: 04 eb 15        jsr parse_next
+ 2185 eb5c: 08 30           popr r3
+ 2186 eb5e: 05              ret
+ 2187 eb5f:             
+ 2188 eb5f:             ;
+ 2189 eb5f:             ; VARIABLE_TYPE tokenizer_num(void)
+ 2190 eb5f:             ;
+ 2191 eb5f:             ; Hack for now input characters are ascii hex format HHHH
+ 2192 eb5f:             ;
+ 2193 eb5f:             ; value returned in R7
+ 2194 eb5f:             ;
+ 2195 eb5f:             ; Should this advance the line ptr?
+ 2196 eb5f:             ;
+ 2197 eb5f:             
+ 2198 eb5f:             parse_num:
+ 2199 eb5f: 07 03           pushr r3
+ 2200 eb61: 07 04           pushr r4
+ 2201 eb63: 07 05           pushr r5
+ 2202 eb65: 07 06           pushr r6
+ 2203 eb67: 1e 00 00        mviw r6,0           ;accumlate val in r6
+ 2204 eb6a: f3 02 02        LDR r3,bas_txtptr
+ 2205 eb6d: 1c 00 00        MVIW R4,0000h
+ 2206 eb70:             ;    STR R4,bas_negflag
+ 2207 eb70: 43              LDAVR R3
+ 2208 eb71:             ;  ldti '-'
+ 2209 eb71:             ;    brneq parse_num_pos
+ 2210 eb71:             ;    MVIW R4,0ffffh
+ 2211 eb71:             ;    STR R4,bas_negflag
+ 2212 eb71:             ;    incr r3
+ 2213 eb71:             
+ 2214 eb71:             parse_num_pos:
+ 2215 eb71: 04 eb 9f        jsr parse_num_char
+ 2216 eb74:             ;   jsr SHOWBYTEA
+ 2217 eb74: 36              mvarl r6
+ 2218 eb75:             parse_num_loop:
+ 2219 eb75: 04 eb 9f        jsr parse_num_char
+ 2220 eb78:             ;   jsr showbytea
+ 2221 eb78: 09              push
+ 2222 eb79: 0d ff           ldti 0FFH
+ 2223 eb7b: a8 eb 93        breq parse_num_done
+ 2224 eb7e:             
+ 2225 eb7e: 0f 56           movrr r6,r5
+ 2226 eb80: 1c 00 0a        mviw r4,0ah
+ 2227 eb83: 04 ee 0c        jsr parse_mul16
+ 2228 eb86:             ;    jsr showr7
+ 2229 eb86: 0a              pop
+ 2230 eb87: 1e 00 00        mviw r6,0
+ 2231 eb8a: 36              mvarl r6
+ 2232 eb8b: 04 ee 47        jsr parse_add16
+ 2233 eb8e: 0f 67           movrr r7,r6
+ 2234 eb90:             ;    jsr showr7
+ 2235 eb90: a0 eb 75        br parse_num_loop
+ 2236 eb93:             
+ 2237 eb93:             parse_num_done:
+ 2238 eb93: 0a              pop
+ 2239 eb94: 0f 76           movrr r6,r7
+ 2240 eb96:             ;    ldr r4,bas_negflag
+ 2241 eb96:             ;    mvrla r4
+ 2242 eb96:             ;    brz parse_num_done1
+ 2243 eb96:             ;    jsr parse_neg
+ 2244 eb96:             parse_num_done1:
+ 2245 eb96: 08 60           popr r6
+ 2246 eb98: 08 50           popr r5
+ 2247 eb9a: 08 40           popr r4
+ 2248 eb9c: 08 30           popr r3
+ 2249 eb9e:             
+ 2250 eb9e:             ;    jsr showr7
+ 2251 eb9e: 05              ret
+ 2252 eb9f:             
+ 2253 eb9f:             parse_num_char:
+ 2254 eb9f: 43              LDAVR R3
+ 2255 eba0: 04 ee 9a        JSR parse_isdigit
+ 2256 eba3: a2 eb a9        BRNZ parse_num_char1
+ 2257 eba6: 0e ff           ldai 0ffh
+ 2258 eba8: 05              ret
+ 2259 eba9:             parse_num_char1:
+ 2260 eba9: 43              ldavr r3
+ 2261 ebaa: b1 30           SUBI '0'
+ 2262 ebac: 53              incr r3
+ 2263 ebad: 05              RET
+ 2264 ebae:             
+ 2265 ebae:             ;
+ 2266 ebae:             ; add error checking
+ 2267 ebae:             ;
+ 2268 ebae:             ; return hex nibble in accumulator
+ 2269 ebae:             ;
+ 2270 ebae:             parse_getnibble:
+ 2271 ebae: 43                LDAVR R3
+ 2272 ebaf: 53                incr r3
+ 2273 ebb0: 0d 39             LDTI '9'
+ 2274 ebb2: a9 eb b8          BRGT parse_af
+ 2275 ebb5: b1 30             SUBI '0'
+ 2276 ebb7: 05                RET
+ 2277 ebb8:             parse_af:
+ 2278 ebb8: 04 ff d0          JSR toupper
+ 2279 ebbb: b1 41             SUBI 'A'
+ 2280 ebbd: b0 0a             ADDI 10
+ 2281 ebbf: 05                RET
+ 2282 ebc0:             ;
+ 2283 ebc0:             ; void tokenizer_string(char *dest, int len)
+ 2284 ebc0:             ;
+ 2285 ebc0:             ; not used, in line parse_line
+ 2286 ebc0:             ;
+ 2287 ebc0:             parse_string:
+ 2288 ebc0: 04 eb 11        JSR parse_token
+ 2289 ebc3: 0d 03           LDTI TOKENIZER_STRING
+ 2290 ebc5: a8 eb c9        BREQ parse_string1
+ 2291 ebc8: 05              ret
+ 2292 ebc9:             
+ 2293 ebc9:             parse_string1:
+ 2294 ebc9: 07 03           pushr r3
+ 2295 ebcb: f3 02 02        LDR r3,bas_txtptr
+ 2296 ebce: 43              LDAVR R3
+ 2297 ebcf:             
+ 2298 ebcf:             
+ 2299 ebcf:             ;
+ 2300 ebcf:             ; void tokenizer_error_print(void)
+ 2301 ebcf:             ;
+ 2302 ebcf:             ; fix
+ 2303 ebcf:             ;
+ 2304 ebcf:             ;parse_error_print:
+ 2305 ebcf:             ;    halt
+ 2306 ebcf:             
+ 2307 ebcf:             ;
+ 2308 ebcf:             ; int tokenizer_finished(void)
+ 2309 ebcf:             ;
+ 2310 ebcf:             parse_finished:
+ 2311 ebcf: 07 03           pushr r3
+ 2312 ebd1: f3 02 02        LDR r3,bas_txtptr
+ 2313 ebd4: 43              ldavr r3
+ 2314 ebd5: a1 eb ea        brz parse_finished_yes
+ 2315 ebd8:             ;    ldti 0ah
+ 2316 ebd8:             ;    breq parse_finished_yes
+ 2317 ebd8:             ;    ldti 0dh
+ 2318 ebd8:             ;    breq parse_finished_yes
+ 2319 ebd8: 0d 01           ldti TOKENIZER_EOF
+ 2320 ebda: a8 eb ea        breq parse_finished_yes
+ 2321 ebdd: ec 02 0a        lda bas_currenttoken
+ 2322 ebe0: 0d 01           ldti TOKENIZER_EOF
+ 2323 ebe2: a8 eb ea        breq parse_finished_yes
+ 2324 ebe5: 08 30           popr r3
+ 2325 ebe7: 0e 00           ldai 0
+ 2326 ebe9: 05              ret
+ 2327 ebea:             parse_finished_yes:
+ 2328 ebea: 0e 01           ldai 1
+ 2329 ebec: 08 30           popr r3
+ 2330 ebee: 05              ret
+ 2331 ebef:             
+ 2332 ebef:             ;
+ 2333 ebef:             ; int tokenizer_variable_num(void)
+ 2334 ebef:             ;
+ 2335 ebef:             parse_variable_num:
+ 2336 ebef: 07 03             pushr r3
+ 2337 ebf1: f3 02 02          LDR r3,bas_txtptr
+ 2338 ebf4: 43                ldavr r3
+ 2339 ebf5: b1 41             subi 'A'
+ 2340 ebf7: 37                mvarl r7
+ 2341 ebf8: 0e 00             ldai 0
+ 2342 ebfa: 3f                mvarh r7
+ 2343 ebfb: 08 30             popr r3
+ 2344 ebfd: 05                ret
+ 2345 ebfe:             
+ 2346 ebfe:             ;
+ 2347 ebfe:             ; char *const tokenizer_pos(void)
+ 2348 ebfe:             ;
+ 2349 ebfe:             ; probably not used
+ 2350 ebfe:             parse_pos:
+ 2351 ebfe:             
+ 2352 ebfe:             ;not used old
+ 2353 ebfe:             ; char *tokenize(char *program)
+ 2354 ebfe:             ;
+ 2355 ebfe:             ; parse:
+ 2356 ebfe:             
+ 2357 ebfe:             ;
+ 2358 ebfe:             ; char *tokenizeLine(char *line)
+ 2359 ebfe:             ;
+ 2360 ebfe:             ; assume input text string in parse_input_line
+ 2361 ebfe:             ;
+ 2362 ebfe:             
+ 2363 ebfe:             parse_line:
+ 2364 ebfe: 04 ea f7        JSR PARSE_INIT
+ 2365 ec01:             
+ 2366 ec01: 1b 00 06        MVIW R3,6              ;all lines have a 6 bytes including EOL token
+ 2367 ec04: fb 02 08        str r3,bas_tokcounter
+ 2368 ec07: 1b 04 00        MVIW R3,parse_token_buffer
+ 2369 ec0a:             
+ 2370 ec0a: 07 03           pushr r3
+ 2371 ec0c: f3 02 02        LDR r3,bas_txtptr
+ 2372 ec0f: 43              ldavr r3
+ 2373 ec10: 04 ee 9a        jsr parse_isdigit
+ 2374 ec13: 08 30           popr r3
+ 2375 ec15: 0d 01           ldti 1
+ 2376 ec17: a8 ec 5e        breq parse_code
+ 2377 ec1a: 04 ea 6f        jsr parse_get_next_tok
+ 2378 ec1d:             
+ 2379 ec1d:             parse_line_list:
+ 2380 ec1d: 0d 26           ldti tokenizer_list
+ 2381 ec1f: aa ec 2b        brneq parse_line_exit
+ 2382 ec22: f7 02 0c        ldr r7,bas_tokenbuffer
+ 2383 ec25: 04 e6 a7        JSR  basic_list
+ 2384 ec28: 0e 00           ldai 0
+ 2385 ec2a: 05              RET
+ 2386 ec2b:             
+ 2387 ec2b:             parse_line_exit:
+ 2388 ec2b: 0d 29           ldti TOKENIZER_EXIT
+ 2389 ec2d: aa ec 36        brneq parse_line_run
+ 2390 ec30: 04 e5 4f        jsr basic_run
+ 2391 ec33: 0e 01           ldai 1
+ 2392 ec35: 05              RET
+ 2393 ec36:             
+ 2394 ec36:             parse_line_run:
+ 2395 ec36: 0d 27           ldti TOKENIZER_RUN
+ 2396 ec38: aa ec 41        brneq parse_line_new
+ 2397 ec3b: 04 e5 4f        jsr basic_run
+ 2398 ec3e: 0e 00           ldai 0
+ 2399 ec40: 05              RET
+ 2400 ec41:             
+ 2401 ec41:             parse_line_new:
+ 2402 ec41: 0d 28           ldti TOKENIZER_NEW
+ 2403 ec43: aa ec 4f        brneq parse_line_error
+ 2404 ec46: 1f 10 00        MVIW R7,bas_tok_buf_start
+ 2405 ec49: 0e 01           ldai TOKENIZER_EOF          ;write EOF to start of buffer
+ 2406 ec4b: 4f              stavr r7
+ 2407 ec4c: 0e 00           ldai 0
+ 2408 ec4e: 05              RET
+ 2409 ec4f:             
+ 2410 ec4f:             parse_line_error:
+ 2411 ec4f: 1f e0 f5        mviw r7,parse_cmd_error
+ 2412 ec52: 04 ff c0        jsr stringout
+ 2413 ec55: 1f ee f9        mviw r7,CRLF
+ 2414 ec58: 04 ff c0        jsr stringout
+ 2415 ec5b: 0e 00           ldai 0
+ 2416 ec5d: 05              ret
+ 2417 ec5e:             
+ 2418 ec5e:             parse_code:
+ 2419 ec5e: 0e 25           LDAI TOKENIZER_LINENUM ;start with linenum token
+ 2420 ec60: 4b              STAVR R3
+ 2421 ec61: 53              INCR R3
+ 2422 ec62:             
+ 2423 ec62: 04 eb 5f        JSR parse_num           ;store line number
+ 2424 ec65: ff 02 10        str r7,bas_newlinenum
+ 2425 ec68: 27              mvrla r7
+ 2426 ec69: 4b              stavr r3
+ 2427 ec6a: 53              incr r3
+ 2428 ec6b: 2f              mvrha r7
+ 2429 ec6c: 4b              stavr r3
+ 2430 ec6d: 53              incr r3
+ 2431 ec6e:             
+ 2432 ec6e: 53              incr r3                ; skip over line length - fill in later
+ 2433 ec6f: 53              incr r3
+ 2434 ec70:             
+ 2435 ec70:             parse_line_loop:
+ 2436 ec70: 04 eb 15        JSR parse_next
+ 2437 ec73: 04 eb 11        JSR parse_token
+ 2438 ec76: 0d 24           ldti TOKENIZER_CR
+ 2439 ec78: a8 ec e7        BREQ parse_line_done
+ 2440 ec7b:             
+ 2441 ec7b: 4b              STAVR R3
+ 2442 ec7c: 53              INCR R3
+ 2443 ec7d: f5 02 08        ldr r5,bas_tokcounter
+ 2444 ec80: 55              incr r5
+ 2445 ec81: fd 02 08        str r5,bas_tokcounter
+ 2446 ec84:             
+ 2447 ec84: 0d 02           ldti TOKENIZER_NUMBER
+ 2448 ec86: aa ec 9d        BRNEQ parse_line1
+ 2449 ec89: 04 eb 5f        JSR parse_num
+ 2450 ec8c: 27              mvrla r7
+ 2451 ec8d: 4b              stavr r3
+ 2452 ec8e: 53              incr r3
+ 2453 ec8f: 2f              mvrha r7
+ 2454 ec90: 4b              stavr r3
+ 2455 ec91: 53              incr r3
+ 2456 ec92: f5 02 08        ldr r5,bas_tokcounter
+ 2457 ec95: 55              incr r5
+ 2458 ec96: 55              incr r5
+ 2459 ec97: fd 02 08        str r5,bas_tokcounter
+ 2460 ec9a: a0 ec 70        BR parse_line_loop
+ 2461 ec9d:             
+ 2462 ec9d:             parse_line1:
+ 2463 ec9d: 0d 03           ldti TOKENIZER_STRING
+ 2464 ec9f: aa ec ce        BRNEQ parse_line2
+ 2465 eca2: f4 02 02        ldr r4,bas_txtptr
+ 2466 eca5: 54              incr r4                   ;skip over opening "
+ 2467 eca6:             
+ 2468 eca6:             parse_line1loop:
+ 2469 eca6: 44              ldavr r4
+ 2470 eca7: 0d 22           ldti '"'
+ 2471 eca9: a8 ec b9        breq parse_line1done
+ 2472 ecac: 4b              stavr r3
+ 2473 ecad: 53              incr r3
+ 2474 ecae: 54              incr r4
+ 2475 ecaf: f5 02 08        ldr r5,bas_tokcounter
+ 2476 ecb2: 55              incr r5
+ 2477 ecb3: fd 02 08        str r5,bas_tokcounter
+ 2478 ecb6: a0 ec a6        BR parse_line1loop
+ 2479 ecb9:             parse_line1done:
+ 2480 ecb9: 54              incr r4                   ;skip over closing "
+ 2481 ecba: 0e 00           ldai 0                    ;add null into token buffer
+ 2482 ecbc: 4b              stavr R3
+ 2483 ecbd: 53              incr r3
+ 2484 ecbe: f5 02 08        ldr r5,bas_tokcounter
+ 2485 ecc1: 55              incr r5
+ 2486 ecc2: fd 02 08        str r5,bas_tokcounter
+ 2487 ecc5: fb 02 06        str r3,BAS_TOKPTR
+ 2488 ecc8: fc 02 02        str r4,bas_txtptr
+ 2489 eccb: a0 ec 70        BR parse_line_loop
+ 2490 ecce:             
+ 2491 ecce:             parse_line2:
+ 2492 ecce: 0d 04           ldti TOKENIZER_VARIABLE
+ 2493 ecd0: aa ec 70        BRNEQ parse_line_loop
+ 2494 ecd3: 04 eb ef        JSR parse_variable_num
+ 2495 ecd6: 27              mvrla r7
+ 2496 ecd7: 4b              stavr r3
+ 2497 ecd8: 53              incr r3
+ 2498 ecd9: 2f              mvrha r7
+ 2499 ecda: 4b              stavr r3
+ 2500 ecdb: 53              incr r3
+ 2501 ecdc: f5 02 08        ldr r5,bas_tokcounter
+ 2502 ecdf: 55              incr r5
+ 2503 ece0: 55              incr r5
+ 2504 ece1: fd 02 08        str r5,bas_tokcounter
+ 2505 ece4: a0 ec 70        BR parse_line_loop
+ 2506 ece7:             
+ 2507 ece7:             parse_line_done:
+ 2508 ece7: 0e 24           ldai TOKENIZER_CR           ;tack CR to end of buffer
+ 2509 ece9: 4b              STAVR R3
+ 2510 ecea: 53              INCR R3
+ 2511 eceb:             ;    ldr r5,bas_tokcounter
+ 2512 eceb:             ;    incr r5
+ 2513 eceb:             ;    str r5,bas_tokcounter
+ 2514 eceb:             
+ 2515 eceb: 1b 04 00        mviw r3,parse_token_buffer ; write length into token buffer
+ 2516 ecee: 53              incr r3
+ 2517 ecef: 53              incr r3
+ 2518 ecf0: 53              incr r3
+ 2519 ecf1: f7 02 08        ldr r7,bas_tokcounter
+ 2520 ecf4: ff 02 12        str r7,bas_newlinelen
+ 2521 ecf7: 27              mvrla r7
+ 2522 ecf8: 4b              stavr r3
+ 2523 ecf9: 53              incr r3
+ 2524 ecfa: 2f              mvrha r7
+ 2525 ecfb: 4b              stavr r3
+ 2526 ecfc:             
+ 2527 ecfc:             ;
+ 2528 ecfc:             ; void addLine(char *buff)
+ 2529 ecfc:             ; since addline is only called from parse_tokenizeline where are these
+ 2530 ecfc:             ; values are know, pass them in or
+ 2531 ecfc:             ; maybe merge addLine to bottom of parse_tokenizeline
+ 2532 ecfc:             ;
+ 2533 ecfc:             ; r7 points to line to insert
+ 2534 ecfc:             ; r6 linenumber
+ 2535 ecfc:             ; r5 linelength
+ 2536 ecfc:             ;
+ 2537 ecfc:             parse_addline:
+ 2538 ecfc: f7 02 10          ldr r7,BAS_NEWLINENUM
+ 2539 ecff: 04 ed 68          JSR parse_removeline      ; if line number already exists delete it
+ 2540 ed02: f7 02 12          ldr r7,bas_newlinelen     ; if new line is 6 bytes line just delete nothing to add
+ 2541 ed05: 27                mvrla r7
+ 2542 ed06: 0d 06             ldti 6
+ 2543 ed08: aa ed 0e          brneq parse_addline1
+ 2544 ed0b: 0e 00             ldai 0
+ 2545 ed0d: 05                ret
+ 2546 ed0e:             
+ 2547 ed0e:             parse_addline1:                 ;find insert location
+ 2548 ed0e: f7 02 10          ldr r7,BAS_NEWLINENUM
+ 2549 ed11: f3 02 0c          ldr r3,bas_tokenBuffer
+ 2550 ed14:             
+ 2551 ed14:             parse_addlineloop:
+ 2552 ed14: fb 02 14          str r3,bas_insertptr
+ 2553 ed17: 43                ldavr r3
+ 2554 ed18: 0d 01             ldti TOKENIZER_EOF
+ 2555 ed1a: a8 ed 3d          BREQ parse_addroom
+ 2556 ed1d: 53                incr r3                   ;get line number of line in token buffer into r6
+ 2557 ed1e: 43                ldavr r3
+ 2558 ed1f: 36                mvarl r6
+ 2559 ed20: 53                incr r3
+ 2560 ed21: 43                ldavr r3
+ 2561 ed22: 3e                mvarh r6
+ 2562 ed23: 04 ee aa          jsr parse_compare
+ 2563 ed26: 0d ff             ldti 0ffh
+ 2564 ed28: a8 ed 3d          breq parse_addroom
+ 2565 ed2b:             
+ 2566 ed2b: 53                incr r3                   ;get line length
+ 2567 ed2c: 43                ldavr r3
+ 2568 ed2d: 1e 00 00          mviw r6,0                 ;set r6 to length - assumes < 256 bytes
+ 2569 ed30: 36                mvarl r6
+ 2570 ed31: 5e                decr r6                   ;account for 3 bytes of linenum token and linenum
+ 2571 ed32: 5e                decr r6
+ 2572 ed33: 5e                decr r6
+ 2573 ed34:             
+ 2574 ed34:             addline_moveptr:              ; advance pointer to next line
+ 2575 ed34: 53                incr r3
+ 2576 ed35: 5e                decr r6
+ 2577 ed36: 26                mvrla r6
+ 2578 ed37: a2 ed 34          brnz addline_moveptr
+ 2579 ed3a: a0 ed 14          br parse_addlineloop
+ 2580 ed3d:             
+ 2581 ed3d:             
+ 2582 ed3d:             parse_addroom:               ; make room
+ 2583 ed3d: 1f 20 00          mviw r7,BAS_TOK_BUF_END
+ 2584 ed40:             ;      decr r7
+ 2585 ed40: f6 02 12          ldr  r6,BAS_NEWLINELEN
+ 2586 ed43: 04 ee 55          jsr parse_sub16
+ 2587 ed46: 1d 20 00          mviw r5,BAS_TOK_BUF_END
+ 2588 ed49:             ;      decr r5
+ 2589 ed49:             
+ 2590 ed49:             parse_roomloop:
+ 2591 ed49: 5f                decr r7
+ 2592 ed4a: 5d                decr r5
+ 2593 ed4b: 47                ldavr r7
+ 2594 ed4c: 4d                stavr r5
+ 2595 ed4d:             
+ 2596 ed4d: f6 02 14          ldr r6,bas_insertptr
+ 2597 ed50: 04 ee aa          jsr PARSE_COMPARE
+ 2598 ed53: a2 ed 49          brnz parse_roomloop
+ 2599 ed56:             
+ 2600 ed56: f7 02 14          ldr r7,bas_insertptr
+ 2601 ed59: 1e 04 00          MVIW R6,parse_token_buffer
+ 2602 ed5c:             
+ 2603 ed5c:             parse_insertloop:
+ 2604 ed5c: 46                ldavr r6
+ 2605 ed5d: 4f                stavr r7
+ 2606 ed5e: 56                incr r6
+ 2607 ed5f: 57                incr r7
+ 2608 ed60: 0d 24             ldti 024h ; sub in actual eol token here
+ 2609 ed62: aa ed 5c          brneq parse_insertloop
+ 2610 ed65: 0e 00             ldai 0
+ 2611 ed67: 05                ret
+ 2612 ed68:             
+ 2613 ed68:             ;
+ 2614 ed68:             ; void removeLine(int lineNum)
+ 2615 ed68:             ;
+ 2616 ed68:             parse_removeline:
+ 2617 ed68: 04 ed 90        JSR basu_find
+ 2618 ed6b: 2f              mvrha R7
+ 2619 ed6c: a2 ed 74        brnz parse_removeline1
+ 2620 ed6f: 27              mvrla R7
+ 2621 ed70: a2 ed 74        brnz parse_removeline1
+ 2622 ed73: 05              ret
+ 2623 ed74:             parse_removeline1:
+ 2624 ed74: 0f 57           movrr R7,R5     ; R5 = destination ptr
+ 2625 ed76: 57              incr r7
+ 2626 ed77: 57              incr r7
+ 2627 ed78: 57              incr r7
+ 2628 ed79: 47              ldavr r7
+ 2629 ed7a: 36              mvarl r6        ; R6 = remove length
+ 2630 ed7b: 57              incr r7
+ 2631 ed7c: 47              ldavr r7
+ 2632 ed7d: 3e              mvarh r6
+ 2633 ed7e:             
+ 2634 ed7e: 5f              decr r7         ;backup to start of line
+ 2635 ed7f: 5f              decr r7
+ 2636 ed80: 5f              decr r7
+ 2637 ed81: 5f              decr r7
+ 2638 ed82: 04 ee 47        JSR parse_add16
+ 2639 ed85:             parse_removeloop:
+ 2640 ed85: 47              ldavr r7
+ 2641 ed86: 4d              stavr r5
+ 2642 ed87: 55              incr r5
+ 2643 ed88: 57              incr r7
+ 2644 ed89: 2f              MVRHA r7
+ 2645 ed8a:             
+ 2646 ed8a: ee 02 0e        ldt  bas_bufferendhi
+ 2647 ed8d:             
+ 2648 ed8d: aa ed 85        brneq parse_removeloop
+ 2649 ed90:             ;
+ 2650 ed90:             ; no need to explicitly set TOKENIZER_ENDOFINPUT should have been copied
+ 2651 ed90:             ; since we are moving complete contents of buffer
+ 2652 ed90:             ; Make sure it is set during addline
+ 2653 ed90:             ;
+ 2654 ed90:             
+ 2655 ed90:             
+ 2656 ed90:             ; run & parse utilites
+ 2657 ed90:             ;
+ 2658 ed90:             
+ 2659 ed90:             ;
+ 2660 ed90:             ; find in the token buffer linenum in r7
+ 2661 ed90:             ;
+ 2662 ed90:             basu_find:
+ 2663 ed90: 07 05           pushr r5                  ; save r5
+ 2664 ed92: f5 02 0c        LDR  r5,bas_tokenBuffer   ; r5 ptr to token buffer
+ 2665 ed95:             
+ 2666 ed95:             basu_find_loop:
+ 2667 ed95: 45              ldavr r5                  ;get token
+ 2668 ed96: 0d 01           ldti TOKENIZER_EOF        ;EOF
+ 2669 ed98: aa ed a2        brneq basu_find_loop1     ;no continue
+ 2670 ed9b: 1f 00 00        mviw r7,0                 ;return 0 in r7 and 0 in accumulator (why?)
+ 2671 ed9e: 27              mvrla r7
+ 2672 ed9f: 08 50           popr r5
+ 2673 eda1: 05              ret
+ 2674 eda2:             
+ 2675 eda2:             basu_find_loop1:
+ 2676 eda2: 55              incr r5                   ;skip past linenum token
+ 2677 eda3: 27              mvrla r7                  ;test low byte of linenum
+ 2678 eda4: 0b              MVAT
+ 2679 eda5: 45              ldavr r5
+ 2680 eda6: aa ed b9        brneq basu_find1          ;not eqaul
+ 2681 eda9: 55              incr r5
+ 2682 edaa: 2f              mvrha r7                  ;test high byte of linenum
+ 2683 edab: 0b              MVAT
+ 2684 edac: 45              ldavr r5
+ 2685 edad: aa ed ba        brneq basu_find2          ;not equal
+ 2686 edb0: 5d              decr r5                   ;if equal backup to linenum token
+ 2687 edb1: 5d              decr r5
+ 2688 edb2: 0f 75           movrr r5,r7               ;set r7 to point to start of line
+ 2689 edb4: 0e 01           ldai 1                    ;return 1 in accumulator
+ 2690 edb6: 08 50           popr r5
+ 2691 edb8: 05              ret
+ 2692 edb9:             
+ 2693 edb9:             basu_find1:
+ 2694 edb9: 55              incr r5                   ;skip over linenum high byte
+ 2695 edba:             basu_find2:
+ 2696 edba: 55              incr r5                   ;get line length
+ 2697 edbb: 45              ldavr r5
+ 2698 edbc: 1e 00 00        mviw r6,0                 ;set r6 to length - assumes < 256 bytes
+ 2699 edbf: 36              mvarl r6
+ 2700 edc0: 5e              decr r6                   ;account for 3 bytes of linenum token and linenum
+ 2701 edc1: 5e              decr r6
+ 2702 edc2: 5e              decr r6
+ 2703 edc3:             basu_find_moveptr:            ; advance pointer to next line
+ 2704 edc3: 55              incr r5
+ 2705 edc4: 5e              decr r6
+ 2706 edc5: 26              mvrla r6
+ 2707 edc6: a2 ed c3        brnz basu_find_moveptr
+ 2708 edc9: a0 ed 95        br basu_find_loop
+ 2709 edcc:             
+ 2710 edcc:             ;
+ 2711 edcc:             ; Divide r5 by r4 return answer in r7
+ 2712 edcc:             ;
+ 2713 edcc:             ; return result in r7
+ 2714 edcc:             ;
+ 2715 edcc:             parse_div16:
+ 2716 edcc: 07 06             pushr r6
+ 2717 edce: 0f 75             movrr r5,r7
+ 2718 edd0: 0f 64             movrr r4,r6
+ 2719 edd2: 1c 00 00          mviw r4,0
+ 2720 edd5:             ;
+ 2721 edd5:             ; 16 bit SUB of r6 from r7, return result in r7
+ 2722 edd5:             ;
+ 2723 edd5:             ; r7=r6 00
+ 2724 edd5:             ; r7>r6 01
+ 2725 edd5:             ; r7<r6 ff
+ 2726 edd5:             ;
+ 2727 edd5:             divloop:
+ 2728 edd5: 04 ee aa        jsr parse_compare
+ 2729 edd8: 0d ff           ldti 0FFH
+ 2730 edda: a8 ed e8        breq div_done
+ 2731 eddd: 07 06           pushr r6
+ 2732 eddf: 04 ee 55        jsr parse_sub16
+ 2733 ede2: 08 60           popr r6
+ 2734 ede4: 54              incr r4
+ 2735 ede5: a0 ed d5        br divloop
+ 2736 ede8:             div_done:
+ 2737 ede8: 08 60           popr r6
+ 2738 edea: 0f 74           MOVRR r4,r7
+ 2739 edec: 05              ret
+ 2740 eded:             
+ 2741 eded:             ;
+ 2742 eded:             ; mod r5 by r4 return answer in r7
+ 2743 eded:             ;
+ 2744 eded:             ; return result in r7
+ 2745 eded:             ;
+ 2746 eded:             parse_mod16:
+ 2747 eded: 07 06             pushr r6
+ 2748 edef: 0f 75             movrr r5,r7
+ 2749 edf1: 0f 64             movrr r4,r6
+ 2750 edf3: 1c 00 00          mviw r4,0
+ 2751 edf6:             ;
+ 2752 edf6:             ; 16 bit SUB of r6 from r7, return result in r7
+ 2753 edf6:             ;
+ 2754 edf6:             modloop:
+ 2755 edf6: 04 ee aa        jsr parse_compare
+ 2756 edf9: 0d ff           ldti 0FFH
+ 2757 edfb: a8 ee 09        breq mod_done
+ 2758 edfe: 07 06           pushr r6
+ 2759 ee00: 04 ee 55        jsr parse_sub16
+ 2760 ee03: 08 60           popr r6
+ 2761 ee05: 54              incr r4
+ 2762 ee06: a0 ed f6        br modloop
+ 2763 ee09:             mod_done:
+ 2764 ee09: 08 60           popr r6
+ 2765 ee0b: 05              ret
+ 2766 ee0c:             
+ 2767 ee0c:             ;
+ 2768 ee0c:             ; Multiple numbers in R4 and R5
+ 2769 ee0c:             ;
+ 2770 ee0c:             ; Return in R7
+ 2771 ee0c:             ;
+ 2772 ee0c:             ; R6 = Bit counter
+ 2773 ee0c:             ;
+ 2774 ee0c:             parse_mul16:
+ 2775 ee0c: 07 06               pushr r6
+ 2776 ee0e:             
+ 2777 ee0e: 1f 00 00            MVIW R7,0
+ 2778 ee11: 1e 00 10            MVIW R6,10h
+ 2779 ee14:             ;        jsr showregs
+ 2780 ee14:             
+ 2781 ee14:             parse_mulloop:
+ 2782 ee14:             ;        jsr showregs
+ 2783 ee14:             
+ 2784 ee14: 25                  mvrla r5
+ 2785 ee15: b3 01               andi  01h
+ 2786 ee17: a1 ee 1d            brz parse_mulskip
+ 2787 ee1a: 04 ee 39            jsr parse_muladd16
+ 2788 ee1d:             
+ 2789 ee1d:             parse_mulskip:
+ 2790 ee1d:             ;
+ 2791 ee1d:             ; clear carry flag HACK
+ 2792 ee1d:             ;
+ 2793 ee1d: 0e 00               ldai 0      ;clear carry -  maybe add a clear carry ins
+ 2794 ee1f: e0                  cshl
+ 2795 ee20: b0 00               addi 0      ; may not be needed
+ 2796 ee22:             ;
+ 2797 ee22: 24                  mvrla r4
+ 2798 ee23:             ;        jsr showcarry
+ 2799 ee23: e0                  cshl
+ 2800 ee24:             ;        jsr showcarry
+ 2801 ee24: 34                  mvarl r4
+ 2802 ee25: 2c                  mvrha r4
+ 2803 ee26:             ;        jsr showcarry
+ 2804 ee26: e0                  cshl
+ 2805 ee27:             ;        jsr showcarry
+ 2806 ee27: 3c                  mvarh r4
+ 2807 ee28:             
+ 2808 ee28: 0e 00               ldai 0      ;clear carry
+ 2809 ee2a: e0                  cshl
+ 2810 ee2b:             ;        addi 0
+ 2811 ee2b:             
+ 2812 ee2b: 2d                  mvrha r5
+ 2813 ee2c: e1                  cshr
+ 2814 ee2d: 3d                  mvarh r5
+ 2815 ee2e: 25                  mvrla r5
+ 2816 ee2f: e1                  cshr
+ 2817 ee30: 35                  mvarl r5
+ 2818 ee31:             
+ 2819 ee31: 5e                  decr r6
+ 2820 ee32: 26                  mvrla r6
+ 2821 ee33: a2 ee 14            brnz parse_mulloop
+ 2822 ee36: 08 60               popr r6
+ 2823 ee38: 05                  ret
+ 2824 ee39:             
+ 2825 ee39:             parse_muladd16:
+ 2826 ee39: 0e 00               ldai 0      ;clear carry
+ 2827 ee3b: e0                  cshl
+ 2828 ee3c:             
+ 2829 ee3c: 27                  MVRLA R7
+ 2830 ee3d: 0b                  MVAT
+ 2831 ee3e: 24                  mvrla r4
+ 2832 ee3f: b8                  ADDT
+ 2833 ee40: 37                  mvarl r7
+ 2834 ee41:             
+ 2835 ee41: 2f                  mvrha r7
+ 2836 ee42: 0b                  MVAT
+ 2837 ee43: 2c                  mvrha r4
+ 2838 ee44: e3                  addtc
+ 2839 ee45: 3f                  mvarh r7
+ 2840 ee46: 05                  ret
+ 2841 ee47:             
+ 2842 ee47:             ;
+ 2843 ee47:             ; 16 bit ADD r6 and r7, return result in r7
+ 2844 ee47:             ;
+ 2845 ee47:             parse_add16:
+ 2846 ee47:             
+ 2847 ee47: 0e 00             ldai 0      ;clear carry
+ 2848 ee49: e0                cshl
+ 2849 ee4a: 26                MVRLA R6
+ 2850 ee4b: 0b                MVAT
+ 2851 ee4c: 27                mvrla r7
+ 2852 ee4d: b8                ADDT
+ 2853 ee4e: 37                mvarl r7
+ 2854 ee4f: 2e                mvrha r6
+ 2855 ee50: 0b                MVAT
+ 2856 ee51: 2f                mvrha r7
+ 2857 ee52: e3                addtc
+ 2858 ee53: 3f                mvarh r7
+ 2859 ee54: 05                ret
+ 2860 ee55:             
+ 2861 ee55:             ;
+ 2862 ee55:             ; 16 bit SUB of r6 from r7, return result in r7
+ 2863 ee55:             ;
+ 2864 ee55:             parse_sub16:
+ 2865 ee55: 2e                mvrha r6
+ 2866 ee56: b5                inva
+ 2867 ee57: 3e                mvarh r6
+ 2868 ee58: 26                mvrla r6
+ 2869 ee59: b5                inva
+ 2870 ee5a: 36                mvarl r6
+ 2871 ee5b: 56                incr r6
+ 2872 ee5c: a0 ee 47          br parse_add16
+ 2873 ee5f:             
+ 2874 ee5f:             ;
+ 2875 ee5f:             ; convert positive in r7 to negative
+ 2876 ee5f:             ;
+ 2877 ee5f:             parse_neg:
+ 2878 ee5f: 2f                mvrha r7
+ 2879 ee60: b5                inva
+ 2880 ee61: 3f                mvarh r7
+ 2881 ee62: 27                mvrla r7
+ 2882 ee63: b5                inva
+ 2883 ee64: 37                mvarl r7
+ 2884 ee65: 57                incr r7
+ 2885 ee66: 05                ret
+ 2886 ee67:             
+ 2887 ee67:             ;
+ 2888 ee67:             ; 16 bit AND r6 and r7, return result in r7
+ 2889 ee67:             ;
+ 2890 ee67:             parse_and16:
+ 2891 ee67: 26                MVRLA R6
+ 2892 ee68: 0b                MVAT
+ 2893 ee69: 27                mvrla r7
+ 2894 ee6a: bb                ANDT
+ 2895 ee6b: 37                mvarl r7
+ 2896 ee6c: 2e                mvrha r6
+ 2897 ee6d: 0b                MVAT
+ 2898 ee6e: 2f                mvrha r7
+ 2899 ee6f: bb                ANDT
+ 2900 ee70: 3f                mvarh r7
+ 2901 ee71: 05                ret
+ 2902 ee72:             
+ 2903 ee72:             ;
+ 2904 ee72:             ; 16 bit OR r6 and r7, return result in r7
+ 2905 ee72:             ;
+ 2906 ee72:             parse_or16:
+ 2907 ee72: 26                MVRLA R6
+ 2908 ee73: 0b                MVAT
+ 2909 ee74: 27                mvrla r7
+ 2910 ee75: ba                ORT
+ 2911 ee76: 37                mvarl r7
+ 2912 ee77: 2e                mvrha r6
+ 2913 ee78: 0b                MVAT
+ 2914 ee79: 2f                mvrha r7
+ 2915 ee7a: ba                ORT
+ 2916 ee7b: 3f                mvarh r7
+ 2917 ee7c: 05                ret
+ 2918 ee7d:             
+ 2919 ee7d:             
+ 2920 ee7d:             ;
+ 2921 ee7d:             ; is digit in accumulator hex
+ 2922 ee7d:             ; returns 1 if yes and 0 if no
+ 2923 ee7d:             ;
+ 2924 ee7d:             ; what about upper/lower case
+ 2925 ee7d:             ;
+ 2926 ee7d:             ; destroys tmp register
+ 2927 ee7d:             parse_ishex:
+ 2928 ee7d: 0d 30          ldti '0'
+ 2929 ee7f: a7 ee 97       brlt parse_ishex_no
+ 2930 ee82: 0d 39          ldti '9'
+ 2931 ee84: a9 ee 8a       brgt parse_ishex_af
+ 2932 ee87: a0 ee 94       br parse_ishex_yes
+ 2933 ee8a:             
+ 2934 ee8a:             parse_ishex_af:
+ 2935 ee8a: 0d 41           ldti 'A'
+ 2936 ee8c: a7 ee 97        brlt parse_ishex_no
+ 2937 ee8f: 0d 46           ldti 'F'
+ 2938 ee91: a9 ee 97        brgt parse_ishex_no
+ 2939 ee94:             
+ 2940 ee94:             parse_ishex_yes:
+ 2941 ee94: 0e 01           ldai 1
+ 2942 ee96: 05              ret
+ 2943 ee97:             
+ 2944 ee97:             parse_ishex_no:
+ 2945 ee97: 0e 00           ldai 0
+ 2946 ee99: 05              ret
+ 2947 ee9a:             
+ 2948 ee9a:             ;
+ 2949 ee9a:             ; is digit in accumulator decimal
+ 2950 ee9a:             ; returns 1 if yes and 0 if no
+ 2951 ee9a:             ;
+ 2952 ee9a:             ; destroys tmp register
+ 2953 ee9a:             ;
+ 2954 ee9a:             parse_isdigit:
+ 2955 ee9a: 0d 30          ldti '0'
+ 2956 ee9c: a7 ee a7       brlt parse_isdigit_no
+ 2957 ee9f: 0d 39          ldti '9'
+ 2958 eea1: a9 ee a7       brgt parse_isdigit_no
+ 2959 eea4:             
+ 2960 eea4: 0e 01           ldai 1
+ 2961 eea6: 05              ret
+ 2962 eea7:             
+ 2963 eea7:             parse_isdigit_no:
+ 2964 eea7: 0e 00           ldai 0
+ 2965 eea9: 05              ret
+ 2966 eeaa:             
+ 2967 eeaa:             ;
+ 2968 eeaa:             ; 16 bit compare r6 and r7
+ 2969 eeaa:             ;
+ 2970 eeaa:             ; returns in accumulator
+ 2971 eeaa:             ; r7=r6 00
+ 2972 eeaa:             ; r7>r6 01
+ 2973 eeaa:             ; r7<r6 ff
+ 2974 eeaa:             ;
+ 2975 eeaa:             ; destory Tmp
+ 2976 eeaa:             ;
+ 2977 eeaa:             parse_compare:
+ 2978 eeaa: 2e            mvrha r6
+ 2979 eeab: 0b            mvat
+ 2980 eeac: 2f            mvrha r7
+ 2981 eead: aa ee b9      brneq parse_compareh
+ 2982 eeb0: 26            mvrla r6
+ 2983 eeb1: 0b            mvat
+ 2984 eeb2: 27            mvrla r7
+ 2985 eeb3: aa ee c2      brneq parse_comparel
+ 2986 eeb6: 0e 00         ldai 0
+ 2987 eeb8: 05            ret
+ 2988 eeb9:             
+ 2989 eeb9:             parse_compareh:
+ 2990 eeb9: a7 ee bf      brlt parse_compareh1
+ 2991 eebc: 0e 01         ldai 1
+ 2992 eebe: 05            ret
+ 2993 eebf:             parse_compareh1:
+ 2994 eebf: 0e ff         ldai 0ffh
+ 2995 eec1: 05            ret
+ 2996 eec2:             
+ 2997 eec2:             parse_comparel:
+ 2998 eec2: a7 ee c8      brlt parse_comparel1
+ 2999 eec5: 0e 01         ldai 1
+ 3000 eec7: 05            ret
+ 3001 eec8:             parse_comparel1:
+ 3002 eec8: 0e ff         ldai 0ffh
+ 3003 eeca: 05            ret
+ 3004 eecb:             
+ 3005 eecb: 3e 3e 3e 00 basic_prompt: db ">>>",0
+ 3006 eecf:             basic_interprter:
+ 3007 eecf:                     ;build input string
+ 3008 eecf:                     ;point register to BUFFER
+ 3009 eecf:                     ;loop fetch chars
+ 3010 eecf:                     ;until CR
+ 3011 eecf:                     ;be sure line ends with a NULL or CR
+ 3012 eecf:                     ;what does parse require???
+ 3013 eecf: 1f ee cb            MVIW R7,basic_prompt
+ 3014 eed2: 04 ff c0            JSR stringout
+ 3015 eed5:             
+ 3016 eed5: 1f 03 00            mviw r7,parse_input_line
+ 3017 eed8:             
+ 3018 eed8:             parse_inputloop:
+ 3019 eed8: 04 ee e8            jsr get_inputline
+ 3020 eedb:             
+ 3021 eedb: 1f 03 00            mviw r7,parse_input_line
+ 3022 eede: 04 eb fe            JSR parse_line
+ 3023 eee1:             
+ 3024 eee1: a1 ee cf            BRZ basic_interprter
+ 3025 eee4: 05                  RET
+ 3026 eee5:             
+ 3027 eee5: 1b 03 00            mviw r3,parse_input_line
+ 3028 eee8:             
+ 3029 eee8:             get_inputline:
+ 3030 eee8: 04 ff e8            jsr uartin
+ 3031 eeeb: 4f                  stavr r7
+ 3032 eeec: 57                  incr r7
+ 3033 eeed: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+ 3034 eeef: aa ee e8            brneq get_inputline
+ 3035 eef2: 1f ee f9            MVIW R7,CRLF
+ 3036 eef5: 04 ff c0            JSR STRINGOUT
+ 3037 eef8: 05                  RET
+ 3038 eef9:             
+ 3039 eef9:             ;
+ 3040 eef9:             ; STRINGS
+ 3041 eef9:             ;
+ 3042 eef9: 0a 0d 00    CRLF: DB 0ah,0dh,0
+ 3043 eefc:             ;
+ 3044 eefc:             
+ 3045 eefc:                   ORG 0EF00h
+ 3046 ef00:             
+ 3047 ef00:             basic_test:
+ 3048 ef00:             
+ 3049 ef00:             ;    DB  25h,0ah,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h,24h,25h,14h,00h
+ 3050 ef00:             ;    DB  0ah,00h,06h,04h,00h,00h,24h,25h,1eh,00h,11h,00h,04h,00h,00h,23h
+ 3051 ef00:             ;    DB  04h,00h,00h,17h,02h,01h,00h,24h,25h,28h,00h,13h,00h,07h,04h,00h
+ 3052 ef00:             ;    DB  00h,21h,02h,0ah,00h,08h,0dh,02h,14h,00h,24h,01h,00h,00h,00h,00h
+ 3053 ef00:             
+ 3054 ef00:             ;    DB  25h,0ah,00h,14h,00h,06h,1fh,02h,01h,00h,17h,02h,02h,00h,20h,17h
+ 3055 ef00:             ;    DB  02h,03h,00h,24h,25h,14h,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h
+ 3056 ef00:             ;    DB  24h,25h,1eh,00h,0dh,00h,04h,01h,00h,23h,02h,02h,00h,24h,25h,28h
+ 3057 ef00:             ;    DB  00h,0eh,00h,06h,04h,00h,00h,17h,04h,01h,00h,24h,25h,32h,00h,15h
+ 3058 ef00:             ;    DB  00h,04h,02h,00h,23h,04h,00h,00h,17h,04h,01h,00h,17h,02h,05h,00h
+ 3059 ef00:             ;    DB  24h,25h,3ch,00h,0ah,00h,06h,04h,02h,00h,24h,01h,00h,00h,00h,00h
+ 3060 ef00:             
+ 3061 ef00:             ;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+ 3062 ef00:             ;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+ 3063 ef00:             ;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
+ 3064 ef00:             ;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
+ 3065 ef00:             ;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
+ 3066 ef00:             ;    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
+ 3067 ef00:             ;    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
+ 3068 ef00:             ;    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
+ 3069 ef00:             ;    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
+ 3070 ef00:             ;    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
+ 3071 ef00:             ;    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
+ 3072 ef00:             ;    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
+ 3073 ef00:             ;    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
+ 3074 ef00:             ;    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
+ 3075 ef00:             ;    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+ 3076 ef00:             
+ 3077 ef00:             ;
+ 3078 ef00:             ; The End
+ 3079 ef00:             ;
+ 3080 ef00:               ORG 0EFFFh
+ 3081 efff:             ZZZZ:
+ 3082 efff: 00            DB   0
 
-ed5eh: ADDLINE_MOVEPTR  - <  2573>   2577 
-eef9h: BASIC_INTERPRTER - <  3005>    187   3023 
-e6a7h: BASIC_LIST       - <  1431>    149   2382 
-eef5h: BASIC_PROMPT     - <  3004>   3012 
-e54fh: BASIC_RUN        - <  1163>    157   2389   2396 
-ef00h: BASIC_TEST       - <  3046>    203 
+ed34h: ADDLINE_MOVEPTR  - <  2574>   2578 
+eecfh: BASIC_INTERPRTER - <  3006>    187   3024 
+e6a7h: BASIC_LIST       - <  1431>    149   2383 
+eecbh: BASIC_PROMPT     - <  3005>   3013 
+e54fh: BASIC_RUN        - <  1163>    157   2390   2397 
+ef00h: BASIC_TEST       - <  3047>    203 
 0100h: BASIC_VARS       - <    69>   1205   1228 
 e6c0h: BASLIST1         - <  1447>   1440 
 e760h: BASLIST10        - <  1557>   1551 
@@ -3199,45 +3200,45 @@ e6abh: BASLIST_LOOP     - <  1436>   1445   1451   1467   1492   1515   1523
          1801   1819   1827 
 e6f2h: BASLIST_STRING   - <  1484>   1488 
 e6fah: BASLIST_STRINGEND - <  1490>   1486 
-edbah: BASU_FIND        - <  2661>    619   2616 
-ede3h: BASU_FIND1       - <  2692>   2679 
-ede4h: BASU_FIND2       - <  2694>   2684 
-edbfh: BASU_FIND_LOOP   - <  2665>   2707 
-edcch: BASU_FIND_LOOP1  - <  2674>   2668 
-ededh: BASU_FIND_MOVEPTR - <  2702>   2706 
-020eh: BAS_BUFFERENDHI  - <    81>    172   2645 
+ed90h: BASU_FIND        - <  2662>    619   2617 
+edb9h: BASU_FIND1       - <  2693>   2680 
+edbah: BASU_FIND2       - <  2695>   2685 
+ed95h: BASU_FIND_LOOP   - <  2666>   2708 
+eda2h: BASU_FIND_LOOP1  - <  2675>   2669 
+edc3h: BASU_FIND_MOVEPTR - <  2703>   2707 
+020eh: BAS_BUFFERENDHI  - <    81>    172   2646 
 e069h: BAS_COPYLOOP     - <   206>    213    215 
-020ah: BAS_CURRENTTOKEN - <    79>   2120   2128   2155   2320 
+020ah: BAS_CURRENTTOKEN - <    79>   2121   2129   2156   2321 
 e58ch: BAS_ERROR        - <  1242>    303   1149 
 0282h: BAS_FORSTACK     - <   102>    271 
 0280h: BAS_FORSTACKPTR  - <   101> 
 02c0h: BAS_GOSUBPTR     - <   111> 
 02c2h: BAS_GOSUBSTACK   - <   112>    270 
-0214h: BAS_INSERTPTR    - <    88>   2551   2595   2599 
+0214h: BAS_INSERTPTR    - <    88>   2552   2596   2600 
 e0a8h: BAS_MSG1         - <   244>    302 
 e0c4h: BAS_MSG2         - <   245> 
 e0d5h: BAS_MSG3         - <   246>   1146 
-0216h: BAS_NEGFLAG      - <    89>   2205   2210   2239 
-0212h: BAS_NEWLINELEN   - <    87>   2519   2539   2584 
-0210h: BAS_NEWLINENUM   - <    86>   2423   2537   2547 
-0204h: BAS_NXTPTR       - <    76>   1998   2013   2029   2064   2082   2141 
-         2182 
+0216h: BAS_NEGFLAG      - <    89> 
+0212h: BAS_NEWLINELEN   - <    87>   2520   2540   2585 
+0210h: BAS_NEWLINENUM   - <    86>   2424   2538   2548 
+0204h: BAS_NXTPTR       - <    76>   1998   2014   2030   2065   2083   2142 
+         2183 
 0200h: BAS_RUN_ENDED    - <    74>    272    638   1052   1180 
-0208h: BAS_TOKCOUNTER   - <    78>   2118   2366   2442   2444   2455   2458 
-         2474   2476   2483   2485   2500   2503   2518 
-020ch: BAS_TOKENBUFFER  - <    80>    148    170    275   2381   2548   2663 
-0206h: BAS_TOKPTR       - <    77>   2116   2486 
-2000h: BAS_TOK_BUF_END  - <   129>    171   2582   2586 
-1000h: BAS_TOK_BUF_START - <   125>    167    202   2403 
-0202h: BAS_TXTPTR       - <    75>    973   1879   1973   2042   2114   2142 
-         2153   2203   2294   2311   2336   2370   2464   2487 
+0208h: BAS_TOKCOUNTER   - <    78>   2119   2367   2443   2445   2456   2459 
+         2475   2477   2484   2486   2501   2504   2519 
+020ch: BAS_TOKENBUFFER  - <    80>    148    170    275   2382   2549   2664 
+0206h: BAS_TOKPTR       - <    77>   2117   2487 
+2000h: BAS_TOK_BUF_END  - <   129>    171   2583   2587 
+1000h: BAS_TOK_BUF_START - <   125>    167    202   2404 
+0202h: BAS_TXTPTR       - <    75>    973   1879   1973   2043   2115   2143 
+         2154   2204   2295   2312   2337   2371   2465   2488 
 e077h: BIGTEST          - <   218>    180 
 ffc4h: CHAROUT          - <     5>    682   1343   1375   1395 
-ef23h: CRLF             - <  3041>    223    230    235    716   1798   2412 
-         3034 
+eef9h: CRLF             - <  3042>    223    230    235    716   1798   2413 
+         3035 
 e5cbh: DIVIDERS         - <  1327>   1352 
-edffh: DIVLOOP          - <  2726>   2734 
-ee12h: DIV_DONE         - <  2735>   2729 
+edd5h: DIVLOOP          - <  2727>   2735 
+ede8h: DIV_DONE         - <  2736>   2730 
 e119h: EXE_ACCEPT       - <   285>    326    340    349    361    367    370 
           637    652    662    726    732    761    763    768    776    779 
           781    802    832    842    887    898    916    918    929    944 
@@ -3338,11 +3339,11 @@ e1c8h: EXE_TERM_MOD     - <   428>    397
 e1b2h: EXE_TERM_SLASH   - <   414>    395 
 e132h: EXE_VARFACTOR    - <   318>    374 
 e5c7h: EXE_VARIABLE_NUM - <  1315>    319    757    836    902    965   1002 
-eae3h: FOUND            - <  2063>   2046 
-ef12h: GET_INPUTLINE    - <  3028>    970   3018   3033 
-ee20h: MODLOOP          - <  2753>   2761 
-ee33h: MOD_DONE         - <  2762>   2756 
-eaedh: NOKEYOWRDSFOUND  - <  2071>   2043 
+ead2h: FOUND            - <  2064>   2047 
+eee8h: GET_INPUTLINE    - <  3029>    970   3019   3034 
+edf6h: MODLOOP          - <  2754>   2762 
+ee09h: MOD_DONE         - <  2763>   2757 
+eadch: NOKEYOWRDSFOUND  - <  2072>   2044 
 e9f4h: PARSECHAR1       - <  1887>   1884 
 ea44h: PARSECHAR10      - <  1937>   1934 
 ea4ch: PARSECHAR11      - <  1942>   1939 
@@ -3359,117 +3360,116 @@ ea24h: PARSECHAR7       - <  1917>   1914
 ea2ch: PARSECHAR7A      - <  1922>   1919 
 ea34h: PARSECHAR8       - <  1927>   1924 
 ea3ch: PARSECHAR9       - <  1932>   1929 
-ee71h: PARSE_ADD16      - <  2844>    483   2231   2637   2871 
-ed26h: PARSE_ADDLINE    - <  2536> 
-ed38h: PARSE_ADDLINE1   - <  2546>   2542 
-ed3eh: PARSE_ADDLINELOOP - <  2550>   2578 
-ed67h: PARSE_ADDROOM    - <  2581>   2554   2563 
-ebe2h: PARSE_AF         - <  2276>   2273 
-ee91h: PARSE_AND16      - <  2889>    507 
-e0f5h: PARSE_CMD_ERROR  - <   248>   2410 
-ec88h: PARSE_CODE       - <  2417>   2375 
-eed4h: PARSE_COMPARE    - <  2976>    563    580    597    865   1361   2561 
-         2596   2727   2754 
-eee3h: PARSE_COMPAREH   - <  2988>   2980 
-eee9h: PARSE_COMPAREH1  - <  2992>   2989 
-eeech: PARSE_COMPAREL   - <  2996>   2984 
-eef2h: PARSE_COMPAREL1  - <  3000>   2997 
-edf6h: PARSE_DIV16      - <  2714>    221    423 
-ebf9h: PARSE_FINISHED   - <  2309>   2135   2167 
-ec14h: PARSE_FINISHED_YES - <  2326>   2313   2319   2322 
-ebd8h: PARSE_GETNIBBLE  - <  2269> 
-ea6fh: PARSE_GET_NEXT_TOK - <  1971>   2119   2154   2376 
-ea74h: PARSE_GNT1       - <  1979>   1987 
-ea8bh: PARSE_GNT1LOOP   - <  1993>   1997 
-ea85h: PARSE_GNT1_CHKPOS - <  1989>   1982 
-ea9bh: PARSE_GNT1_NOTNEG - <  2003>   1986 
-ea9ch: PARSE_GNT2       - <  2008>   1991 
-eaaah: PARSE_GNT3       - <  2019>   2011 
-eab0h: PARSE_GNT3LOOP   - <  2023>   2027 
-eac0h: PARSE_GNT4       - <  2034>   2022 
-eb03h: PARSE_GNT_ERROR  - <  2087>   2078   2080 
-eb08h: PARSE_INIT       - <  2111>   2363 
-ef02h: PARSE_INPUTLOOP  - <  3017> 
-0300h: PARSE_INPUT_LINE - <   117>    968    972   3015   3020   3026 
-ed86h: PARSE_INSERTLOOP - <  2602>   2608 
-eec4h: PARSE_ISDIGIT    - <  2953>   1985   1990   1996   2254   2372 
-eed1h: PARSE_ISDIGIT_NO - <  2962>   2955   2957 
-eea7h: PARSE_ISHEX      - <  2926> 
-eeb4h: PARSE_ISHEX_AF   - <  2933>   2930 
-eec1h: PARSE_ISHEX_NO   - <  2943>   2928   2935   2937 
-eebeh: PARSE_ISHEX_YES  - <  2939>   2931 
-e968h: PARSE_KEYWORDS   - <  1845>   2039 
-ec28h: PARSE_LINE       - <  2362>    194   3021 
-ecc7h: PARSE_LINE1      - <  2461>   2447 
-ece3h: PARSE_LINE1DONE  - <  2478>   2470 
-ecd0h: PARSE_LINE1LOOP  - <  2467>   2477 
-ecf8h: PARSE_LINE2      - <  2490>   2463 
-ed11h: PARSE_LINE_DONE  - <  2506>   2438 
-ec79h: PARSE_LINE_ERROR - <  2409>   2402 
-ec55h: PARSE_LINE_EXIT  - <  2386>   2380 
-ec47h: PARSE_LINE_LIST  - <  2378> 
-ec9ah: PARSE_LINE_LOOP  - <  2434>   2459   2488   2492   2504 
-ec6bh: PARSE_LINE_NEW   - <  2400>   2395 
-ec60h: PARSE_LINE_RUN   - <  2393>   2388 
-ee17h: PARSE_MOD16      - <  2745>    228    437 
-ee36h: PARSE_MUL16      - <  2773>    409   2226 
-ee63h: PARSE_MULADD16   - <  2824>   2786 
-ee3eh: PARSE_MULLOOP    - <  2780>   2820 
-ee47h: PARSE_MULSKIP    - <  2788>   2785 
-ee89h: PARSE_NEG        - <  2876>    351   2242 
-eb26h: PARSE_NEXT       - <  2134>   2183   2435 
-eb2dh: PARSE_NEXT1      - <  2139>   2136 
-eb35h: PARSE_NEXT1LOOP  - <  2144>   2149 
-eb3fh: PARSE_NEXT2      - <  2152>   2147 
-eb50h: PARSE_NEXT3      - <  2166>   2158   2173 
-eb60h: PARSE_NEXTDONE   - <  2175>   2168   2171 
-eb67h: PARSE_NEXTDONE2  - <  2181>   2178 
-eb70h: PARSE_NUM        - <  2197>    976   2422   2448 
-ebc9h: PARSE_NUM_CHAR   - <  2252>   2214   2218 
-ebd3h: PARSE_NUM_CHAR1  - <  2258>   2255 
-ebb3h: PARSE_NUM_DONE   - <  2236>   2222 
-ebc0h: PARSE_NUM_DONE1  - <  2243>   2241 
-eb95h: PARSE_NUM_LOOP   - <  2217>   2234 
-eb91h: PARSE_NUM_POS    - <  2213>   2208 
-ee9ch: PARSE_OR16       - <  2905>    519 
-ec28h: PARSE_POS        - <  2349> 
-ed92h: PARSE_REMOVELINE - <  2615>   2538 
-ed9eh: PARSE_REMOVELINE1 - <  2622>   2618   2620 
-edafh: PARSE_REMOVELOOP - <  2638>   2647 
-ed73h: PARSE_ROOMLOOP   - <  2589>   2597 
-e9e4h: PARSE_SINGLECHAR - <  1876>   2010 
-ebeah: PARSE_STRING     - <  2286> 
-ebf3h: PARSE_STRING1    - <  2292>   2289 
-ee7fh: PARSE_SUB16      - <  2863>    495   1366   2585   2731   2758 
-eb22h: PARSE_TOKEN      - <  2127>   2287   2436 
-0400h: PARSE_TOKEN_BUFFER - <   121>   2115   2367   2514   2600 
-ec19h: PARSE_VARIABLE_NUM - <  2334>   2493 
-eacch: PCMPLOOP         - <  2044>   2052 
+ee47h: PARSE_ADD16      - <  2845>    483   2232   2638   2872 
+ecfch: PARSE_ADDLINE    - <  2537> 
+ed0eh: PARSE_ADDLINE1   - <  2547>   2543 
+ed14h: PARSE_ADDLINELOOP - <  2551>   2579 
+ed3dh: PARSE_ADDROOM    - <  2582>   2555   2564 
+ebb8h: PARSE_AF         - <  2277>   2274 
+ee67h: PARSE_AND16      - <  2890>    507 
+e0f5h: PARSE_CMD_ERROR  - <   248>   2411 
+ec5eh: PARSE_CODE       - <  2418>   2376 
+eeaah: PARSE_COMPARE    - <  2977>    563    580    597    865   1361   2562 
+         2597   2728   2755 
+eeb9h: PARSE_COMPAREH   - <  2989>   2981 
+eebfh: PARSE_COMPAREH1  - <  2993>   2990 
+eec2h: PARSE_COMPAREL   - <  2997>   2985 
+eec8h: PARSE_COMPAREL1  - <  3001>   2998 
+edcch: PARSE_DIV16      - <  2715>    221    423 
+ebcfh: PARSE_FINISHED   - <  2310>   2136   2168 
+ebeah: PARSE_FINISHED_YES - <  2327>   2314   2320   2323 
+ebaeh: PARSE_GETNIBBLE  - <  2270> 
+ea6fh: PARSE_GET_NEXT_TOK - <  1971>   2120   2155   2377 
+ea74h: PARSE_GNT1       - <  1979> 
+ea7bh: PARSE_GNT1LOOP   - <  1993>   1997 
+ea75h: PARSE_GNT1_CHKPOS - <  1989> 
+ea8bh: PARSE_GNT2       - <  2009>   1991 
+ea99h: PARSE_GNT3       - <  2020>   2012 
+ea9fh: PARSE_GNT3LOOP   - <  2024>   2028 
+eaafh: PARSE_GNT4       - <  2035>   2023 
+eaf2h: PARSE_GNT_ERROR  - <  2088>   2079   2081 
+eaf7h: PARSE_INIT       - <  2112>   2364 
+eed8h: PARSE_INPUTLOOP  - <  3018> 
+0300h: PARSE_INPUT_LINE - <   117>    968    972   3016   3021   3027 
+ed5ch: PARSE_INSERTLOOP - <  2603>   2609 
+ee9ah: PARSE_ISDIGIT    - <  2954>   1990   1996   2255   2373 
+eea7h: PARSE_ISDIGIT_NO - <  2963>   2956   2958 
+ee7dh: PARSE_ISHEX      - <  2927> 
+ee8ah: PARSE_ISHEX_AF   - <  2934>   2931 
+ee97h: PARSE_ISHEX_NO   - <  2944>   2929   2936   2938 
+ee94h: PARSE_ISHEX_YES  - <  2940>   2932 
+e968h: PARSE_KEYWORDS   - <  1845>   2040 
+ebfeh: PARSE_LINE       - <  2363>    194   3022 
+ec9dh: PARSE_LINE1      - <  2462>   2448 
+ecb9h: PARSE_LINE1DONE  - <  2479>   2471 
+eca6h: PARSE_LINE1LOOP  - <  2468>   2478 
+ecceh: PARSE_LINE2      - <  2491>   2464 
+ece7h: PARSE_LINE_DONE  - <  2507>   2439 
+ec4fh: PARSE_LINE_ERROR - <  2410>   2403 
+ec2bh: PARSE_LINE_EXIT  - <  2387>   2381 
+ec1dh: PARSE_LINE_LIST  - <  2379> 
+ec70h: PARSE_LINE_LOOP  - <  2435>   2460   2489   2493   2505 
+ec41h: PARSE_LINE_NEW   - <  2401>   2396 
+ec36h: PARSE_LINE_RUN   - <  2394>   2389 
+ededh: PARSE_MOD16      - <  2746>    228    437 
+ee0ch: PARSE_MUL16      - <  2774>    409   2227 
+ee39h: PARSE_MULADD16   - <  2825>   2787 
+ee14h: PARSE_MULLOOP    - <  2781>   2821 
+ee1dh: PARSE_MULSKIP    - <  2789>   2786 
+ee5fh: PARSE_NEG        - <  2877>    351 
+eb15h: PARSE_NEXT       - <  2135>   2184   2436 
+eb1ch: PARSE_NEXT1      - <  2140>   2137 
+eb24h: PARSE_NEXT1LOOP  - <  2145>   2150 
+eb2eh: PARSE_NEXT2      - <  2153>   2148 
+eb3fh: PARSE_NEXT3      - <  2167>   2159   2174 
+eb4fh: PARSE_NEXTDONE   - <  2176>   2169   2172 
+eb56h: PARSE_NEXTDONE2  - <  2182>   2179 
+eb5fh: PARSE_NUM        - <  2198>    976   2423   2449 
+eb9fh: PARSE_NUM_CHAR   - <  2253>   2215   2219 
+eba9h: PARSE_NUM_CHAR1  - <  2259>   2256 
+eb93h: PARSE_NUM_DONE   - <  2237>   2223 
+eb96h: PARSE_NUM_DONE1  - <  2244> 
+eb75h: PARSE_NUM_LOOP   - <  2218>   2235 
+eb71h: PARSE_NUM_POS    - <  2214> 
+ee72h: PARSE_OR16       - <  2906>    519 
+ebfeh: PARSE_POS        - <  2350> 
+ed68h: PARSE_REMOVELINE - <  2616>   2539 
+ed74h: PARSE_REMOVELINE1 - <  2623>   2619   2621 
+ed85h: PARSE_REMOVELOOP - <  2639>   2648 
+ed49h: PARSE_ROOMLOOP   - <  2590>   2598 
+e9e4h: PARSE_SINGLECHAR - <  1876>   2011 
+ebc0h: PARSE_STRING     - <  2287> 
+ebc9h: PARSE_STRING1    - <  2293>   2290 
+ee55h: PARSE_SUB16      - <  2864>    495   1366   2586   2732   2759 
+eb11h: PARSE_TOKEN      - <  2128>   2288   2437 
+0400h: PARSE_TOKEN_BUFFER - <   121>   2116   2368   2515   2601 
+ebefh: PARSE_VARIABLE_NUM - <  2335>   2494 
+eabbh: PCMPLOOP         - <  2045>   2053 
 ffcch: SHOWADDR         - <     7>   1443   1833 
 ffd8h: SHOWBYTE         - <    10> 
 ffe0h: SHOWBYTEA        - <    12>    299   1143 
 ffe4h: SHOWCARRY        - <    13> 
 ffd4h: SHOWR7           - <     9> 
 ffdch: SHOWREGS         - <    11>    222    229   1148 
-eadah: SKIPLOOP         - <  2056>   2059 
-eadah: SKIPTOEND        - <  2054>   2049 
+eac9h: SKIPLOOP         - <  2057>   2060 
+eac9h: SKIPTOEND        - <  2055>   2050 
 ffc0h: STRINGOUT        - <     4>    224    231    236    674    717   1147 
          1442   1477   1521   1529   1537   1545   1553   1561   1569   1577 
          1585   1593   1601   1609   1617   1625   1633   1641   1799   1825 
-         1832   2411   2413   3013   3035   3035 
+         1832   2412   2414   3014   3036   3036 
 0019h: TOKENIZER_AND    - <    44>    468   1686   1910 
 001bh: TOKENIZER_ASTR   - <    46>    392   1706   1920 
 0010h: TOKENIZER_CALL   - <    35>   1606   1857 
 0015h: TOKENIZER_COMMA  - <    40>    679   1000   1034   1646   1890 
 0024h: TOKENIZER_CR     - <    55>    636    709    743    767    780    886 
-          943    982   1008   1044   1796   1885   2437   2507 
+          943    982   1008   1044   1796   1885   2438   2508 
 0009h: TOKENIZER_ELSE   - <    28>   1550   1850 
 0014h: TOKENIZER_END    - <    39>   1117   1638   1861 
-0001h: TOKENIZER_EOF    - <    20>    168    711    745   1186   1448   2318 
-         2321   2404   2553   2667 
+0001h: TOKENIZER_EOF    - <    20>    168    711    745   1186   1448   2319 
+         2322   2405   2554   2668 
 0023h: TOKENIZER_EQ     - <    54>    550    762    917   1786   1960 
-0000h: TOKENIZER_ERROR  - <    19>   1439   1867   2089 
-0029h: TOKENIZER_EXIT   - <    60>   1865   2387 
+0000h: TOKENIZER_ERROR  - <    19>   1439   1867   2090 
+0029h: TOKENIZER_EXIT   - <    60>   1865   2388 
 000ah: TOKENIZER_FOR    - <    29>    897   1093   1558   1851 
 000eh: TOKENIZER_GOSUB  - <    33>    775   1081   1590   1855 
 000dh: TOKENIZER_GOTO   - <    32>    651   1131   1582   1854 
@@ -3479,31 +3479,31 @@ ffc0h: STRINGOUT        - <     4>    224    231    236    674    717   1147
 002ah: TOKENIZER_INPUT  - <    61>    963   1137   1822   1866 
 001fh: TOKENIZER_LEFTP  - <    50>    365    697   1746   1935 
 0005h: TOKENIZER_LET    - <    24>   1123   1125   1518   1846 
-0025h: TOKENIZER_LINENUM - <    56>   1155   1269   1804   2418 
-0026h: TOKENIZER_LIST   - <    57>   1862   2379 
+0025h: TOKENIZER_LINENUM - <    56>   1155   1269   1804   2419 
+0026h: TOKENIZER_LIST   - <    57>   1862   2380 
 0021h: TOKENIZER_LT     - <    52>    546   1766   1950 
 0018h: TOKENIZER_MINUS  - <    43>    347    466   1676   1905 
 001dh: TOKENIZER_MOD    - <    48>    396   1726   1930 
-0028h: TOKENIZER_NEW    - <    59>   1864   2401 
+0028h: TOKENIZER_NEW    - <    59>   1864   2402 
 000ch: TOKENIZER_NEXT   - <    31>    831   1111   1574   1853 
 0002h: TOKENIZER_NUMBER - <    21>    357    695    778   1253   1454   1999 
-         2446 
+         2447 
 001ah: TOKENIZER_OR     - <    45>    470   1696   1915 
 0012h: TOKENIZER_PEEK   - <    37>    991   1099   1622   1859 
 0017h: TOKENIZER_PLUS   - <    42>    338    464   1666   1900 
 0013h: TOKENIZER_POKE   - <    38>   1028   1105   1630   1860 
 0006h: TOKENIZER_PRINT  - <    25>    661   1063   1526   1847 
-0011h: TOKENIZER_REM    - <    36>   1614   1858   2157 
+0011h: TOKENIZER_REM    - <    36>   1614   1858   2158 
 000fh: TOKENIZER_RETURN - <    34>    801   1087   1598   1856 
 0020h: TOKENIZER_RIGHTP - <    51>    369   1756   1945 
-0027h: TOKENIZER_RUN    - <    58>   1863   2394 
+0027h: TOKENIZER_RUN    - <    58>   1863   2395 
 0016h: TOKENIZER_SEMICOLON - <    41>    687   1656   1895 
 001ch: TOKENIZER_SLASH  - <    47>    394   1716   1925 
-0003h: TOKENIZER_STRING - <    22>    666   1279   1473   2030   2288   2462 
+0003h: TOKENIZER_STRING - <    22>    666   1279   1473   2031   2289   2463 
 0008h: TOKENIZER_THEN   - <    27>    731   1542   1849 
 000bh: TOKENIZER_TO     - <    30>    928   1566   1852 
 0004h: TOKENIZER_VARIABLE - <    23>    325    693    760    841    915    980 
-         1006   1075   1261   1495   2083   2491 
+         1006   1075   1261   1495   2084   2492 
 e68fh: TOKL_CALL        - <  1426>   1608 
 e64fh: TOKL_ELSE        - <  1415>   1552 
 e68ah: TOKL_END         - <  1425>   1640 
@@ -3522,18 +3522,18 @@ e679h: TOKL_REM         - <  1422>   1616
 e671h: TOKL_RETURN      - <  1421>   1600 
 e649h: TOKL_THEN        - <  1414>   1544 
 e65ah: TOKL_TO          - <  1417>   1568 
-eac5h: TOP              - <  2040>   2061 
-ffd0h: TOUPPER          - <     8>   2277 
-ffe8h: UARTIN           - <    14>   3029 
+eab4h: TOP              - <  2041>   2062 
+ffd0h: TOUPPER          - <     8>   2278 
+ffe8h: UARTIN           - <    14>   3030 
 ffc8h: UARTOUT          - <     6>    301   1145   1466   1479   1503   1514 
          1649   1651   1659   1661   1669   1671   1679   1681   1689   1691 
          1699   1701   1709   1711   1719   1721   1729   1731   1739   1741 
          1749   1751   1759   1761   1769   1771   1779   1781   1789   1791 
          1818 
-efffh: ZZZZ             - <  3080> 
+efffh: ZZZZ             - <  3081> 
 
-3081 Lines assembled
+3082 Lines assembled
 0 Errors
-359 Labels
-Object Code:3822 bytes
+358 Labels
+Object Code:3780 bytes
 
