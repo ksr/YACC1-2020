@@ -400,7 +400,7 @@ int main(int argc, char** argv) {
             if (stepmode == SINGLESTEP) {
                 for (int t = 3; t < jsrdepth; t++)
                     printf("->");
-                printf("singlestep [%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word, acc, register_read_word(3), register_read_word(7));
+                printf("singlestep [%02x] at [%04x] acc=[%02x] tmp=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word, acc, treg, register_read_word(3), register_read_word(7));
                 debug_mode(SINGLESTEP);
             }
             if ((stepmode == JUMPOVER) && (jsrover <= jsrdepth)) {
@@ -431,7 +431,7 @@ int main(int argc, char** argv) {
                 break;
             case 0x03:
 
-                printf("\nHalt[%02x] at [%04x] acc=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, register_read_word(3), register_read_word(7));
+                printf("\nHalt[%02x] at [%04x] acc=[%02x] tmp=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, treg ,register_read_word(3), register_read_word(7));
                 dump(0x0200, 0x021f);
                 dump(0x0f80, 0x0f8f);
                 dump(0x0400, 0x040F);

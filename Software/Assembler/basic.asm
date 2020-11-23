@@ -56,6 +56,10 @@ TOKENIZER_CR: EQU 36
 TOKENIZER_LINENUM: EQU 37
 TOKENIZER_LIST: EQU 38
 TOKENIZER_RUN: EQU 39
+TOKENIZER_NEW: EQU 40
+TOKENIZER_EXIT: EQU 41
+TOKENIZER_INPUT: EQU 42
+
 
 ;
 ; BASIC interpreter user variables area
@@ -82,6 +86,7 @@ bas_bufferendhi:  EQU 020Eh ; HACK, above buffer should end on 0xXXFF boundry
 bas_newlinenum:   EQU 0210h ; line number of new line to be added
 bas_newlinelen:   EQU 0212h ; line length of new line to be added
 bas_insertptr:    EQU 0214H
+bas_negflag:      EQU 0216H ; PROCESS NEGATIVE NUMBER
 
 ;
 ; FOR-NEXT statement stack ptr and stack data
@@ -211,43 +216,34 @@ bas_copyloop:
       ret
 
 bigtest:
+    mviw r5,0105
+    mviw r4,0010
+    jsr parse_div16
+    jsr showregs
+    mviw r7,CRLF
+    jsr stringout
+
+    mviw r5,0105
+    mviw r4,0010
+    jsr parse_mod16
+    jsr showregs
+    mviw r7,CRLF
+    jsr stringout
+
     mviw r7,01234h
     jsr exe_itoa
     mviw r7,CRLF
     jsr stringout
 
-    mviw r7,010h
-    jsr exe_itoa
-    mviw r7,CRLF
-    jsr stringout
 
-    mviw r7,07654h
-    jsr exe_itoa
-    mviw r7,CRLF
-    jsr stringout
-
-    mviw r7,00h
-    jsr exe_itoa
-    mviw r7,CRLF
-    jsr stringout
-
-    mviw r7,0FFFEh
-    jsr exe_itoa
-    mviw r7,CRLF
-    jsr stringout
-
-    mviw r7,08012h
-    jsr exe_itoa
-    mviw r7,CRLF
-    jsr stringout
     ret
 
 ;
 ; basic interpreter messages
 ;
-bas_msg1: db "Accept - unexpected token",0,0ah,0dh
+bas_msg1: db "accept - unexpected token",0,0ah,0dh
 bas_msg2: db "line not found",0,0ah,0dh
-bas_msg3: db "Basic token not supported ",0ah,0dh
+bas_msg3: db "token not supported ",0ah,0dh
 exe_stmt_msg: db "EXE STMT ",0
 parse_cmd_error: db "UNKNOWN COMMAND",0,0ah,0DH
 
@@ -301,7 +297,7 @@ exe_accept:
 ; debug information
 ;
     JSR showbytea
-    ldai '-'
+    ldai '#'
     JSR uartout
     mviw R7,bas_msg1
     JSR bas_error
@@ -334,8 +330,29 @@ exe_varfactor:
 ; int factor()
 ; return value in R7
 ;
+; IS MOVE T TO A NEEDED IN ALL THESE :
+;
 exe_factor:
 ;
+    LDAVR R3               ;get current token into accumulator
+    LDTI TOKENIZER_PLUS
+    BRNEQ exe_factor1A
+    JSR exe_accept
+    JSR EXE_FACTOR
+    MVTA
+    RET
+
+exe_factor1A:
+    LDAVR R3               ;get current token into accumulator
+    LDTI TOKENIZER_MINUS
+    BRNEQ exe_factor1B
+    JSR exe_accept
+    JSR EXE_FACTOR
+    JSR PARSE_NEG
+    MVTA
+    RET
+
+exe_factor1B:
     LDAVR R3               ;get current token into accumulator
     LDTI TOKENIZER_NUMBER
     BRNEQ exe_factor1
@@ -401,6 +418,11 @@ exe_term_slash:
 ;
 ; do divide f1 = f1 / f2
 ;
+    pushr r4
+    movrr r6,r4
+    jsr PARSE_DIV16
+    movrr r7,r5
+    popr r4
     BR exe_term_loop
 
 exe_term_mod:
@@ -410,6 +432,11 @@ exe_term_mod:
 ;
 ; f1 = f1 % f2
 ;
+    pushr r4
+    movrr r6,r4
+    jsr PARSE_MOD16
+    movrr r7,r5
+    popr r4
     BR exe_term_loop
 
 exe_term_done:
@@ -930,6 +957,32 @@ exe_for_stmt:
     ret
 
 ;
+; INPUT
+;
+exe_input_stmt:
+    ldai TOKENIZER_INPUT   ; eat INPUT
+    jsr exe_accept
+    jsr exe_variable_num
+    Push
+
+    mviw r7,parse_input_line
+
+    jsr get_inputline
+
+    mviw r7,parse_input_line
+    str r7,bas_txtptr
+
+
+    jsr parse_num
+    pop
+    jsr  EXE_SET_VARIABLE
+
+    ldai TOKENIZER_VARIABLE
+    jsr EXE_ACCEPT
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    RET
+;
 ; void peek_statment()
 ;
 ;peek_statement(void) {
@@ -1081,6 +1134,12 @@ exe_stmt11:
     ret
 
 exe_stmt12:
+    LDTI TOKENIZER_INPUT
+    BRNEQ exe_stmt13
+    JSR exe_input_stmt
+    ret
+
+exe_stmt13:
     jsr showbytea
     ldai '='
     jsr uartout
@@ -1365,6 +1424,7 @@ tokl_peek: DB "PEEK ",0
 tokl_poke: DB "POKE ",0
 tokl_end: DB "END ",0
 tokl_call: DB "CALL ",0
+tokl_input: DB "INPUT ",0
 tokl_error: DB "LIST ERROR",0
 
 
@@ -1407,6 +1467,9 @@ baslist2:
     BR baslist_loop
 
 baslist3:
+;
+; output quotes around string
+;
     LDTI TOKENIZER_STRING
     BRNEQ baslist4
     incr r3
@@ -1414,11 +1477,16 @@ baslist3:
     jsr stringout
     ldai ' '
     jsr uartout
+
+;
+; does r7 point to end of string here?
+;
 baslist_string:
     ldavr r3
     brz baslist_stringend
     incr r3
     br baslist_string
+
 baslist_stringend:
     incr r3
     BR baslist_loop
@@ -1742,7 +1810,7 @@ baslist37:
     ldavr r3
     mvarh r7
     INCR R3
-    incr r3
+    incr r3         ;skip over line length
     incr r3
     jsr exe_itoa
     ;jsr showr7
@@ -1751,6 +1819,15 @@ baslist37:
     BR baslist_loop
 
 baslist38:
+    LDTI TOKENIZER_INPUT
+    BRNEQ baslist39
+    MVIW R7,tokl_input
+    JSR stringout
+    INCR R3
+    BR baslist_loop
+
+
+baslist39:
     MVIW R7,tokl_error
     JSR stringout
     JSR showaddr
@@ -1763,7 +1840,7 @@ baslist_done:
     ret
 
 ;
-; Basic Interpreter Parser
+; BASIC Interpreter Parser
 ;
 parse_keywords:
       DB "let",0,TOKENIZER_LET
@@ -1784,8 +1861,10 @@ parse_keywords:
       DB "end",0,TOKENIZER_END
       DB "list",0,TOKENIZER_LIST
       DB "run",0,TOKENIZER_RUN
+      DB "new",0,TOKENIZER_NEW
+      DB "exit",0,TOKENIZER_EXIT
+      DB "input",0,TOKENIZER_INPUT
       DB 0,0,TOKENIZER_ERROR
-
 
 ;
 ; int singlechar (void)
@@ -1837,8 +1916,13 @@ parsechar6:
     ret
 parsechar7:
     ldti '*'
-    brneq parsechar8
+    brneq parsechar7A
     ldai TOKENIZER_ASTR
+    ret
+parsechar7A:
+    ldti '/'
+    brneq parsechar8
+    ldai TOKENIZER_SLASH
     ret
 parsechar8:
     ldti '%'
@@ -1894,8 +1978,18 @@ parse_get_next_tok:
 ;
 parse_gnt1:
     ldavr r3
+    ldti '-'
+    brneq parse_gnt1_chkpos
+    incr r3
+    ldavr r3
+    jsr parse_isdigit
+    brz parse_gnt1_notneg
+    br parse_gnt1
+
+parse_gnt1_chkpos:
     jsr parse_isdigit
     brz parse_gnt2
+
 parse_gnt1loop:
     incr R3
     ldavr r3
@@ -1905,6 +1999,9 @@ parse_gnt1loop:
     ldai TOKENIZER_NUMBER
     popr r3
     ret
+
+parse_gnt1_notneg:
+    decr r3
 ;
 ; singlechar
 ;
@@ -2104,6 +2201,16 @@ parse_num:
     pushr r6
     mviw r6,0           ;accumlate val in r6
     LDR r3,bas_txtptr
+    MVIW R4,0000h
+    STR R4,bas_negflag
+    LDAVR R3
+    ldti '-'
+    brneq parse_num_pos
+    MVIW R4,0ffffh
+    STR R4,bas_negflag
+    incr r3
+
+parse_num_pos:
     jsr parse_num_char
 ;   jsr SHOWBYTEA
     mvarl r6
@@ -2125,13 +2232,20 @@ parse_num_loop:
     movrr r7,r6
 ;    jsr showr7
     br parse_num_loop
+
 parse_num_done:
     pop
     movrr r6,r7
+    ldr r4,bas_negflag
+    mvrla r4
+    brz parse_num_done1
+    jsr parse_neg
+parse_num_done1:
     popr r6
     popr r5
     popr r4
     popr r3
+
 ;    jsr showr7
     ret
 
@@ -2145,39 +2259,6 @@ parse_num_char1:
     ldavr r3
     SUBI '0'
     incr r3
-    RET
-
-parse_num_old:
-    pushr r3
-    LDR r3,bas_txtptr
-    JSR parse_getnibble
-    SHL
-    SHL
-    SHL
-    SHL
-    ANDI 0f0h
-    Push
-    JSR parse_getnibble
-    ANDI 0FH
-    MVAT
-    Pop
-    ORT
-    MVARH R7
-
-    JSR parse_getnibble
-    SHL
-    shl
-    shl
-    shl
-    ANDI 0f0h
-    push
-    JSR parse_getnibble
-    ANDI 0FH
-    MVAT
-    pop
-    ORT
-    MVARL R7
-    popr r3
     RET
 
 ;
@@ -2294,22 +2375,43 @@ parse_line:
     breq parse_code
     jsr parse_get_next_tok
 
+parse_line_list:
     ldti tokenizer_list
-    brneq parse_line_run
+    brneq parse_line_exit
     ldr r7,bas_tokenbuffer
     JSR  basic_list
+    ldai 0
+    RET
+
+parse_line_exit:
+    ldti TOKENIZER_EXIT
+    brneq parse_line_run
+    jsr basic_run
+    ldai 1
     RET
 
 parse_line_run:
     ldti TOKENIZER_RUN
-    brneq parse_line_error
+    brneq parse_line_new
     jsr basic_run
+    ldai 0
     RET
+
+parse_line_new:
+    ldti TOKENIZER_NEW
+    brneq parse_line_error
+    MVIW R7,bas_tok_buf_start
+    ldai TOKENIZER_EOF          ;write EOF to start of buffer
+    stavr r7
+    ldai 0
+    RET
+
 parse_line_error:
     mviw r7,parse_cmd_error
     jsr stringout
     mviw r7,CRLF
     jsr stringout
+    ldai 0
     ret
 
 parse_code:
@@ -2438,6 +2540,7 @@ parse_addline:
       mvrla r7
       ldti 6
       brneq parse_addline1
+      ldai 0
       ret
 
 parse_addline1:                 ;find insert location
@@ -2503,7 +2606,7 @@ parse_insertloop:
       incr r7
       ldti 024h ; sub in actual eol token here
       brneq parse_insertloop
-
+      ldai 0
       ret
 
 ;
@@ -2603,6 +2706,62 @@ basu_find_moveptr:            ; advance pointer to next line
     brnz basu_find_moveptr
     br basu_find_loop
 
+;
+; Divide r5 by r4 return answer in r7
+;
+; return result in r7
+;
+parse_div16:
+      pushr r6
+      movrr r5,r7
+      movrr r4,r6
+      mviw r4,0
+;
+; 16 bit SUB of r6 from r7, return result in r7
+;
+; r7=r6 00
+; r7>r6 01
+; r7<r6 ff
+;
+divloop:
+    jsr parse_compare
+    ldti 0FFH
+    breq div_done
+    pushr r6
+    jsr parse_sub16
+    popr r6
+    incr r4
+    br divloop
+div_done:
+    popr r6
+    MOVRR r4,r7
+    ret
+
+;
+; mod r5 by r4 return answer in r7
+;
+; return result in r7
+;
+parse_mod16:
+      pushr r6
+      movrr r5,r7
+      movrr r4,r6
+      mviw r4,0
+;
+; 16 bit SUB of r6 from r7, return result in r7
+;
+modloop:
+    jsr parse_compare
+    ldti 0FFH
+    breq mod_done
+    pushr r6
+    jsr parse_sub16
+    popr r6
+    incr r4
+    br modloop
+mod_done:
+    popr r6
+    ret
 
 ;
 ; Multiple numbers in R4 and R5
@@ -2710,6 +2869,19 @@ parse_sub16:
       mvarl r6
       incr r6
       br parse_add16
+
+;
+; convert positive in r7 to negative
+;
+parse_neg:
+      mvrha r7
+      inva
+      mvarh r7
+      mvrla r7
+      inva
+      mvarl r7
+      incr r7
+      ret
 
 ;
 ; 16 bit AND r6 and r7, return result in r7
@@ -2840,21 +3012,28 @@ basic_interprter:
         MVIW R7,basic_prompt
         JSR stringout
 
-        mviw r3,parse_input_line
+        mviw r7,parse_input_line
 
 parse_inputloop:
-        jsr uartin
-        stavr r3
-        incr r3
-        ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
-        brneq parse_inputloop
-        MVIW R7,CRLF
-        JSR STRINGOUT
+        jsr get_inputline
 
         mviw r7,parse_input_line
         JSR parse_line
 
-        BR basic_interprter
+        BRZ basic_interprter
+        RET
+
+        mviw r3,parse_input_line
+
+get_inputline:
+        jsr uartin
+        stavr r7
+        incr r7
+        ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+        brneq get_inputline
+        MVIW R7,CRLF
+        JSR STRINGOUT
+        RET
 
 ;
 ; STRINGS
@@ -2878,24 +3057,25 @@ basic_test:
 ;    DB  00h,04h,02h,00h,23h,04h,00h,00h,17h,04h,01h,00h,17h,02h,05h,00h
 ;    DB  24h,25h,3ch,00h,0ah,00h,06h,04h,02h,00h,24h,01h,00h,00h,00h,00h
 
-    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
-    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
-    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
-    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
-    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
-    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
-    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
-    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
-    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
-    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
-    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
-    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
-    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
-    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
+;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
+;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
+;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
+;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
+;    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
+;    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
+;    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
+;    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
+;    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
+;    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
+;    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
+;    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
+;    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
+;    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
 
 ;
 ; The End
 ;
+  ORG 0EFFFh
 ZZZZ:
   DB   0
