@@ -59,6 +59,8 @@ TOKENIZER_RUN: EQU 39
 TOKENIZER_NEW: EQU 40
 TOKENIZER_EXIT: EQU 41
 TOKENIZER_INPUT: EQU 42
+TOKENIZER_INP: EQU 43
+TOKENIZER_OUTP: EQU 44
 
 
 ;
@@ -957,6 +959,22 @@ exe_for_stmt:
     ret
 
 ;
+; INP
+;
+exe_inp_stmt:
+    ldai TOKENIZER_INP   ; eat INP
+    jsr exe_accept
+    ret
+
+;
+; outp
+;
+exe_outp_stmt:
+    ldai TOKENIZER_OUTP   ; eat OUTP
+    jsr exe_accept
+    ret
+
+;
 ; INPUT
 ;
 exe_input_stmt:
@@ -1060,9 +1078,9 @@ exe_end_stmt:
 exe_stmt:
     LDAVR R3
 
-    LDTI TOKENIZER_PRINT
+    LDTI TOKENIZER_VARIABLE
     BRNEQ exe_stmt1
-    JSR exe_print_stmt
+    JSR exe_let_stmt
     ret
 
 exe_stmt1:
@@ -1072,74 +1090,86 @@ exe_stmt1:
     ret
 
 exe_stmt2:
-    LDTI TOKENIZER_VARIABLE
-    BRNEQ exe_stmt3
-    JSR exe_let_stmt
-    ret
-
-exe_stmt3:
-    LDTI TOKENIZER_GOSUB
-    BRNEQ exe_stmt4
-    JSR exe_gosub_stmt
-    ret
-
-exe_stmt4:
-    LDTI TOKENIZER_RETURN
-    BRNEQ exe_stmt5
-    JSR exe_return_stmt
-    ret
-
-exe_stmt5:
-    LDTI TOKENIZER_FOR
-    BRNEQ exe_stmt6
-    JSR exe_for_stmt
-    ret
-
-exe_stmt6:
-    LDTI TOKENIZER_PEEK
-    BRNEQ exe_stmt7
-    JSR exe_peek_stmt
-    ret
-
-exe_stmt7:
-    LDTI TOKENIZER_POKE
-    BRNEQ exe_stmt8
-    JSR exe_poke_stmt
-    ret
-
-exe_stmt8:
     LDTI TOKENIZER_NEXT
-    BRNEQ exe_stmt9
+    BRNEQ exe_stmt3
     JSR exe_next_stmt
     ret
 
+exe_stmt3:
+    LDTI TOKENIZER_PRINT
+    BRNEQ exe_stmt4
+    JSR exe_print_stmt
+    ret
+
+exe_stmt4:
+    LDTI TOKENIZER_FOR
+    BRNEQ exe_stmt5
+    JSR exe_for_stmt
+    ret
+
+exe_stmt5:
+    LDTI TOKENIZER_GOTO
+    BRNEQ exe_stmt6
+    JSR exe_goto_stmt
+    ret
+
+exe_stmt6:
+    LDTI TOKENIZER_INPUT
+    BRNEQ exe_stmt7
+    JSR exe_input_stmt
+    ret
+
+exe_stmt7:
+    LDTI TOKENIZER_GOSUB
+    BRNEQ exe_stmt8
+    JSR exe_gosub_stmt
+    ret
+
+exe_stmt8:
+    LDTI TOKENIZER_RETURN
+    BRNEQ exe_stmt9
+    JSR exe_return_stmt
+    ret
+
 exe_stmt9:
-    LDTI TOKENIZER_END
+    LDTI TOKENIZER_PEEK
     BRNEQ exe_stmt10
-    JSR exe_end_stmt
+    JSR exe_peek_stmt
     ret
 
 exe_stmt10:
-    LDTI TOKENIZER_LET
+    LDTI TOKENIZER_POKE
     BRNEQ exe_stmt11
+    JSR exe_poke_stmt
+    ret
+
+exe_stmt11:
+    LDTI TOKENIZER_END
+    BRNEQ exe_stmt12
+    JSR exe_end_stmt
+    ret
+
+exe_stmt12:
+    LDTI TOKENIZER_LET
+    BRNEQ exe_stmt13
     LDAI TOKENIZER_LET
     JSR exe_accept
     JSR exe_let_stmt
     ret
 
-exe_stmt11:
-    LDTI TOKENIZER_GOTO
-    BRNEQ exe_stmt12
-    JSR exe_goto_stmt
-    ret
-
-exe_stmt12:
-    LDTI TOKENIZER_INPUT
-    BRNEQ exe_stmt13
-    JSR exe_input_stmt
-    ret
-
 exe_stmt13:
+    LDTI TOKENIZER_INP
+    BRNEQ exe_stmt14
+    JSR exe_inp_stmt
+    ret
+
+exe_stmt14:
+    LDTI TOKENIZER_OUTP
+    BRNEQ exe_stmt15
+    JSR exe_outp_stmt
+    ret
+
+exe_stmt15:
     jsr showbytea
     ldai '='
     jsr uartout
@@ -1150,6 +1180,8 @@ exe_stmt13:
 
 ;
 ; void line_statement (void)
+;
+; IS LINENUM NEEDED? CAN we skip over here?
 ;
 exe_line_stmt:
     LDAI TOKENIZER_LINENUM
@@ -1177,8 +1209,9 @@ exe_run_cont:
 ; int ubasic_finished()
 ;
 exe_finished:
-    MVIW R2,bas_run_ended
-    LDAVR R2
+;    MVIW R2,bas_run_ended
+;    LDAVR R2
+    LDA bas_run_ended
     LDTI 1
     BREQ exe_finished_yes
 
@@ -1425,6 +1458,8 @@ tokl_poke: DB "POKE ",0
 tokl_end: DB "END ",0
 tokl_call: DB "CALL ",0
 tokl_input: DB "INPUT ",0
+tokl_inp: DB "INP ",0
+tokl_outp: DB "OUTP ",0
 tokl_error: DB "LIST ERROR",0
 
 
@@ -1826,8 +1861,23 @@ baslist38:
     INCR R3
     BR baslist_loop
 
-
 baslist39:
+    LDTI TOKENIZER_INP
+    BRNEQ baslist40
+    MVIW R7,tokl_inp
+    JSR stringout
+    INCR R3
+    BR baslist_loop
+
+baslist40:
+    LDTI TOKENIZER_OUTP
+    BRNEQ baslist41
+    MVIW R7,tokl_outp
+    JSR stringout
+    INCR R3
+    BR baslist_loop
+
+baslist41:
     MVIW R7,tokl_error
     JSR stringout
     JSR showaddr
@@ -1864,6 +1914,8 @@ parse_keywords:
       DB "new",0,TOKENIZER_NEW
       DB "exit",0,TOKENIZER_EXIT
       DB "input",0,TOKENIZER_INPUT
+      DB "inp",0,TOKENIZER_INP
+      DB "outp",0,TOKENIZER_OUTP
       DB 0,0,TOKENIZER_ERROR
 
 ;
@@ -2587,15 +2639,22 @@ parse_addroom:               ; make room
       mviw r5,BAS_TOK_BUF_END
 ;      decr r5
 
+      ldr r6,bas_insertptr
 parse_roomloop:
       decr r7
       decr r5
       ldavr r7
       stavr r5
 
-      ldr r6,bas_insertptr
-      jsr PARSE_COMPARE
-      brnz parse_roomloop
+      mvrla r6
+      mvat
+      mvrla r7
+      brneq parse_roomloop
+
+      mvrha r6
+      mvat
+      mvrha r7
+      brneq parse_roomloop
 
       ldr r7,bas_insertptr
       MVIW R6,parse_token_buffer
