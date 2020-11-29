@@ -43,6 +43,7 @@ FILLMODE:     EQU 4
 ;
 monmode:        EQU 0f00h
 continue_addr:  EQU 0f02h
+interupt_cnt:   EQU 0f04h
 line_buffer:    EQU 0f80h    ; 128 bytes long max
 
 
@@ -62,15 +63,6 @@ eprom:
 ; Setup Stack
 ;
          MVIW R1,STACK
-
-; test
-;         brdev devon
-;
-;         off
-;         halt
-;devon:
-;        on
-;        halt
 
 ; SERIAL OUT SETUP
 ;
@@ -92,6 +84,8 @@ eprom:
 
           LDAI NOMODE
           STA MONMODE
+          ldai 05h
+          sta interupt_cnt
 ;
 ; Main
 ;
@@ -121,7 +115,9 @@ eprom:
 ;
 ; if INPUT high start the monitor
 ;
-         BRINH cmdloop
+        iaddr isrcode
+        INTE
+        BRINH cmdloop
 ;
 ; else run test/code below at completetion blink OUT LED jump to cmdloop
 ;
@@ -1743,27 +1739,27 @@ gettestpromopt: DB "Enter Test number:",0
 BASIC_PARSEMSG: DB 0ah,0dh,"Enter Line:",0
 ;
 helpmenu:
-DB "0      - Exit (emulator only)",0ah,0dh
-DB "H      - This help menu",0ah,0dh,0ah,0dh
-DB "B AAAA - Show 256 bytes of memory (16 byte aligned)",0ah,0dh
-DB "         CR display next 256 bytes",0ah,0dh
-DB "C      - Copy BASIC test program into interpreter buffer",0ah,0dh
-DB "D AAAA - Show 16 bytes of memory at (16 byte aligned)",0ah,0dh
-DB "         CR display next 16 bytes",0ah,0dh
-DB "E AAAA - show contents of location AAAA (Output AAAA:XX)",0ah,0dh
-DB "         if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
-DB "         if followed by CR display next location",0ah,0dh
-DB "F AAAA   Fill contents 256 bytes of memory at address AAAA with 0(16 byte aligned) with 0",0ah,0dh
-DB "         if followed by CR fill next 256 bytes",0ah,0dh
-DB "G AAAA - Jump to (and execute) starting at AAAA",0ah,0dh
-DB "         code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
-DB "I      - BASIC Interpreter",0ah,0dh 
-DB "L      - List BASIC program",0ah,0dh
-DB "P      - Enter program line to BASIC",0ah,0dh
-DB "R      - Show registers",0ah,0dh
-DB "T      - Test menu",0ah,0DH
-DB "Y      - run BASIC test code",0ah,0DH
-DB "Z      - Run program with Basic interpreter",0ah,0DH
+DB "0     - Exit (emulator only)",0ah,0dh
+DB "H     - This help menu",0ah,0dh,0ah,0dh
+DB "B AAAA- Show 256 bytes of memory (16 byte aligned)"
+DB " CR display next 256 bytes",0ah,0dh
+DB "C     - Copy BASIC test program into interpreter buffer",0ah,0dh
+DB "D AAAA- Show 16 bytes of memory at (16 byte aligned)"
+DB " CR display next 16 bytes",0ah,0dh
+DB "E AAAA- show contents of location AAAA (Output AAAA:XX)",0ah,0dh
+DB "        if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
+DB "        if followed by CR display next location",0ah,0dh
+DB "F AAAA  Fill contents 256 bytes of memory at address AAAA with 0(16 byte aligned) with 0",0ah,0dh
+DB "        if followed by CR fill next 256 bytes",0ah,0dh
+DB "G AAAA- Jump to (and execute) starting at AAAA",0ah,0dh
+DB "        code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
+DB "I     - BASIC",0ah,0dh
+DB "L     - List BASIC",0ah,0dh
+DB "P     - Enter program line to BASIC",0ah,0dh
+DB "R     - Show registers",0ah,0dh
+DB "T     - Test menu",0ah,0DH
+DB "Y     - run BASIC test code",0ah,0DH
+DB "Z     - Run program with Basic interpreter",0ah,0DH
 DB 0
 ;
 ; TEST HELP MESSAGES
@@ -1910,6 +1906,25 @@ endmenu: DB "-",0
 ;     XORI  055H
 ;     OUTA  P1
 ;      JSRUR R2
+
+;
+; Interupt sevice routine
+;
+  org 0ff90h
+isrcode:
+;  halt
+  push
+  pushr r7
+  lda interupt_cnt
+isrloop:
+  jsr BLINK
+  subi 1
+  brnz isrloop
+  popr r7
+  pop
+;  halt
+  iret
+
 
 ;
 ; BIOS ENTRY Points

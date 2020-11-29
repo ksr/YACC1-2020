@@ -91,12 +91,16 @@ extern "C" {
 #define        CSHR     0xE1
 #define        ADDIC    0xE2
 #define        ADDTC    0xE3
-#define        LDA      0xEC
-#define        STA      0xED
-#define        LDT      0xEE
-#define        STT      0xEF
-#define        LDR      0xf0
-#define        STR      0xf8
-
+#define        LDA      0xE4
+#define        STA      0xE5
+#define        LDT      0xE6
+#define        STT      0xE7
+#define        STR      0xE8
+#define        LDR      0xF0
+#define        INTE     0XFB
+#define        INTD     0XFC
+#define        IRET     0XFD
+#define        IADDR    0xFE
+#define        INT      0xFF
 #endif /* OPCODES_H */
 

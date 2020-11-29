@@ -3,7 +3,7 @@ by Michael H. Riley
 
 yacc1 -> Native
 2 Classes read.
-88 Patterns read.
+92 Patterns read.
     1 0000:             ;
     2 0000:             ; BIOS Entry Points
     3 0000:             ;
@@ -175,9 +175,9 @@ yacc1 -> Native
   169 e020: 1f 10 00          MVIW R7,bas_tok_buf_start
   170 e023: 0e 01             ldai TOKENIZER_EOF          ;write EOF to start of buffer
   171 e025: 4f                stavr r7
-  172 e026: ff 02 0c          STR R7,bas_tokenbuffer
+  172 e026: ef 02 0c          STR R7,bas_tokenbuffer
   173 e029: 1f 20 00          mviw r7,bas_tok_buf_end
-  174 e02c: ff 02 0e          str r7,bas_bufferendhi
+  174 e02c: ef 02 0e          str r7,bas_bufferendhi
   175 e02f: 05                Ret
   176 e030:             
   177 e030:             ;
@@ -1015,7 +1015,7 @@ yacc1 -> Native
   988 e45e: 04 ef 3f        jsr get_inputline
   989 e461:             
   990 e461: 1f 03 00        mviw r7,parse_input_line
-  991 e464: ff 02 02        str r7,bas_txtptr
+  991 e464: ef 02 02        str r7,bas_txtptr
   992 e467:             
   993 e467:             
   994 e467: 04 eb b0        jsr parse_num
@@ -1238,7 +1238,7 @@ yacc1 -> Native
  1211 e57f:             exe_finished:
  1212 e57f:             ;    MVIW R2,bas_run_ended
  1213 e57f:             ;    LDAVR R2
- 1214 e57f: ec 02 00        LDA bas_run_ended
+ 1214 e57f: e4 02 00        LDA bas_run_ended
  1215 e582: 0d 01           LDTI 1
  1216 e584: a8 e5 90        BREQ exe_finished_yes
  1217 e587:             
@@ -2116,7 +2116,7 @@ yacc1 -> Native
  2047 eacd: 43              ldavr r3
  2048 eace: 04 ee f1        jsr parse_isdigit
  2049 ead1: a2 ea cc        brnz parse_gnt1loop
- 2050 ead4: fb 02 04        STR r3,bas_nxtptr
+ 2050 ead4: eb 02 04        STR r3,bas_nxtptr
  2051 ead7: 0e 02           ldai TOKENIZER_NUMBER
  2052 ead9: 08 30           popr r3
  2053 eadb: 05              ret
@@ -2132,7 +2132,7 @@ yacc1 -> Native
  2063 eadd: 04 ea 35       jsr parse_singlechar
  2064 eae0: a1 ea ea       BRZ parse_gnt3
  2065 eae3: 53             incr r3
- 2066 eae4: fb 02 04       STR r3,bas_nxtptr
+ 2066 eae4: eb 02 04       STR r3,bas_nxtptr
  2067 eae7: 08 30          popr r3
  2068 eae9: 05             ret
  2069 eaea:             ;
@@ -2148,7 +2148,7 @@ yacc1 -> Native
  2079 eaf2: 0d 22           ldti '"'
  2080 eaf4: aa ea f0        brneq parse_gnt3loop
  2081 eaf7: 53              incr r3
- 2082 eaf8: fb 02 04        STR r3,bas_nxtptr
+ 2082 eaf8: eb 02 04        STR r3,bas_nxtptr
  2083 eafb: 0e 03           ldai TOKENIZER_STRING
  2084 eafd: 08 30           popr r3
  2085 eaff: 05              ret
@@ -2183,7 +2183,7 @@ yacc1 -> Native
  2114 eb20: a0 eb 05        br top
  2115 eb23:             
  2116 eb23:             found:
- 2117 eb23: fb 02 04        str r3,bas_nxtptr
+ 2117 eb23: eb 02 04        str r3,bas_nxtptr
  2118 eb26: 54              incr r4
  2119 eb27: 44              ldavr r4
  2120 eb28: 08 40           popr r4
@@ -2201,7 +2201,7 @@ yacc1 -> Native
  2132 eb35: 0d 5a           ldti 'Z'
  2133 eb37: a9 eb 43        BRGT parse_gnt_error
  2134 eb3a: 53              INCR r3
- 2135 eb3b: fb 02 04        str r3,bas_nxtptr
+ 2135 eb3b: eb 02 04        str r3,bas_nxtptr
  2136 eb3e: 0e 04           LDAI tokenizer_variable
  2137 eb40: 08 30           popr r3
  2138 eb42: 05              RET
@@ -2233,13 +2233,13 @@ yacc1 -> Native
  2164 eb48:             parse_init:
  2165 eb48:             
  2166 eb48: 07 03           pushr r3
- 2167 eb4a: ff 02 02        STR R7,bas_txtptr
+ 2167 eb4a: ef 02 02        STR R7,bas_txtptr
  2168 eb4d: 1b 04 00        MVIW r3,parse_token_buffer
- 2169 eb50: fb 02 06        STR  R3,bas_tokptr
+ 2169 eb50: eb 02 06        STR  R3,bas_tokptr
  2170 eb53: 1b 00 00        mviw r3,0
- 2171 eb56: fb 02 08        str r3,bas_tokcounter
+ 2171 eb56: eb 02 08        str r3,bas_tokcounter
  2172 eb59: 04 ea c0        jsr parse_get_next_tok
- 2173 eb5c: ed 02 0a        sta bas_currenttoken
+ 2173 eb5c: e5 02 0a        sta bas_currenttoken
  2174 eb5f: 08 30           popr r3
  2175 eb61: 05              ret
  2176 eb62:             
@@ -2247,7 +2247,7 @@ yacc1 -> Native
  2178 eb62:             ; int tokenizer_token(void)
  2179 eb62:             :
  2180 eb62:             parse_token:
- 2181 eb62: ec 02 0a        lda bas_currenttoken
+ 2181 eb62: e4 02 0a        lda bas_currenttoken
  2182 eb65: 05              ret
  2183 eb66:             
  2184 eb66:             ;
@@ -2261,7 +2261,7 @@ yacc1 -> Native
  2192 eb6d:             parse_next1:
  2193 eb6d: 07 03           pushr r3
  2194 eb6f: f3 02 04        ldr r3,bas_nxtptr
- 2195 eb72: fb 02 02        str r3,bas_txtptr
+ 2195 eb72: eb 02 02        str r3,bas_txtptr
  2196 eb75:             
  2197 eb75:             parse_next1loop:
  2198 eb75: 43              ldavr r3
@@ -2272,9 +2272,9 @@ yacc1 -> Native
  2203 eb7f:             
  2204 eb7f:             
  2205 eb7f:             parse_next2:
- 2206 eb7f: fb 02 02        str r3,bas_txtptr
+ 2206 eb7f: eb 02 02        str r3,bas_txtptr
  2207 eb82: 04 ea c0        jsr parse_get_next_tok
- 2208 eb85: ed 02 0a        sta bas_currenttoken
+ 2208 eb85: e5 02 0a        sta bas_currenttoken
  2209 eb88:             
  2210 eb88: 0d 11           ldti TOKENIZER_REM
  2211 eb8a: a8 eb 90        breq parse_next3
@@ -2301,7 +2301,7 @@ yacc1 -> Native
  2232 eba6: 53              incr r3
  2233 eba7:             
  2234 eba7:             parse_nextdone2:
- 2235 eba7: fb 02 04        str r3,bas_nxtptr
+ 2235 eba7: eb 02 04        str r3,bas_nxtptr
  2236 ebaa: 04 eb 66        jsr parse_next
  2237 ebad: 08 30           popr r3
  2238 ebaf: 05              ret
@@ -2439,7 +2439,7 @@ yacc1 -> Native
  2370 ec29:             ;    breq parse_finished_yes
  2371 ec29: 0d 01           ldti TOKENIZER_EOF
  2372 ec2b: a8 ec 3b        breq parse_finished_yes
- 2373 ec2e: ec 02 0a        lda bas_currenttoken
+ 2373 ec2e: e4 02 0a        lda bas_currenttoken
  2374 ec31: 0d 01           ldti TOKENIZER_EOF
  2375 ec33: a8 ec 3b        breq parse_finished_yes
  2376 ec36: 08 30           popr r3
@@ -2485,7 +2485,7 @@ yacc1 -> Native
  2416 ec4f: 04 eb 48        JSR PARSE_INIT
  2417 ec52:             
  2418 ec52: 1b 00 06        MVIW R3,6              ;all lines have a 6 bytes including EOL token
- 2419 ec55: fb 02 08        str r3,bas_tokcounter
+ 2419 ec55: eb 02 08        str r3,bas_tokcounter
  2420 ec58: 1b 04 00        MVIW R3,parse_token_buffer
  2421 ec5b:             
  2422 ec5b: 07 03           pushr r3
@@ -2542,7 +2542,7 @@ yacc1 -> Native
  2473 ecb2: 53              INCR R3
  2474 ecb3:             
  2475 ecb3: 04 eb b0        JSR parse_num           ;store line number
- 2476 ecb6: ff 02 10        str r7,bas_newlinenum
+ 2476 ecb6: ef 02 10        str r7,bas_newlinenum
  2477 ecb9: 27              mvrla r7
  2478 ecba: 4b              stavr r3
  2479 ecbb: 53              incr r3
@@ -2563,7 +2563,7 @@ yacc1 -> Native
  2494 eccd: 53              INCR R3
  2495 ecce: f5 02 08        ldr r5,bas_tokcounter
  2496 ecd1: 55              incr r5
- 2497 ecd2: fd 02 08        str r5,bas_tokcounter
+ 2497 ecd2: ed 02 08        str r5,bas_tokcounter
  2498 ecd5:             
  2499 ecd5: 0d 02           ldti TOKENIZER_NUMBER
  2500 ecd7: aa ec ee        BRNEQ parse_line1
@@ -2577,7 +2577,7 @@ yacc1 -> Native
  2508 ece3: f5 02 08        ldr r5,bas_tokcounter
  2509 ece6: 55              incr r5
  2510 ece7: 55              incr r5
- 2511 ece8: fd 02 08        str r5,bas_tokcounter
+ 2511 ece8: ed 02 08        str r5,bas_tokcounter
  2512 eceb: a0 ec c1        BR parse_line_loop
  2513 ecee:             
  2514 ecee:             parse_line1:
@@ -2595,7 +2595,7 @@ yacc1 -> Native
  2526 ecff: 54              incr r4
  2527 ed00: f5 02 08        ldr r5,bas_tokcounter
  2528 ed03: 55              incr r5
- 2529 ed04: fd 02 08        str r5,bas_tokcounter
+ 2529 ed04: ed 02 08        str r5,bas_tokcounter
  2530 ed07: a0 ec f7        BR parse_line1loop
  2531 ed0a:             parse_line1done:
  2532 ed0a: 54              incr r4                   ;skip over closing "
@@ -2604,9 +2604,9 @@ yacc1 -> Native
  2535 ed0e: 53              incr r3
  2536 ed0f: f5 02 08        ldr r5,bas_tokcounter
  2537 ed12: 55              incr r5
- 2538 ed13: fd 02 08        str r5,bas_tokcounter
- 2539 ed16: fb 02 06        str r3,BAS_TOKPTR
- 2540 ed19: fc 02 02        str r4,bas_txtptr
+ 2538 ed13: ed 02 08        str r5,bas_tokcounter
+ 2539 ed16: eb 02 06        str r3,BAS_TOKPTR
+ 2540 ed19: ec 02 02        str r4,bas_txtptr
  2541 ed1c: a0 ec c1        BR parse_line_loop
  2542 ed1f:             
  2543 ed1f:             parse_line2:
@@ -2622,7 +2622,7 @@ yacc1 -> Native
  2553 ed2d: f5 02 08        ldr r5,bas_tokcounter
  2554 ed30: 55              incr r5
  2555 ed31: 55              incr r5
- 2556 ed32: fd 02 08        str r5,bas_tokcounter
+ 2556 ed32: ed 02 08        str r5,bas_tokcounter
  2557 ed35: a0 ec c1        BR parse_line_loop
  2558 ed38:             
  2559 ed38:             parse_line_done:
@@ -2638,7 +2638,7 @@ yacc1 -> Native
  2569 ed40: 53              incr r3
  2570 ed41: 53              incr r3
  2571 ed42: f7 02 08        ldr r7,bas_tokcounter
- 2572 ed45: ff 02 12        str r7,bas_newlinelen
+ 2572 ed45: ef 02 12        str r7,bas_newlinelen
  2573 ed48: 27              mvrla r7
  2574 ed49: 4b              stavr r3
  2575 ed4a: 53              incr r3
@@ -2670,7 +2670,7 @@ yacc1 -> Native
  2601 ed62: f3 02 0c          ldr r3,bas_tokenBuffer
  2602 ed65:             
  2603 ed65:             parse_addlineloop:
- 2604 ed65: fb 02 14          str r3,bas_insertptr
+ 2604 ed65: eb 02 14          str r3,bas_insertptr
  2605 ed68: 43                ldavr r3
  2606 ed69: 0d 01             ldti TOKENIZER_EOF
  2607 ed6b: a8 ed 8e          BREQ parse_addroom
@@ -2771,7 +2771,7 @@ yacc1 -> Native
  2702 eddf: 57              incr r7
  2703 ede0: 2f              MVRHA r7
  2704 ede1:             
- 2705 ede1: ee 02 0e        ldt  bas_bufferendhi
+ 2705 ede1: e6 02 0e        ldt  bas_bufferendhi
  2706 ede4:             
  2707 ede4: aa ed dc        brneq parse_removeloop
  2708 ede7:             ;

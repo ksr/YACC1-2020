@@ -137,17 +137,25 @@ E2 \1
 ADDTC
 E3
 LDA \W
-EC  hi(1) lo(1)
+E4  hi(1) lo(1)
 STA \W
-ED  hi(1) lo(1)
+E5  hi(1) lo(1)
 LDT \W
-EE  hi(1) lo(1)
+E6  hi(1) lo(1)
 STT \W
-EF  hi(1) lo(1)
+E7  hi(1) lo(1)
+STR \{regs},\W
+E8|1  hi(2) lo(2)
 LDR \{regs},\W
 F0|1  hi(2) lo(2)
-STR \{regs},\W
-F8|1  hi(2) lo(2)
+INTE
+FB
+INTD
+FC
+IRET
+FD
+IADDR \W
+FE|1  hi(1) lo(1)
 ORG     \W
 \O1
 END     \W

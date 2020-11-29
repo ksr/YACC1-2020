@@ -150,7 +150,7 @@ void branchInstructions() {
     branch(PC, ALUCS, NOINVERT, SOURCE_NONE);
     endInstruction();
     showCntlMemory(BRC);
-    
+
     startInstruction(BRDEV);
     loadNextInstruction();
     initCurrentLine();
@@ -169,39 +169,39 @@ void branchInstructions() {
         showCntlMemory(BRVR | reg);
     }
 
-/* not implemented 
-    for (int reg = 0; reg < 8; reg++) {
-        startInstruction(BRUR | reg);
-        loadNextInstruction();
-        initCurrentLine();
+    /* not implemented 
+        for (int reg = 0; reg < 8; reg++) {
+            startInstruction(BRUR | reg);
+            loadNextInstruction();
+            initCurrentLine();
 
-        setRdId(reg);
-        setSignal("-REG-FUNC-RD");
-        writeCurrentLine();
+            setRdId(reg);
+            setSignal("-REG-FUNC-RD");
+            writeCurrentLine();
 
-        setSignal("-REG-RD-HI"); //load branch register
-        writeCurrentLine();
-        setSignal("BRANCH-LD-HI");
-        writeCurrentLine();
-        clearSignal("BRANCH-LD-HI");
-        writeCurrentLine();
-        clearSignal("-REG-RD-HI");
-        writeCurrentLine();
+            setSignal("-REG-RD-HI"); //load branch register
+            writeCurrentLine();
+            setSignal("BRANCH-LD-HI");
+            writeCurrentLine();
+            clearSignal("BRANCH-LD-HI");
+            writeCurrentLine();
+            clearSignal("-REG-RD-HI");
+            writeCurrentLine();
 
-        setSignal("-REG-RD-LO"); //load branch register
-        writeCurrentLine();
-        setSignal("BRANCH-LD-LO");
-        writeCurrentLine();
-        clearSignal("BRANCH-LD-LO");
-        writeCurrentLine();
-        clearSignal("-REG-RD-LO"); //load branch register 
-        writeCurrentLine();
+            setSignal("-REG-RD-LO"); //load branch register
+            writeCurrentLine();
+            setSignal("BRANCH-LD-LO");
+            writeCurrentLine();
+            clearSignal("BRANCH-LD-LO");
+            writeCurrentLine();
+            clearSignal("-REG-RD-LO"); //load branch register 
+            writeCurrentLine();
 
-        endInstruction();
-        showCntlMemory(BRUR | reg);
+            endInstruction();
+            showCntlMemory(BRUR | reg);
   
-    }
-*/
+        }
+     */
 
     startInstruction(BRLT);
     loadNextInstruction();
@@ -620,7 +620,7 @@ void branchInstructions() {
     clearSignal("-MEM-RD");
     //writeCurrentLine();
     incrementReg(PC);
-    
+
     setSignal("-2-BYTE-OPERAND-SEL");
     setSignal("-REG-FUNC-RD");
     setSignal("-HL-SWAP");
@@ -634,7 +634,7 @@ void branchInstructions() {
     writeCurrentLine();
     putBustoRegMem(SP, "-TMP-REG-RD1");
     decrementReg(SP);
-    
+
     clearSignal("-HL-SWAP");
     setSignal("-2-BYTE-OPERAND-SEL");
     setSignal("-REG-FUNC-RD");
@@ -648,7 +648,7 @@ void branchInstructions() {
     writeCurrentLine();
     putBustoRegMem(SP, "-TMP-REG-RD1");
     decrementReg(SP);
-    
+
     endInstruction();
     showCntlMemory(PUSHR);
 
@@ -671,7 +671,7 @@ void branchInstructions() {
     setSignal("-2-BYTE-OPERAND-SEL");
     writeCurrentLine();
     setSignal("-REG-FUNC-LD");
-    
+
     writeCurrentLine();
     setSignal("REG-LD-LO");
     writeCurrentLine();
@@ -681,7 +681,7 @@ void branchInstructions() {
     writeCurrentLine();
     clearSignal("-2-BYTE-OPERAND-SEL");
     writeCurrentLine();
-    
+
     incrementReg(SP);
     setSignal("-2-BYTE-OPERAND-SEL");
     writeCurrentLine();
@@ -698,4 +698,172 @@ void branchInstructions() {
 
     endInstruction();
     showCntlMemory(POPR);
+
+    //
+    // IADDR - Set interrupt vector
+    //
+    startInstruction(IADDR);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    writeCurrentLine();
+    setSignal("INT-LD-HI");
+    writeCurrentLine();
+    clearSignal("INT-LD-HI"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine();
+
+    incrementReg(PC);
+    //writeCurrentLine(); increment ends in writeline step 2 cleanup
+
+    putMemAtRegOnBus(PC);
+
+    writeCurrentLine();
+    setSignal("INT-LD-LO");
+    writeCurrentLine();
+    clearSignal("INT-LD-LO"); // if branch reg +ve edge triggered next write not required
+    //writeCurrentLine();  step 4 //reg up is rising edge??? are you sure
+    writeCurrentLine();
+    incrementReg(PC);
+    // writeCurrentLine(); increment ends in writeline step 2 cleanup
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(IADDR);
+
+
+    //
+    // Interrupt handler 
+    //
+    startInstruction(INT);
+    //putMemAtRegOnBus(PC);
+    //setSignal("LD-INS-REG"); // rising or falling?
+    //writeCurrentLine();
+    //clearSignal("LD-INS-REG");
+    //writeCurrentLine(); // -reg-up is rising edge
+    //incrementReg(PC);
+    //clearSignal("-MEM-RD"); //STEP 9 DO NOT LEAVE DATA BUS DRIVEN WITH INSTRUCTION FETCHED FROM MEM  
+    
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("INT-START");
+    writeCurrentLine();
+    clearSignal("INT-START");
+    writeCurrentLine();
+    decrementReg(PC);   // 
+    setSignal("-REG-FUNC-RD");
+    setRdId(PC);
+    //writeCurrentLine(); //???
+    setSignal("-HL-SWAP");
+    putBustoRegMem(SP, "-REG-RD-HI");
+
+    decrementReg(SP);
+
+    setSignal("-REG-FUNC-RD");
+    setRdId(PC);
+    clearSignal("-HL-SWAP");
+    putBustoRegMem(SP, "-REG-RD-LO");
+
+    decrementReg(SP);
+
+    setSignal("-INT-JMP"); //output isr address register
+    clearSignal("-REG-FUNC-RD");
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+    writeCurrentLine();
+
+    clearSignal("BR-TEST"); //ken added oct 10, probably needed
+    writeCurrentLine();
+
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    writeCurrentLine();
+
+    endInstruction();
+    showCntlMemory(INT);
+
+    //
+    //IRET - return from interrupt service routine
+    //
+    startInstruction(IRET); //try as one instruction
+    loadNextInstruction();
+    initCurrentLine();
+
+    incrementReg(SP);
+    putMemAtRegOnBus(SP);
+    setSignal("BRANCH-LD-LO");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-LO"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //reg up is rising edge??? are you sure
+
+    incrementReg(SP);
+    putMemAtRegOnBus(SP);
+    //setSignal("-HL-SWAP");
+    writeCurrentLine();
+    setSignal("BRANCH-LD-HI");
+    writeCurrentLine();
+    clearSignal("BRANCH-LD-HI"); // if branch reg +ve edge triggered next write not required
+    writeCurrentLine(); //maybe not needed
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+
+    setSignal("-BRANCH-RD-LO"); //output branch register
+    setSignal("-BRANCH-RD-HI");
+    setSignal("-ALU-FUNC");
+    setAlu(ALUBR);
+    setSignal("BR-TEST");
+    setLdId(PC);
+    setSignal("-REG-FUNC-LD");
+    writeCurrentLine();
+    setSignal("REG-LD-LO"); //load branch register
+    setSignal("REG-LD-HI"); //FIX on new card ???
+    writeCurrentLine();
+
+    clearSignal("BR-TEST"); //ken added oct 10, this is why branch after return fails
+
+    clearSignal("REG-LD-LO");
+    clearSignal("REG-LD-HI"); //Fix on new card  ???
+    writeCurrentLine();
+    setSignal("INT-EN");
+    writeCurrentLine();
+    clearSignal("INT-EN");
+    writeCurrentLine();
+    endInstruction();
+    showCntlMemory(IRET);
+
+    //
+    // enable interrupts
+    //
+    startInstruction(INTE); //try as one instruction
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("INT-EN");
+    writeCurrentLine();
+    clearSignal("INT-EN");
+    writeCurrentLine();
+    endInstruction();
+    showCntlMemory(INTE);
+ 
+    //
+    // Disable interrupts 
+    //
+    startInstruction(INTD); //try as one instruction
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("INT-START");
+    writeCurrentLine();
+    clearSignal("INT-START");
+    writeCurrentLine();
+    endInstruction();
+    showCntlMemory(INTD);
 }
