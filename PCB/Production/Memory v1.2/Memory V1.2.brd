@@ -2259,16 +2259,16 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="140.97" y1="80.01" x2="140.97" y2="80.645" width="0.1524" layer="1"/>
 <via x="14.605" y="87.63" extent="1-16" drill="0.254"/>
 </signal>
-<signal name="-ADDR-REG-ID0">
+<signal name="ADDR-REG-ID0">
 <contactref element="X1" pad="C3"/>
 </signal>
-<signal name="-ADDR-REG-ID1">
+<signal name="ADDR-REG-ID1">
 <contactref element="X1" pad="C4"/>
 </signal>
-<signal name="-ADDR-REG-ID2">
+<signal name="ADDR-REG-ID2">
 <contactref element="X1" pad="C5"/>
 </signal>
-<signal name="-ADDR-REG-ID3">
+<signal name="ADDR-REG-ID3">
 <contactref element="X1" pad="C6"/>
 </signal>
 <signal name="IO-ADDR0">
@@ -2374,10 +2374,10 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="11.43" y1="86.36" x2="11.43" y2="102.87" width="0.1524" layer="1"/>
 <wire x1="10.16" y1="86.36" x2="11.43" y2="86.36" width="0.1524" layer="1"/>
 </signal>
-<signal name="-OUT">
+<signal name="OUT">
 <contactref element="X1" pad="C27"/>
 </signal>
-<signal name="-IN">
+<signal name="IN">
 <contactref element="X1" pad="C26"/>
 </signal>
 <signal name="BR-COND">

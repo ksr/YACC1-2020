@@ -9045,7 +9045,7 @@ Metric Code Size 5664</description>
 </instance>
 </instances>
 <busses>
-<bus name="MAINBUS:-AC-LD,-AC-LD-INV,-AC-RD,ADDR[0..15],-ADDR-REG-LD[0..1],-ADDR-REG-RD[0..1],ALU[0..3],-ALU-FUNC,BR-COND,-BUS-EN,DATA[0..15],-HL-SWAP,-IN,-INT,-INTA,IO-ADDR[0..3],-IO-ADDR-LD,-IO-RD,-IO-WR,-MEM-RD,-MEM-WR,-OUT,-REG-DN,-REG-FUNC-LD,-REG-FUNC-RD,-REG-LD-HI,REG-LD-ID[0..3],-REG-LD-LO,-REG-RD-HI,REG-RD-ID[0..3],-REG-RD-LO,-REG-UP,-RESET,-RUN,-SR-LD,-TMP-REG-LD[0..1],-TMP-REG-RD[0..1],-VMA">
+<bus name="MAINBUS:-AC-LD,-AC-LD-INV,-AC-RD,ADDR[0..15],ADDR-REG-ID0,ADDR-REG-ID1,ADDR-REG-ID2,ADDR-REG-ID3,ALU[0..3],-ALU-FUNC,BR-COND,-BUS-EN,DATA[0..15],-HL-SWAP,IN,-INT,-INTA,IO-ADDR[0..3],-IO-ADDR-LD,-IO-RD,-IO-WR,-MEM-RD,-MEM-WR,OUT,-REG-DN,-REG-FUNC-LD,-REG-FUNC-RD,-REG-LD-HI,REG-LD-ID[0..3],-REG-LD-LO,-REG-RD-HI,REG-RD-ID[0..3],-REG-RD-LO,-REG-UP,-RESET,-RUN,-SR-LD,-TMP-REG-LD[0..1],-TMP-REG-RD[0..1],-VMA">
 <segment>
 <wire x1="-33.02" y1="-1.27" x2="182.88" y2="-1.27" width="0.762" layer="92"/>
 </segment>
@@ -9360,28 +9360,28 @@ Metric Code Size 5664</description>
 <label x="106.68" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-ID0" class="0">
+<net name="ADDR-REG-ID0" class="0">
 <segment>
 <pinref part="X1" gate="-C3" pin="B"/>
 <wire x1="114.3" y1="-1.27" x2="114.3" y2="29.21" width="0.1524" layer="91"/>
 <label x="114.3" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-ID1" class="0">
+<net name="ADDR-REG-ID1" class="0">
 <segment>
 <pinref part="X1" gate="-C4" pin="B"/>
 <wire x1="116.84" y1="-1.27" x2="116.84" y2="29.21" width="0.1524" layer="91"/>
 <label x="116.84" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-ID2" class="0">
+<net name="ADDR-REG-ID2" class="0">
 <segment>
 <pinref part="X1" gate="-C5" pin="B"/>
 <wire x1="119.38" y1="-1.27" x2="119.38" y2="29.21" width="0.1524" layer="91"/>
 <label x="119.38" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-ID3" class="0">
+<net name="ADDR-REG-ID3" class="0">
 <segment>
 <pinref part="X1" gate="-C6" pin="B"/>
 <wire x1="121.92" y1="-1.27" x2="121.92" y2="29.21" width="0.1524" layer="91"/>
@@ -9500,14 +9500,14 @@ Metric Code Size 5664</description>
 <label x="177.8" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-OUT" class="0">
+<net name="OUT" class="0">
 <segment>
 <pinref part="X1" gate="-C27" pin="B"/>
 <wire x1="175.26" y1="-1.27" x2="175.26" y2="29.21" width="0.1524" layer="91"/>
 <label x="175.26" y="1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-IN" class="0">
+<net name="IN" class="0">
 <segment>
 <pinref part="X1" gate="-C26" pin="B"/>
 <wire x1="172.72" y1="-1.27" x2="172.72" y2="29.21" width="0.1524" layer="91"/>
