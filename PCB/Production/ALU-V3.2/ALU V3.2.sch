@@ -13604,28 +13604,28 @@ Source: www.kingbright.com</description>
 <label x="106.68" y="-1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-RD0" class="0">
+<net name="ADDR-REG-ID0" class="0">
 <segment>
 <pinref part="X1" gate="-C3" pin="B"/>
 <wire x1="114.3" y1="-3.81" x2="114.3" y2="26.67" width="0.1524" layer="91"/>
 <label x="114.3" y="-1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-LD0" class="0">
+<net name="ADDR-REG-ID1" class="0">
 <segment>
 <pinref part="X1" gate="-C4" pin="B"/>
 <wire x1="116.84" y1="-3.81" x2="116.84" y2="26.67" width="0.1524" layer="91"/>
 <label x="116.84" y="-1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-RD1" class="0">
+<net name="ADDR-REG-ID2" class="0">
 <segment>
 <pinref part="X1" gate="-C5" pin="B"/>
 <wire x1="119.38" y1="-3.81" x2="119.38" y2="26.67" width="0.1524" layer="91"/>
 <label x="119.38" y="-1.27" size="1.778" layer="95" rot="R90"/>
 </segment>
 </net>
-<net name="-ADDR-REG-LD1" class="0">
+<net name="ADDR-REG-ID3" class="0">
 <segment>
 <pinref part="X1" gate="-C6" pin="B"/>
 <wire x1="121.92" y1="-3.81" x2="121.92" y2="26.67" width="0.1524" layer="91"/>
