@@ -3967,16 +3967,16 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <signal name="-TMP-REG-RD1">
 <contactref element="X1" pad="B29"/>
 </signal>
-<signal name="-ADDR-REG-RD0">
+<signal name="ADDR-REG-ID0">
 <contactref element="X1" pad="C3"/>
 </signal>
-<signal name="-ADDR-REG-LD0">
+<signal name="ADDR-REG-ID1">
 <contactref element="X1" pad="C4"/>
 </signal>
-<signal name="-ADDR-REG-RD1">
+<signal name="ADDR-REG-ID2">
 <contactref element="X1" pad="C5"/>
 </signal>
-<signal name="-ADDR-REG-LD1">
+<signal name="ADDR-REG-ID3">
 <contactref element="X1" pad="C6"/>
 </signal>
 <signal name="IO-ADDR0">
