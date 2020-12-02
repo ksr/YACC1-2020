@@ -1922,7 +1922,7 @@ isrloop:
   brnz isrloop
   popr r7
   pop
-;  halt
+;   halt
   iret
 
 

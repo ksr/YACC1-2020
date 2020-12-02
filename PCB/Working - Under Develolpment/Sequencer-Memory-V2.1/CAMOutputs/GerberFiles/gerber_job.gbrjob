@@ -1,7 +1,7 @@
 {
     "Header": {
         "Comment": "All values are metric (mm)",
-        "CreationDate": "2020-11-23T13:22:23Z",
+        "CreationDate": "2020-12-02T01:51:59Z",
         "GenerationSoftware": {
             "Application": "EAGLE",
             "Vendor": "Autodesk",
@@ -13,12 +13,12 @@
         "BoardThickness": 1.640844,
         "LayerNumber": 4,
         "Name": {
-            "ProjectId": "ALU V3.2"
+            "ProjectId": "Sequencer-Memory-V2.1"
         },
         "Owner": "Ken Rother <ken@krother.com>",
         "Size": {
-            "X": 177.78,
-            "Y": 113.97
+            "X": 113.97,
+            "Y": 152.38
         }
     }
 }
