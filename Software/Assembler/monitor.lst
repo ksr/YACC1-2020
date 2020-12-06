@@ -2311,7 +2311,7 @@ yacc1 -> Native
  1922 ff9b: a2 ff 96      brnz isrloop
  1923 ff9e: 08 70         popr r7
  1924 ffa0: 0a            pop
- 1925 ffa1:             ;  halt
+ 1925 ffa1:             ; halt
  1926 ffa1: fd            iret
  1927 ffa2:             
  1928 ffa2:             
