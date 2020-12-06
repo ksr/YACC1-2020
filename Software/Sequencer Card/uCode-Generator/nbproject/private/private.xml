@@ -7,13 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/main.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/controlLine.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/register.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/accumulator.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/branch.c</file>
-            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/yaccsignal.h</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/memory.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/controlLine.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/branch.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/accumulator.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/main.c</file>
+            <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/register.c</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/code.h</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/CodeGen.h</file>
             <file>file:/Users/kennethrother/Documents/YACC1-2020/Software/Sequencer%20Card/uCode-Generator/io.c</file>

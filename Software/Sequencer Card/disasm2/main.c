@@ -17,14 +17,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "yaccsignal.h"
+#include "../yaccsignaldefine.h"
+#include "../yaccsignaldata.h"
 //#include "code.h"
 
 #define PORTS_PER_CHIP 2
 #define PINS_PER_PORT 8
 
 #define BYTES_PER_LINE 8
-#define LINES_PER_INSTRUCTION 32
+#define LINES_PER_INSTRUCTION 64
 #define INSTRUCTION_SIZE BYTES_PER_LINE * LINES_PER_INSTRUCTION
 #define INSTRUCTIONS 256
 #define MEMORY_SIZE BYTES_PER_LINE*LINES_PER_INSTRUCTION*INSTRUCTIONS
@@ -274,14 +275,15 @@ int main(int argc, char** argv) {
 
     printf("Start Disassembler\n");
     printf("Read in file\n");
-    readSource("../ucode-Generator/test.123");
+    readSource("../ucode-Generator2/test.123");
 
     for (i = 0; i < INSTRUCTIONS; i++) {
         if (processInstruction(i)) {
             //printf("Instruction [%d] found\n", i);
         }
     }
-    processInstruction(0xe7);
+    processInstruction(0x04);
+    processInstruction(0x05);
     return (EXIT_SUCCESS);
 }
 

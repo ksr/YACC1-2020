@@ -20,7 +20,6 @@
 extern "C" {
 #endif
 
-/*
     struct signal {
         char *name;
         int chip;
@@ -28,7 +27,7 @@ extern "C" {
         int bit;
     };
     
- */   
+    
 
 #ifdef __cplusplus
 }
@@ -37,10 +36,7 @@ extern "C" {
 #endif /* CODES_H */
 
 void clearCurrentLine();
-void loadNextInstruction();
-void initCurrentLine();
 void putMemAtRegOnBus(int reg);
-void putBustoRegMem(int,char *);
 void cmd(char *str, int reg);
 void bitOn();
 void bitOff();
@@ -54,12 +50,3 @@ void clearCntlMemory();
 void showCntlMemory(int instruction);
 void basicTest();
 void showCurrentLine();
-void setRdId(int);
-void setLdId(int);
-void setAddrId(int);
-void setIo(int);
-void setAlu(int);
-void setSignal(char *);
-void clearSignal(char *);
-void incrementReg(int);
-void decrementReg(int);

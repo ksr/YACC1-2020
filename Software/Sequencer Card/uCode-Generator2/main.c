@@ -11,10 +11,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "../yaccsignaldefine.h"
 #include "../yaccsignaldata.h"
-#include "code.h"
 #include "../../opcodes.h"
+
+#include "code.h"
 #include "CodeGen.h"
 
 void branchInstructions();
