@@ -300,6 +300,39 @@ void accumulatorInstructions() {
     endInstruction();
     showCntlMemory(ins);
 
+#define subnew
+#ifdef subnew
+// subtraction
+    
+    // Sub from accumulator low immediate 8 bit
+    ins = SUBI;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    putMemAtRegOnBus(PC);
+    aluOp(ALUSUB);
+    incrementReg(PC);
+    
+    endInstruction();
+    showCntlMemory(ins);
+
+    // sub TMP from accumulator
+    ins = SUBT;
+    startInstruction(ins);
+    loadNextInstruction();
+    initCurrentLine();
+
+    setSignal("-TMP-REG-RD0");
+    clearSignal("-MEM-RD");
+    writeCurrentLine();
+    aluOp(ALUSUB);
+
+    endInstruction();
+    showCntlMemory(ins);
+#endif
+    
+#ifdef subold
 // subtraction
     
     // Sub from accumulator low immediate 8 bit
@@ -371,7 +404,8 @@ void accumulatorInstructions() {
 
     endInstruction();
     showCntlMemory(ins);
-
+#endif
+    
 //Boolean
     
     //AND to  Accum low immediate 8 bit
