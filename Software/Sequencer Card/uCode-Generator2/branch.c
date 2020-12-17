@@ -72,8 +72,8 @@ void branch(int reg, int mode, int invert, int source) {
     if (source == SOURCE_TMP) // problem will conflict with data transfer of branch reg to PC added 10
         clearSignal("-TMP-REG-RD0"); //added 10
     writeCurrentLine(); // added 10
-    setSignal("-BRANCH-RD-LO"); //output branch register maybe move down after brtest sr set
-    setSignal("-BRANCH-RD-HI");
+    setSignal("-BRANCH-RD"); //output branch register maybe move down after brtest sr set
+    //setSignal("-BRANCH-RD-HI");
     //setSignal("-REG-FUNC-LD");//?
     writeCurrentLine(); //Ken Probably not needed
     setLdId(PC);
@@ -274,8 +274,8 @@ void branchInstructions() {
 
     decrementReg(SP);
 #endif
-    setSignal("-BRANCH-RD-LO"); //output branch register
-    setSignal("-BRANCH-RD-HI");
+    setSignal("-BRANCH-RD"); //output branch register
+    //setSignal("-BRANCH-RD-HI");
 
     setSignal("-ALU-FUNC");
     setAlu(ALUBR);
@@ -499,8 +499,8 @@ void branchInstructions() {
     writeCurrentLine();
 
 
-    setSignal("-BRANCH-RD-LO"); //output branch register
-    setSignal("-BRANCH-RD-HI");
+    setSignal("-BRANCH-RD"); //output branch register
+    //setSignal("-BRANCH-RD-HI");
 
     setSignal("-ALU-FUNC");
     setAlu(ALUBR);
@@ -548,8 +548,8 @@ void branchInstructions() {
     clearSignal("-MEM-RD");
     writeCurrentLine();
 
-    setSignal("-BRANCH-RD-LO"); //output branch register
-    setSignal("-BRANCH-RD-HI");
+    setSignal("-BRANCH-RD"); //output branch register
+    //setSignal("-BRANCH-RD-HI");
     setSignal("-ALU-FUNC");
     setAlu(ALUBR);
     setSignal("BR-TEST");
@@ -814,8 +814,8 @@ void branchInstructions() {
     clearSignal("-MEM-RD");
     writeCurrentLine();
 
-    setSignal("-BRANCH-RD-LO"); //output branch register
-    setSignal("-BRANCH-RD-HI");
+    setSignal("-BRANCH-RD"); //output branch register
+    //setSignal("-BRANCH-RD-HI");
     setSignal("-ALU-FUNC");
     setAlu(ALUBR);
     setSignal("BR-TEST");
