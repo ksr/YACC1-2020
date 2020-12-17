@@ -70,7 +70,8 @@ eprom:
          OUTI  P1,080H
 
          OUTI  P0,(UARTA0!UARTCS)
-         OUTI  P1,12
+;         OUTI  P1,12 ;9600
+         OUTI P1,3 ;38400
 
          OUTI  P0,(UARTA1!UARTCS)
          OUTI  P1,00
