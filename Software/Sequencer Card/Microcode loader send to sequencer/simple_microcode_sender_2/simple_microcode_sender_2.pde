@@ -47,15 +47,15 @@ void setup() {
   fill(100);
 
 
-  commands = loadStrings("../../uCode-Generator/test.hexz"); //read command file
+  commands = loadStrings("../../uCode-Generator2/test.hexz"); //read command file
 
-  cache=loadStrings("../../uCode-Generator/cache"); //read command file
+  cache=loadStrings("../../uCode-Generator2/cache"); //read command file
   if (cache != null) {
     println(" cache file found");
     cacheFile=true;
   } else {
     println("cache file not found");
-    cache = loadStrings("../../uCode-Generator/test.hexz");
+    cache = loadStrings("../../uCode-Generator2/test.hexz");
     for (int i=0; i < cache.length; i++) {
       cache[i]="";
     }

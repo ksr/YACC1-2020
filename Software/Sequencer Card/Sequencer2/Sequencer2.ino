@@ -7,7 +7,7 @@
 #include <Wire.h> //I2C library
 #include "Adafruit_MCP23017.h"
 //#include "YACC_Common_headera.h"
- 
+
 /*
    Format ":AIXXXXXXXX....XXXXX"
    ":"  Start charachter
@@ -34,6 +34,9 @@
 #define UCODESWITCH A0
 #define STARTSWITCH A2 // Default HIGH
 
+//
+#define READYLINE 7
+
 //UCODESWITCH Modes
 #define DOWNLOAD 0
 #define WRITEMEM 1
@@ -41,7 +44,7 @@
 int mode;
 int verbose = 0;
 
-#define LINES_PER_INSTRUCTION 64  // total number of rows of BYTES_PER_LINE
+#define LINES_PER_INSTRUCTION 32 // tmp back to 32 HACK  // total number of rows of BYTES_PER_LINE
 #define BYTES_PER_LINE 8         // total bytes/row (mem chips) should be 8
 #define INSTRUCTION_SIZE  BYTES_PER_LINE*LINES_PER_INSTRUCTION
 
@@ -66,9 +69,11 @@ void doError(String errorMsg, int code) {
   ///Serial.print("Error: ");
   ///Serial.println(errorMsg);
   while (1) {
-    for (int i = 0; i < code; i++)
-      blinkLed(FAULT);
-    delay(2000);
+    for (int i = 0; i < code; i++) {
+      blinkLed(FAULT); 
+      delay(1000);
+    } 
+    delay(5000);
   }
 }
 
@@ -156,6 +161,7 @@ void setup() {
   pinMode(FAULT, OUTPUT);
   pinMode(READY, OUTPUT);
   pinMode(LOADING, OUTPUT);
+  pinMode(READYLINE, OUTPUT);
 
   pinMode(MEMRD, OUTPUT);
   pinMode(MEMWR, OUTPUT);
@@ -164,6 +170,7 @@ void setup() {
   digitalWrite(MEMRD, HIGH);
   digitalWrite(MEMWR, HIGH);
   digitalWrite(MEMSEL, HIGH);
+  digitalWrite(READYLINE, LOW);
 
   pinMode(UCODESWITCH, INPUT);
   pinMode(STARTSWITCH, INPUT);
@@ -192,7 +199,7 @@ void loop() {
   unsigned char previousData[8];
   unsigned char mask;
   int val;
-  
+
   //bool printed=false;
 
   if (mode == WRITEMEM) { // LOADING on while copying, READY on when complete
@@ -259,6 +266,7 @@ void loop() {
 
     digitalWrite(LOADING, LOW);
     digitalWrite(READY, HIGH);
+    digitalWrite(READYLINE, HIGH);
     Serial.println("RAM copy complete, READY!!!");
 
 
@@ -299,10 +307,10 @@ void loop() {
               if ( ((data[bytee]^previousData[bytee]) & mask) != 0) {
                 //memcpy_P( &myArraySRAM, &opcodesPROGMEM[(bytee * 8) + bit], sizeof(opcode));
                 //sprintf(tmp, "sig=[%d][%s] ", (bytee * 8) + bit, myArraySRAM.code);
-                val=data[bytee]&mask;
-                if(val != 0)
+                val = data[bytee] & mask;
+                if (val != 0)
                   val = 1;
-                sprintf(tmp, "sig=[%d]=%d ", (bytee * 8) + bit,val);
+                sprintf(tmp, "sig=[%d]=%d ", (bytee * 8) + bit, val);
                 Serial.print(tmp);
               }
               mask = mask << 1;
@@ -321,7 +329,9 @@ void loop() {
   else { // download instructions
 
     digitalWrite(LOADING, HIGH);
+    digitalWrite(READY, HIGH);
     while (digitalRead(STARTSWITCH) == true);
+    digitalWrite(READY, LOW);
 
     while ( waitInstructionBegin()) { // Returns true when instruction downloaded, false when end of instruction list
       downloadInstruction();

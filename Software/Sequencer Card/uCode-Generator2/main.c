@@ -13,7 +13,7 @@
 #include <string.h>
 
 #include "../yaccsignaldefine.h"
-#include "../yaccsignaldata.h"
+#include "../yaccsignaldata2.h"
 #include "../../opcodes.h"
 
 #include "code.h"

@@ -47,12 +47,13 @@ byte i2c_eeprom_read_byte( int deviceaddress, unsigned int eeaddress ) {
 void setup()
 {
   int i;
-  char somedata[] = "this is data from the eeprom2123456789a11223344778899aaddd"; // data to write
+  char somedata[] = "dec 13 aaa this is data from the eeprom2123456789a11223344778899aaddd"; // data to write
 
   Wire.begin(); // initialise the connection
   Serial.begin(19200);
   offset = 5000;
 
+#define WRITE_MEM
 #ifdef WRITE_MEM
   for (i = 0; i < strlen(somedata) + 1; i++) { //+1 for ending null
     i2c_eeprom_write_byte(0x57, i + offset, somedata[i] ); // write to EEPROM
