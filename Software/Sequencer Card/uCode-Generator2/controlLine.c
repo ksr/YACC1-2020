@@ -176,8 +176,12 @@ void dumpCntlMemory() {
                 writeAsciiByte(dumper2, cntlMemory[i * INSTRUCTION_SIZE + j * BYTES_PER_LINE + k]);
             }
         }
-        if (j < LINES_PER_INSTRUCTION) {
-            fputc('Z', dumper2);
+//        if (j < LINES_PER_INSTRUCTION) {
+//            fputc('Z', dumper2);
+        for(;j<LINES_PER_INSTRUCTION;j++){
+            for (k = 0; k < BYTES_PER_LINE; k++) {
+                writeAsciiByte(dumper2,0x00);
+            }
         }
         printf("\n");
         fputc(END_INS_CHAR, dumper2);
