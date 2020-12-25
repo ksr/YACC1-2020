@@ -1,6 +1,6 @@
 build/Debug/GNU-MacOSX/main.o: main.c ../yaccsignaldefine.h \
-  ../yaccsignaldata.h
+  ../yaccsignaldata2.h
 
 ../yaccsignaldefine.h:
 
-../yaccsignaldata.h:
+../yaccsignaldata2.h:

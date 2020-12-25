@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "../yaccsignaldefine.h"
-#include "../yaccsignaldata.h"
+#include "../yaccsignaldata2.h"
 //#include "code.h"
 
 #define PORTS_PER_CHIP 2
