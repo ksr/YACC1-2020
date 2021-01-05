@@ -1,4 +1,11 @@
-#define OLD 1
+//#define TESTING 1
+
+#ifdef TESTING
+int testins = 0;
+#endif
+
+
+#define OLD
 #ifdef OLD
 /*
    Format "%AIXXXXXXXX....XXXXX-"
@@ -15,12 +22,6 @@
 #define START_CHARACTER '%'
 #define END_CHARACTER '!'
 
-#define TESTING 1
-
-#ifdef TESTING
-int testins = 0x3F;
-#endif
-
 void sendReadyPrompt() {
   Serial.println(PROMPT);
 }
@@ -31,14 +32,13 @@ void downloadInstruction() {
   unsigned char currentInstruction;
   unsigned char instructionChecksum;
   //unsigned char readIns[INSTRUCTION_SIZE];
-  char tmp[15];
+  char tmp[20];
 
-  //for (int i = 0; i < INSTRUCTION_SIZE; i++)
-  //  readIns[i] = 0xff;
-
-  int instruction;
+//  for (int i = 0; i < INSTRUCTION_SIZE; i++)
+//    readIns[i] = 0xff;
 
 #ifndef TESTING
+  int instruction;
   currentChecksum = getChecksum();
   currentInstruction = getInstructionNumber();
   instructionChecksum = getCode(instructionBytes);
@@ -46,7 +46,7 @@ void downloadInstruction() {
 
 #ifdef TESTING
   currentInstruction = testins++;
-  sprintf(tmp, "\ntestins %02x:", testins-1);
+  sprintf(tmp, "\ntestins %02x:", testins - 1);
   Serial.println(tmp);
 #endif
 
@@ -63,19 +63,18 @@ void downloadInstruction() {
     Serial.println();
   */
   writeCodeToROM(currentInstruction, instructionBytes);
-  
   //readCodeFromROM(currentInstruction, readIns); //?? why
-  //sprintf(tmp, "INS=%d Check=%02x ", currentInstruction, instructionChecksum);
-  //Serial.println(tmp);
+  ///sprintf(tmp, "INS=%d Check=%02x ", currentInstruction, instructionChecksum);
+  ///Serial.println(tmp);
   for (int i = 0; i < INSTRUCTION_SIZE; i = i + 8) {
-    //Serial.print(i / 8); Serial.print('-');
+    ///Serial.print(i / 8); Serial.print('-');
     for (int j = 0; j < 8; j++) {
-      //sprintf(tmp, "%02x:", readIns[i + j]);
-      //Serial.print(tmp);
+      ///sprintf(tmp, "%02x:", readIns[i + j]);
+      ///Serial.print(tmp);
     }
-    //Serial.println();
+    ///Serial.println();
   }
-  //Serial.println();
+  ///Serial.println();
 }
 
 boolean waitInstructionBegin() {
@@ -88,7 +87,6 @@ boolean waitInstructionBegin() {
   else
     return (true);
 #endif
-
   sendReadyPrompt();
   flashLed(READY);
   while (Serial.available() < 1)

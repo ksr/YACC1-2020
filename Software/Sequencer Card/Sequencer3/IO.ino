@@ -84,7 +84,7 @@ unsigned int writeData(unsigned char data[]) {
   ptr = data;
 
   if (dataDir != OUTDIR)
-    doError("IO: Writing data set to in",3);
+    doError("IO: Writing Data with data direction set to in",3);
 
   //  for (i = 0; i < 4; i++) {
   //    mcp[i + 1].writeGPIOAB(data[i * 2]);
@@ -104,7 +104,7 @@ unsigned int writeData(unsigned char data[]) {
 unsigned int writeAddress(unsigned int address) {
 
   if (addrDir != OUTDIR)
-    doError("IO: Writing addr set to in",4);
+    doError("IO: Writing address with addr direction set to in",4);
 
   mcp[ADDRESS_CHIP].writeGPIOAB(address);
   return (address);

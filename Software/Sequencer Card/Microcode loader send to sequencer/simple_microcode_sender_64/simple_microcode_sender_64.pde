@@ -22,7 +22,7 @@ int cr = 13;    // CR in ASCII
 
 int delayString = 25;
 
-final boolean debug = false;
+final boolean debug = true;
 final boolean useSerial = true;
 
 int verbose=1;
@@ -92,7 +92,7 @@ void setup() {
         }
         String portName = Serial.list()[i-1];
         if (verbose > 1) println(portName);
-        myPort = new Serial(this, portName, 19200); // change baud rate to your liking
+        myPort = new Serial(this, portName, 115200); // change baud rate to your liking
         delay(5000);
         //while (!isPrompt(getLine())); Not needed i think
       } else {
@@ -137,6 +137,7 @@ int doCommand(int index) {
       return(1);
     }
 
+  println("waiting for prompt");
   while (!isPrompt(getLine()));
   println("in write");
   checksum=commands[index].substring(1, 3);

@@ -9,7 +9,7 @@
 
 #define SPECIAL_OPCODE 9
 
-#ifdef UNSED
+#ifdef NOTUSED
 typedef struct {
   char const *code;
 } opcode;
@@ -81,4 +81,4 @@ const opcode opcodesPROGMEM[]  PROGMEM = {
   "-RESET",
   "",
 };
-#endif
+#endif 

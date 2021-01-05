@@ -27,7 +27,7 @@ unsigned int readInstruction(int instruction, unsigned char *data){
   unsigned char *ptr;
   unsigned int address;
 
-  address = instruction * LINES_PER_INSTRUCTION ;
+  address = instruction * LINES_PER_INSTRUCTION;
   //Serial.print("read instruction:"); Serial.print(instruction); Serial.print(" Address:"); Serial.println(address);
 
   ptr = data;
@@ -54,7 +54,7 @@ void writeInstruction(int instruction, unsigned char *data) {
   unsigned int address;
   unsigned char *ptr;
 
-  address = instruction * LINES_PER_INSTRUCTION ;
+  address = instruction * LINES_PER_INSTRUCTION;
   ptr = data;
 
   uCodeRamSelect(true);

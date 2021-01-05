@@ -8,10 +8,6 @@
 #include "Adafruit_MCP23017.h"
 //#include "YACC_Common_headera.h"
 
-
-#include <extEEPROM.h>
-extEEPROM eep(kbits_512, 2, 64, 0x56);
-
 /*
    Format ":AIXXXXXXXX....XXXXX"
    ":"  Start charachter
@@ -48,7 +44,7 @@ extEEPROM eep(kbits_512, 2, 64, 0x56);
 int mode;
 int verbose = 0;
 
-#define LINES_PER_INSTRUCTION 64 // tmp back to 32 HACK  // total number of rows of BYTES_PER_LINE
+#define LINES_PER_INSTRUCTION 64  // total number of rows of BYTES_PER_LINE
 #define BYTES_PER_LINE 8         // total bytes/row (mem chips) should be 8
 #define INSTRUCTION_SIZE  BYTES_PER_LINE*LINES_PER_INSTRUCTION
 
@@ -67,55 +63,15 @@ void writeCodeToROM(int, unsigned char *);
 
 //opcode myArraySRAM;
 
-/*
-   Routines to read/write data to eeprom
-*/
 
-/*
-   Should deviceaddress be an unsigned int for both routines ???
-*/
-void myi2c_eeprom_write_byte( int deviceaddress,  unsigned char wdata, unsigned long eeaddress) {
-  char tmp[35];
-
-  sprintf(tmp, "W-%04x %02x %08lu", deviceaddress, wdata, eeaddress);
-  Serial.println(tmp);
-
-  byte i2cStat = eep.write(eeaddress, wdata);
-  if ( i2cStat != 0 ) {
-    sprintf(tmp, "E-[%08x] A-[%08lu]", i2cStat,eeaddress); Serial.println(tmp);
-    doError("eep write error", 3);
-    while (1);
-  }
-}
-
-/*
-   TODO maybe modify to accept 3rd param - pointer to return value location
-   AND return 0 if succesful and -1 if fails
-*/
-
-byte i2c_eeprom_read_byte( int deviceaddress, unsigned long eeaddress ) {
-  unsigned int rdata;
-  char tmp[35];
-
-
-  rdata = eep.read(eeaddress);
-  if ( rdata  < 0 ) {
-    sprintf(tmp, "E-[%08x] A-[%08lu]", rdata,eeaddress); Serial.println(tmp);
-    doError("eep read error", 2);
-    while (1);
-  }
-  return rdata;
-}
 
 void doError(String errorMsg, int code) {
   ///Serial.print("Error: ");
   ///Serial.println(errorMsg);
   while (1) {
-    for (int i = 0; i < code; i++) {
+    for (int i = 0; i < code; i++)
       blinkLed(FAULT);
-      delay(1000);
-    }
-    delay(5000);
+    delay(2000);
   }
 }
 
@@ -159,7 +115,7 @@ void fillTestPattern(int instruction) {
 */
 void dumpInstruction(int instruction) {
   int i, j;
-  char tmp[15];
+  char tmp[20];
 
   Serial.print("Ins=");
   Serial.println(instruction);
@@ -170,39 +126,39 @@ void dumpInstruction(int instruction) {
   }
   Serial.println();
 
-  readCodeFromROM(instruction, insData);
-  Serial.println("after read ins");
-
+  readInstruction(instruction, insData);
   for (j = 0; j < LINES_PER_INSTRUCTION; j++) {
     sprintf(tmp, "LINE:%02d ", j); Serial.print(tmp);
     for (i = 0; i < BYTES_PER_LINE; i++) {
       sprintf(tmp, "%02x ", insData[i + j * BYTES_PER_LINE]); Serial.print(tmp);
     }
     Serial.println();
+  }
+  Serial.println();
 
+  readCodeFromROM(instruction, insData);
+  for (j = 0; j < LINES_PER_INSTRUCTION; j++) {
+    sprintf(tmp, "LINE:%02d ", j); Serial.print(tmp);
+    for (i = 0; i < BYTES_PER_LINE; i++) {
+      sprintf(tmp, "%02x ", insData[i + j * BYTES_PER_LINE]); Serial.print(tmp);
+    }
+    Serial.println();
   }
   Serial.println();
 }
 
 void setup() {
   int i;
-  char tmp[20];
 
-  Serial.begin(19200);
-  Serial.println("\n\nStartup");
+  Serial.begin(115200);
   Wire.begin();
-
-  uint8_t eepStatus = eep.begin(eep.twiClock100kHz);   //go fast!
-  if (eepStatus) {
-    doError("eep begin err", 1);
-  }
 
   pinMode(UCODESWITCH, INPUT);
   mode = digitalRead(UCODESWITCH);
 
 
   if (mode == WRITEMEM)
-    Serial.println("\n\nStartup");
+    Serial.println("\n\n\n\nStartup");
 
   for (i = 0; i < NUMBER_OF_CONTROLERS; i++) {
     mcp[i].begin(i);
@@ -232,39 +188,6 @@ void setup() {
 
   if (mode == WRITEMEM)
     Serial.println("Startup done\n");
-
-
-
-#define EEPROMTEST1 1
-#ifdef EEPROMTEST1
-  Serial.println("\n1-Start EEPROM TESTS");
-  for (int j = 0; j < 20; j++) {
-    myi2c_eeprom_write_byte(0x57, 0x55, 0x8000); sprintf(tmp, "%02x\n", eep.read(0x8000)); Serial.println(tmp);
-    eep.write(0, 0x11 + j);
-    Serial.println("0");
-   eep.write(32767, 0x22 + j );
-    Serial.println("32767");
-   eep.write(32768, 0x33 + j );
-    Serial.println("32768");
-    eep.write(65535, 0x44 + j);
-    Serial.println("65535");
-  eep.write(65536, 0x55 + j);
-    Serial.println("65536");
-    eep.write(131071, 0x66 + j );
-    Serial.println("131071");
-
-    sprintf(tmp, "%02x", eep.read(0)); Serial.println(tmp);
-    sprintf(tmp, "%02x",eep.read(32767)); Serial.println(tmp);
-    sprintf(tmp, "%02x", eep.read(32768)); Serial.println(tmp);
-    sprintf(tmp, "%02x",eep.read(65535)); Serial.println(tmp);
-    sprintf(tmp, "%02x",eep.read(65536)); Serial.println(tmp);
-    sprintf(tmp, "%02x", eep.read(131071)); Serial.println(tmp);
-  }
-  dumpInstruction(0);
-  dumpInstruction(4);
-
-  //while (1);
-#endif
 }
 
 void loop() {
@@ -274,7 +197,7 @@ void loop() {
   int instruction;
   unsigned char data[BYTES_PER_LINE];
   unsigned int counter;
-  char tmp[50];
+  char tmp[60];
   boolean statusLed = false;
   int i, j;
 
@@ -288,11 +211,11 @@ void loop() {
 
   if (mode == WRITEMEM) { // LOADING on while copying, READY on when complete
 
-    Serial.println("Write Mem");
+    Serial.println("Write Memory");
 
 #define FILLRAM
 #ifdef FILLRAM
-    //Serial.println("test pattern");
+    Serial.println("test pattern");
 
     setAddressOutput();
     setDataOutput();
@@ -302,7 +225,7 @@ void loop() {
       statusLed = !statusLed;
       fillTestPattern(instruction);
     }
-    Serial.println("-done");
+    Serial.println("- done");
 #endif
 
 #define ROMTORAM
@@ -313,7 +236,7 @@ void loop() {
     setDataOutput();
 
     for (instruction = 0; instruction < WORKING_INSTRUCTION_SET; instruction++) {
-      Serial.print("Ins=");
+      Serial.print("Copying Instruction ");
       Serial.println(instruction);
 
       digitalWrite(LOADING, statusLed);
@@ -322,7 +245,7 @@ void loop() {
       readCodeFromROM(instruction, insData);
       writeInstruction(instruction, insData);
     }
-    Serial.println("-done");
+    Serial.println("- done");
 #endif
 
 
@@ -335,10 +258,12 @@ void loop() {
     uCodeRamSelect(true);
 
     dumpInstruction(0);
-    //dumpInstruction(1);
-    //dumpInstruction(5);
+    dumpInstruction(1);
+    dumpInstruction(7);
     //dumpInstruction(6);
     dumpInstruction(124);
+    dumpInstruction(255);
+
 #endif
 
     setAddressInput();
@@ -351,7 +276,7 @@ void loop() {
     digitalWrite(LOADING, LOW);
     digitalWrite(READY, HIGH);
     digitalWrite(READYLINE, HIGH);
-    Serial.println("RAM READY!");
+    Serial.println("RAM copy complete, READY!!!");
 
 
     counter = 0;
@@ -367,7 +292,7 @@ void loop() {
       instruction = (address & 0x1fe0) >> 5;
       if ((previousLine != line) || (previousInstruction != instruction)) {
         readData(data);
-        sprintf(tmp, "Addr= % 04x Seq= % 05d Ins= % 02x Line= % 02x Data= ", address & 0x1fff, counter++, instruction, line); //why spaces after %
+        sprintf(tmp, "Addr=%04x Seq=%05d Ins=%02x Line=%02x Data= ", address & 0x1fff, counter++, instruction, line);
         Serial.print(tmp);
         for (int i = 0; i < BYTES_PER_LINE; i++) {
           sprintf(tmp, " %02x: ", data[i]);
@@ -411,14 +336,15 @@ void loop() {
     }
   }
   else { // download instructions
-
+    //Serial.println("Download");
     digitalWrite(LOADING, HIGH);
-    digitalWrite(READY, HIGH);
     while (digitalRead(STARTSWITCH) == true);
-    digitalWrite(READY, LOW);
+    //Serial.println("Download2");
 
     while ( waitInstructionBegin()) { // Returns true when instruction downloaded, false when end of instruction list
+      //Serial.println("Download3");
       downloadInstruction();
+      //Serial.println("Download4");
       digitalWrite(LOADING, statusLed);
       statusLed = !statusLed;
     }
