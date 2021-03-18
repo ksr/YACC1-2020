@@ -28,5 +28,7 @@
 		Clocker: External Arduino based to tool for single step debug operations
 		Eagle: Configuration files for Eagle
 		Waveforms: Timing diagrams for cpu instructions, probably should move to software area
-		
+
+### YACC1 Connector - V3.2.pdf
+		Current bus connector specifications
 
