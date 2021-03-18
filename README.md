@@ -4,7 +4,7 @@
 
 ### Data Sheets:
 		Useful data sheets, manuals, references.
-			(These are all readily available only but if I inadvertently violated copyright please learn me know and I will remove immediately)
+			(These are all readily available online but if I inadvertently violated copyright please let me know and I will remove immediately)
 
 ### PCB:
 		PCB designs, there are two different subdirectories:
