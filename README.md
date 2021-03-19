@@ -1,7 +1,6 @@
 # YACC1-2020 (Yet Another Custom CPU)
 
-Finally time to try building a custom CPU from basic TTL and other "simple" ICs (no 74ls181 ALU, that would be cheating :-) ). <br/><br/> 
--- Thanks for taking a look --
+Finally time to try building a custom CPU from basic TTL and other "simple" ICs (no 74ls181 ALU, that would be cheating :-) ). 
 
 The YACC1-2020, provides the tools and resources to learn computer science starting from the basics of digital logic through to a fully working custom CPU with a user defined instruction set, assembler, BASIC interpreter, and one day an operating system with filesystem, command line interpreter, and utilities.
 
@@ -56,4 +55,7 @@ Please reach out to ken at cottageworker dot com
 
 ### YACC1 Connector - V3.2.pdf
 		Current bus connector specifications
+		
+<br/><br/> 
+-- Thanks for taking a look --
 
