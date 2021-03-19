@@ -8,6 +8,11 @@ The project is currently under development as a personal project. The basic idea
 
 Here is a [video of the machine in operation](https://youtu.be/6pjIE4_MxIA) and some photos can be found in the Photos & Videos subdirectory in this repository
 
+The basic system is comprised of xx cards:
+- Memory card with 64k RAM and 32K ROM (total address space 64K)
+	Memory card also contains two temporary registers
+- Register card, each with 4 16 bit registers that can drive data or address bus, although the system can operate with one register card anything really useful will require two cards
+
 
 ## Motivation
 
