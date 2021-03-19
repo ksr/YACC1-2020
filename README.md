@@ -23,7 +23,7 @@ Please reach out to ken at cottageworker dot com
 
 ### Data Sheets:
 		Useful data sheets, manuals, references.
-			(These are all readily available online but if I inadvertently violated copyright please let me know and I will remove immediately)
+			(These are all readily available online but if I inadvertently violated copyright<br/>please let me know and I will remove immediately)
 
 ### General Notes:
 		System wide notes, more specific notes in various subdirectories
