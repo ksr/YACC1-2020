@@ -11,9 +11,9 @@ The project is currently under development as a personal project. The basic idea
 Like many others, back in the mid 1970s I had the opportunity to learn both computer programming and microcomputer hardware simultaneously. For me it all started with programming BASIC on a timeshare HP machine via a terminal and/or optical hollerith cards. My math teacher who also taught computer programming allowed us to use the termoianl if we finished our work early. At home I also dabbled with digital circuits and when Popular Electronics published the COSMAC ELF project I was hooked. Now I wonder if for some students when learning computer science does the hardware seem too much like a magic box.
 
 If this project is of intertest, perhaps your one of the following:<br/>
-	High school computer science educators
-	Freshman and sophomore college computer science educators
-	Electronics or Retro computer enthusiasts
+	High school computer science educators<br/>
+	Freshman and sophomore college computer science educators<br/>
+	Electronics or Retro computer enthusiasts<br/>
 	
 Please reach out to ken at cottageworker dot com
 
