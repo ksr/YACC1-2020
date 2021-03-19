@@ -6,7 +6,7 @@ The YACC1-2020, provides the tools and resources to learn computer science start
 
 The project is currently under development as a personal project. The basic idea has been kicking around inside my head for years (47 years to be exact), but until recently never made it to the top of my list (I did make an attempt a few years back but life got in the way). Now I am exploring if this project might be interesting to others, perhaps as an educational tool or maybe just a fun project.
 
-Here is a [video of the machine in operation](https://youtu.be/6pjIE4_MxIA)
+Here is a [video of the machine in operation](https://youtu.be/6pjIE4_MxIA) and some photos can be found in the Photos & Videos subdirectory in this repository
 
 
 ## Motivation
