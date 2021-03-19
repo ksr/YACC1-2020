@@ -398,7 +398,7 @@ if_statement(void)
   } else {
     do {
       tokenizer_next();
-      printf("IF 0 %02x\n",tokenizer_token());
+       DEBUG_PRINTF("IF 0 %02x\n",tokenizer_token());
     } while(tokenizer_token() != TOKENIZER_ELSE &&
         tokenizer_token() != TOKENIZER_CR &&
         tokenizer_token() != TOKENIZER_ENDOFINPUT);
@@ -407,7 +407,7 @@ if_statement(void)
       statement();
     } else if(tokenizer_token() == TOKENIZER_CR) {
       tokenizer_next();
-      printf("IF 0 %02x\n",tokenizer_token());
+       DEBUG_PRINTF("IF 0 %02x\n",tokenizer_token());
     }
   }
 }
