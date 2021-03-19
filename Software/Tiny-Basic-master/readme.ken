@@ -1,0 +1,13 @@
+ sample tiny basic
+source
+https://cvhariharan.dev/projects/2019/12/26/tiny-basic/
+
+build using netbeans
+
+run
+cd build
+parser infile
+ex parser x.tb
+
+This code had a lot of issues and was not used
+
