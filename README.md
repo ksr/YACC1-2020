@@ -13,7 +13,8 @@ Like many others, back in the mid 1970s I had the opportunity to learn both com
 If this project is of intertest, perhaps your one of the following:<br/>
 - High school computer science educators<br/>
 - Freshman and sophomore college computer science educators<br/>
-- Electronics or Retro computer enthusiasts<br/>
+- Electronics or Retro computer enthusiast<br/>
+- Or just generally interested
 	
 Please reach out to ken at cottageworker dot com
 
