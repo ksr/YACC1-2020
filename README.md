@@ -1,5 +1,16 @@
 # YACC1-2020
 
+Finally time to try building a custom CPU from basic TTL and other "simple" ICs (no 74ls181 ALU, that would be cheating :-) ) -- Thanks for taking a look.
+
+The One Page Computer Project, provides the tools and resources to learn computer science starting from the basics of digital logic through to a fully working custom CPU with a user defined instruction set, assembler, BASIC interpreter, and one day an operating system with standard tools.
+
+The project is currently under development as a personal project. The basic idea has kicking around inside my head for years (47 years to be exact), but until recently never made it to the top of my list. Now I am exploring if this project might be interesting to others, perhaps as an educational tool or maybe just a fun project. Files can be found at https://github.com/ksr/YACC1-2020
+
+I am interested in speaking with:
+High school computer science educators
+Freshman and sophomore college computer science educators
+Electronics enthusiasts
+
 ## Directories
 
 ### Data Sheets:
