@@ -1,15 +1,18 @@
-# YACC1-2020
+# YACC1-2020 - One Page Computer Project
 
 Finally time to try building a custom CPU from basic TTL and other "simple" ICs (no 74ls181 ALU, that would be cheating :-) ). <br/> -- Thanks for taking a look --
 
-The One Page Computer Project, provides the tools and resources to learn computer science starting from the basics of digital logic through to a fully working custom CPU with a user defined instruction set, assembler, BASIC interpreter, and one day an operating system with standard tools.
+The One Page Computer Project, provides the tools and resources to learn computer science starting from the basics of digital logic through to a fully working custom CPU with a user defined instruction set, assembler, BASIC interpreter, and one day an operating system with filesystem, command line interpreter, and utilities.
 
-The project is currently under development as a personal project. The basic idea has kicking around inside my head for years (47 years to be exact), but until recently never made it to the top of my list. Now I am exploring if this project might be interesting to others, perhaps as an educational tool or maybe just a fun project. Files can be found at https://github.com/ksr/YACC1-2020
+The project is currently under development as a personal project. The basic idea has been kicking around inside my head for years (47 years to be exact), but until recently never made it to the top of my list (I did make an attempt a few years back but life got in the way). Now I am exploring if this project might be interesting to others, perhaps as an educational tool or maybe just a fun project.
 
-I am interested in speaking with:
-High school computer science educators
-Freshman and sophomore college computer science educators
-Electronics enthusiasts
+If this project is of intertest, perhaps your one of the following:<br/>
+	High school computer science educators
+	Freshman and sophomore college computer science educators
+	Electronics or Retro computer enthusiasts
+	
+Please reach out to ken at cottageworker dot com
+
 
 ## Directories
 
@@ -24,6 +27,7 @@ Electronics enthusiasts
 		PCB designs, there are two different subdirectories:
 			Production: These are the latest fully functioning designs, most likely currently in use
 			Working - Underdevelopment: These are the newest versions of the boards in design
+		Each board has or will have a "theory of operation" document
 			
 ### Photos & Videos:
 		Some sharable files
