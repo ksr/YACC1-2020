@@ -8,12 +8,12 @@ The project is currently under development as a personal project. The basic idea
 
 Here is a [video of the machine in operation](https://youtu.be/6pjIE4_MxIA) and some photos can be found in the Photos & Videos subdirectory in this repository
 
-The basic system is comprised of xx cards:
+The basic system is comprised of 7 cards:
 - Memory card with 64k RAM and 32K ROM (total address space 64K) The memory card also contains two temporary registers
 - Register card, each with 4 16-bit registers that can drive data or address bus, although the system can operate with one register card anything really useful will require two cards. The system has control lines to support upto 4 register cards for a total of 16 registers
 - IO Card has serveral options; Serial RS-232, 8-bit switches, 8-bit LED, LCD
 - ALU Card supports the boolean, compare, add/sub operations, and the accumulator
-- Sequencer card set made up of a memory card and logic card mated together (see photos)
+- Sequencer 2 card set made up of a memory card and logic card mated together (see photos)
 - Optional but highly revommended Bus Test Card, this allows driving the bus in test mode and monitoring the bus in listening mode
 
 
