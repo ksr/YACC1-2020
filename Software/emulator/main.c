@@ -813,166 +813,126 @@ int main(int argc, char** argv) {
                 }
                 break;
 
-                
             case BR:
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-
-                register_write_hi(PC, hi);
-                register_write_lo(PC, lo);
-                break;
-
             case BRZ:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc == 0) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
             case BRNZ:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc != 0) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
             case BRINH:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (in == 1) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
             case BRINL:
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (in == 0) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
-            case 0xa5: /* not implemented yet4*/
-                badOpcode(ins);
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (!carry) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
+            case 0xa5:
             case BRC:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (carry) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
             case BRLT:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc < treg) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
             case BREQ:
-
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc == treg) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
             case BRGT:
-                //printf("a9 %d %d ",acc,treg);
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc > treg) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
             case BRNEQ:
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                if (acc != treg) {
-                    register_write_hi(PC, hi);
-                    register_write_lo(PC, lo);
-                }
-                break;
-
             case BR16Z:
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-                badOpcode(ins);
-                break;
-
             case BR16NZ:
-                hi = memory_read(register_read_word(PC));
-                register_inc(PC);
-                lo = memory_read(register_read_word(PC));
-                register_inc(PC);
-
-                badOpcode(ins);
-                break;
-
-            case 0xad:
-                badOpcode(ins);
-                break;
-
-            case 0xae:
-                badOpcode(ins);
-                break;
-
             case BRDEV:
+            case 0xad:
+            case 0xae:
                 hi = memory_read(register_read_word(PC));
                 register_inc(PC);
                 lo = memory_read(register_read_word(PC));
                 register_inc(PC);
-                // do not branch
-                //register_write_hi(PC, hi);
-                //register_write_lo(PC, lo);
+
+                switch (ins) {
+                    case BR:
+                        register_write_hi(PC, hi);
+                        register_write_lo(PC, lo);
+                        break;
+
+                    case BRZ:
+
+                        if (acc == 0) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRNZ:
+                        if (acc != 0) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRINH:
+                        if (in == 1) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRINL:
+                        if (in == 0) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case 0xa5: /* not implemented yet4*/
+                        badOpcode(ins);
+
+                        if (!carry) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRC:
+                        if (carry) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRLT:
+                        if (acc < treg) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BREQ:
+                        if (acc == treg) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRGT:
+                        if (acc > treg) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BRNEQ:
+                        if (acc != treg) {
+                            register_write_hi(PC, hi);
+                            register_write_lo(PC, lo);
+                        }
+                        break;
+
+                    case BR16Z:
+                        badOpcode(ins);
+                        break;
+
+                    case BR16NZ:
+                        badOpcode(ins);
+                        break;
+
+
+                    case 0xad:
+                        badOpcode(ins);
+                        break;
+
+                    case 0xae:
+                        badOpcode(ins);
+                        break;
+
+                    case BRDEV: // emulator does not branch, hardware does branch
+                        break;
+                }
                 break;
 
             case ADDI:
@@ -1224,10 +1184,10 @@ int main(int argc, char** argv) {
                 register_inc(PC);
                 register_write_lo(IR, lo);
                 register_write_hi(IR, hi);
-                
-                memory_write(register_read_word(IR),register_read_hi(reg));
+
+                memory_write(register_read_word(IR), register_read_hi(reg));
                 register_inc(IR);
-                memory_write(register_read_word(IR),register_read_lo(reg));
+                memory_write(register_read_word(IR), register_read_lo(reg));
                 register_inc(IR);
                 /*
                 register_write_hi(reg, memory_read(register_read_word(IR)));
