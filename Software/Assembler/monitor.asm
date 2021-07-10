@@ -1726,7 +1726,7 @@ nblinkdone:
 ; MONITOR STRINGS
 ;
 hello:  DB 0ah,0dh,"YACC 2020: hello world  ",0ah,0dh,0
-PROMPT: DB ">>",0
+PROMPT: DB ">",0
 CRLF: DB 0ah,0dh,0
 ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
 CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0

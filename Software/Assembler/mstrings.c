@@ -127,7 +127,7 @@ char* upper(char* buffer)
   char *dest;
   dest=_strbuffer;
   strcpy(_strbuffer,buffer);
-  while (*dest|='\0') {
+  while ((*dest|='\0')) {
     if (*dest>='a' && *dest<='z') *dest=(*dest)-32;
     dest++;
     }

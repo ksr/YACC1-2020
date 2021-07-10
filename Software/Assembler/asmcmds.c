@@ -74,7 +74,7 @@ int WildMatch(char *src,char *dest)
     bs=*src++;
     if (bs=='\0') {
       bd=*dest;
-      if (bs |= bd) matched='N'; else matched='Y';
+      if ((bs |= bd)) matched='N'; else matched='Y';
       flag='n';
       }
       else if (bs<=' ') {

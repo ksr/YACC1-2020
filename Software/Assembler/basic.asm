@@ -3061,7 +3061,7 @@ parse_comparel1:
   ldai 0ffh
   ret
 
-basic_prompt: db ">>>",0
+basic_prompt: db ">>",0
 basic_interprter:
         ;build input string
         ;point register to BUFFER

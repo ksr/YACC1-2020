@@ -9,3 +9,4 @@ extern char* remspace(char* buffer);
 extern char* trailspace(char* buffer);
 extern char* upper(char* buffer);
 extern char upcase(char in);
+byte char_to_hex(char buffer);

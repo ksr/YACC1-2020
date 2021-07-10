@@ -192,7 +192,7 @@ yacc1 -> Native
   186 e040:             ;
   187 e040:             ; very basic cmd line driver
   188 e040:             ;
-  189 e040: 04 ef 26          jsr basic_interprter
+  189 e040: 04 ef 25          jsr basic_interprter
   190 e043: 05                ret
   191 e044:             ;
   192 e044:                   org 0e050h
@@ -228,19 +228,19 @@ yacc1 -> Native
   222 e07a: 1c 00 0a        mviw r4,0010
   223 e07d: 04 ee 23        jsr parse_div16
   224 e080: 04 ff dc        jsr showregs
-  225 e083: 1f ef 50        mviw r7,CRLF
+  225 e083: 1f ef 4f        mviw r7,CRLF
   226 e086: 04 ff c0        jsr stringout
   227 e089:             
   228 e089: 1d 00 69        mviw r5,0105
   229 e08c: 1c 00 0a        mviw r4,0010
   230 e08f: 04 ee 44        jsr parse_mod16
   231 e092: 04 ff dc        jsr showregs
-  232 e095: 1f ef 50        mviw r7,CRLF
+  232 e095: 1f ef 4f        mviw r7,CRLF
   233 e098: 04 ff c0        jsr stringout
   234 e09b:             
   235 e09b: 1f 12 34        mviw r7,01234h
   236 e09e: 04 e5 f2        jsr exe_itoa
-  237 e0a1: 1f ef 50        mviw r7,CRLF
+  237 e0a1: 1f ef 4f        mviw r7,CRLF
   238 e0a4: 04 ff c0        jsr stringout
   239 e0a7:             
   240 e0a7:             
@@ -742,7 +742,7 @@ yacc1 -> Native
   715 e352: a0 e3 02        br exe_print_stmt_loop
   716 e355:             
   717 e355:             exe_print_stmt_done:
-  718 e355: 1f ef 50        mviw R7,CRLF
+  718 e355: 1f ef 4f        mviw R7,CRLF
   719 e358: 04 ff c0        jsr stringout
   720 e35b: 04 e5 ab        jsr exe_next_token
   721 e35e: 05              ret
@@ -1012,7 +1012,7 @@ yacc1 -> Native
   985 e45b:             
   986 e45b: 1f 03 00        mviw r7,parse_input_line
   987 e45e:             
-  988 e45e: 04 ef 3f        jsr get_inputline
+  988 e45e: 04 ef 3e        jsr get_inputline
   989 e461:             
   990 e461: 1f 03 00        mviw r7,parse_input_line
   991 e464: ef 02 02        str r7,bas_txtptr
@@ -1878,7 +1878,7 @@ yacc1 -> Native
  1830 e94a:             baslist36:
  1831 e94a: 0d 24           LDTI TOKENIZER_CR
  1832 e94c: aa e9 59        BRNEQ baslist37
- 1833 e94f: 1f ef 50        mviw R7,CRLF
+ 1833 e94f: 1f ef 4f        mviw R7,CRLF
  1834 e952: 04 ff c0        jsr stringout
  1835 e955: 53              INCR R3
  1836 e956: a0 e6 d3        BR baslist_loop
@@ -2531,7 +2531,7 @@ yacc1 -> Native
  2462 eca0:             parse_line_error:
  2463 eca0: 1f e0 f5        mviw r7,parse_cmd_error
  2464 eca3: 04 ff c0        jsr stringout
- 2465 eca6: 1f ef 50        mviw r7,CRLF
+ 2465 eca6: 1f ef 4f        mviw r7,CRLF
  2466 eca9: 04 ff c0        jsr stringout
  2467 ecac: 0e 00           ldai 0
  2468 ecae: 05              ret
@@ -3130,47 +3130,47 @@ yacc1 -> Native
  3061 ef1f: 0e ff         ldai 0ffh
  3062 ef21: 05            ret
  3063 ef22:             
- 3064 ef22: 3e 3e 3e 00 basic_prompt: db ">>>",0
- 3065 ef26:             basic_interprter:
- 3066 ef26:                     ;build input string
- 3067 ef26:                     ;point register to BUFFER
- 3068 ef26:                     ;loop fetch chars
- 3069 ef26:                     ;until CR
- 3070 ef26:                     ;be sure line ends with a NULL or CR
- 3071 ef26:                     ;what does parse require???
- 3072 ef26: 1f ef 22            MVIW R7,basic_prompt
- 3073 ef29: 04 ff c0            JSR stringout
- 3074 ef2c:             
- 3075 ef2c: 1f 03 00            mviw r7,parse_input_line
- 3076 ef2f:             
- 3077 ef2f:             parse_inputloop:
- 3078 ef2f: 04 ef 3f            jsr get_inputline
- 3079 ef32:             
- 3080 ef32: 1f 03 00            mviw r7,parse_input_line
- 3081 ef35: 04 ec 4f            JSR parse_line
- 3082 ef38:             
- 3083 ef38: a1 ef 26            BRZ basic_interprter
- 3084 ef3b: 05                  RET
- 3085 ef3c:             
- 3086 ef3c: 1b 03 00            mviw r3,parse_input_line
- 3087 ef3f:             
- 3088 ef3f:             get_inputline:
- 3089 ef3f: 04 ff e8            jsr uartin
- 3090 ef42: 4f                  stavr r7
- 3091 ef43: 57                  incr r7
- 3092 ef44: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
- 3093 ef46: aa ef 3f            brneq get_inputline
- 3094 ef49: 1f ef 50            MVIW R7,CRLF
- 3095 ef4c: 04 ff c0            JSR STRINGOUT
- 3096 ef4f: 05                  RET
- 3097 ef50:             
- 3098 ef50:             ;
- 3099 ef50:             ; STRINGS
- 3100 ef50:             ;
- 3101 ef50: 0a 0d 00    CRLF: DB 0ah,0dh,0
- 3102 ef53:             ;
- 3103 ef53:             
- 3104 ef53:                   ORG 0EF00h
+ 3064 ef22: 3e 3e 00    basic_prompt: db ">>",0
+ 3065 ef25:             basic_interprter:
+ 3066 ef25:                     ;build input string
+ 3067 ef25:                     ;point register to BUFFER
+ 3068 ef25:                     ;loop fetch chars
+ 3069 ef25:                     ;until CR
+ 3070 ef25:                     ;be sure line ends with a NULL or CR
+ 3071 ef25:                     ;what does parse require???
+ 3072 ef25: 1f ef 22            MVIW R7,basic_prompt
+ 3073 ef28: 04 ff c0            JSR stringout
+ 3074 ef2b:             
+ 3075 ef2b: 1f 03 00            mviw r7,parse_input_line
+ 3076 ef2e:             
+ 3077 ef2e:             parse_inputloop:
+ 3078 ef2e: 04 ef 3e            jsr get_inputline
+ 3079 ef31:             
+ 3080 ef31: 1f 03 00            mviw r7,parse_input_line
+ 3081 ef34: 04 ec 4f            JSR parse_line
+ 3082 ef37:             
+ 3083 ef37: a1 ef 25            BRZ basic_interprter
+ 3084 ef3a: 05                  RET
+ 3085 ef3b:             
+ 3086 ef3b: 1b 03 00            mviw r3,parse_input_line
+ 3087 ef3e:             
+ 3088 ef3e:             get_inputline:
+ 3089 ef3e: 04 ff e8            jsr uartin
+ 3090 ef41: 4f                  stavr r7
+ 3091 ef42: 57                  incr r7
+ 3092 ef43: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+ 3093 ef45: aa ef 3e            brneq get_inputline
+ 3094 ef48: 1f ef 4f            MVIW R7,CRLF
+ 3095 ef4b: 04 ff c0            JSR STRINGOUT
+ 3096 ef4e: 05                  RET
+ 3097 ef4f:             
+ 3098 ef4f:             ;
+ 3099 ef4f:             ; STRINGS
+ 3100 ef4f:             ;
+ 3101 ef4f: 0a 0d 00    CRLF: DB 0ah,0dh,0
+ 3102 ef52:             ;
+ 3103 ef52:             
+ 3104 ef52:                   ORG 0EF00h
  3105 ef00:             
  3106 ef00:             basic_test:
  3107 ef00:             
@@ -3210,7 +3210,7 @@ yacc1 -> Native
  3141 efff: 00            DB   0
 
 ed85h: ADDLINE_MOVEPTR  - <  2626>   2630 
-ef26h: BASIC_INTERPRTER - <  3065>    189   3083 
+ef25h: BASIC_INTERPRTER - <  3065>    189   3083 
 e6cfh: BASIC_LIST       - <  1466>    151   2435 
 ef22h: BASIC_PROMPT     - <  3064>   3072 
 e56dh: BASIC_RUN        - <  1195>    159   2442   2449 
@@ -3299,7 +3299,7 @@ e0d5h: BAS_MSG3         - <   248>   1176
          2206   2256   2347   2364   2389   2423   2517   2540 
 e077h: BIGTEST          - <   220>    182 
 ffc4h: CHAROUT          - <     5>    684   1376   1408   1428 
-ef50h: CRLF             - <  3101>    225    232    237    718   1833   2465 
+ef4fh: CRLF             - <  3101>    225    232    237    718   1833   2465 
          3094 
 e5e8h: DIVIDERS         - <  1360>   1385 
 ee2ch: DIVLOOP          - <  2786>   2794 
@@ -3409,7 +3409,7 @@ e1b2h: EXE_TERM_SLASH   - <   416>    397
 e132h: EXE_VARFACTOR    - <   320>    376 
 e5e4h: EXE_VARIABLE_NUM - <  1348>    321    759    838    904    983   1020 
 eb23h: FOUND            - <  2116>   2099 
-ef3fh: GET_INPUTLINE    - <  3088>    988   3078   3093 
+ef3eh: GET_INPUTLINE    - <  3088>    988   3078   3093 
 ee4dh: MODLOOP          - <  2813>   2821 
 ee60h: MOD_DONE         - <  2822>   2816 
 eb2dh: NOKEYOWRDSFOUND  - <  2124>   2096 
@@ -3458,7 +3458,7 @@ eaf0h: PARSE_GNT3LOOP   - <  2076>   2080
 eb00h: PARSE_GNT4       - <  2087>   2075 
 eb43h: PARSE_GNT_ERROR  - <  2140>   2131   2133 
 eb48h: PARSE_INIT       - <  2164>   2416 
-ef2fh: PARSE_INPUTLOOP  - <  3077> 
+ef2eh: PARSE_INPUTLOOP  - <  3077> 
 0300h: PARSE_INPUT_LINE - <   119>    986    990   3075   3080   3086 
 edb3h: PARSE_INSERTLOOP - <  2662>   2668 
 eef1h: PARSE_ISDIGIT    - <  3013>   2042   2048   2307   2425 
@@ -3608,5 +3608,5 @@ efffh: ZZZZ             - <  3140>
 3141 Lines assembled
 0 Errors
 368 Labels
-Object Code:3867 bytes
+Object Code:3866 bytes
 

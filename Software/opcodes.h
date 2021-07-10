@@ -27,7 +27,7 @@ extern "C" {
 
 #define        ON	0x01
 #define        OFF	0x02
-#define        HALT	0x03
+//#define        HALT	0x03
 #define        JSR      0X04
 #define        RET      0x05
 #define        JSRUR    0x06
