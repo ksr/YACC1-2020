@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2021-08-03T19:57:29Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.6.2"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.9941,
+        "LayerNumber": 4,
+        "Name": {
+            "ProjectId": "yacc2buss"
+        },
+        "Owner": "Ken Rother <ken@krother.com>",
+        "Size": {
+            "X": 304.799988,
+            "Y": 304.799988
+        }
+    }
+}

@@ -1,0 +1,8 @@
+Partlist exported from /Users/ksr77/Documents/YACC1-2020/PCB/Working - Under Develolpment/BUS-PROD-V1.1 copy 2/yacc2buss.sch at 8/3/21 3:57 PM
+
+Qty Value           Device          Package  Parts                          Description                          SPICEMODEL SPICEPREFIX
+8                   CPOL-USE5-6     E5-6     C1, C2, C3, C4, C5, C6, C7, C8 POLARIZED CAPACITOR, American symbol                       
+1                   LED5MM          LED5MM   PWR                            LED                                                        
+1   330             R0207/10        0207/10  R1                             RESISTOR, European symbol            NONE       R          
+8   FABC96S         FABC96S         FABC96S  X1, X2, X3, X4, X5, X6, X7, X8 CONNECTOR                                                  
+2   WIREPAD4,16O1,6 WIREPAD4,16O1,6 4,16O1,6 5V, GND                        Wire PAD connect wire on PCB                               
