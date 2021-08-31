@@ -193,6 +193,7 @@ void setup() {
 void loop() {
 
   int address;
+  int rawaddress;
   int line;
   int instruction;
   unsigned char data[BYTES_PER_LINE];
@@ -287,12 +288,13 @@ void loop() {
     while (1) {
       // Monitor
       delay(1000);
+      rawaddress = readAddress();
       address = readAddress();
-      line = address & 0x1f;
-      instruction = (address & 0x1fe0) >> 5;
+      line = address & 0x3f; //changed from 0x01f
+      instruction = (address & 0x3fc0) >> 6; //changed from (address & 0x1fe0) >> 5;
       if ((previousLine != line) || (previousInstruction != instruction)) {
         readData(data);
-        sprintf(tmp, "Addr=%04x Seq=%05d Ins=%02x Line=%02x Data= ", address & 0x1fff, counter++, instruction, line);
+        sprintf(tmp, "RAW=%04x Addr=%04x Seq=%05d Ins=%02x Line=%02x Data= ", rawaddress, address & 0x1fff, counter++, instruction, line);
         Serial.print(tmp);
         for (int i = 0; i < BYTES_PER_LINE; i++) {
           sprintf(tmp, " %02x: ", data[i]);
