@@ -1,5 +1,6 @@
 .DS_Store
 *~
+/Software-vs/
 /Software/Sequencer Card/uCode-Generator/build/
 /Software/Sequencer Card/uCode-Generator/dist/
 /Software/Assembler/dist/
