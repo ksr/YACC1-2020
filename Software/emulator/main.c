@@ -458,9 +458,8 @@ int main(int argc, char** argv) {
 
         register_inc(PC);
         switch (ins) {
-            case 0x00:
-                printf("Bad opcode [%02x] pc[%04x]\n", ins, register_read_word(PC));
-                exit(0);
+            case START:
+                badOpcode(ins);
                 break;
 
             case ON:
@@ -471,8 +470,7 @@ int main(int argc, char** argv) {
                 out_off();
                 break;
 
-            case 0x03:
-
+            case YHALT:
                 printf("\nHalt[%02x] at [%04x] acc=[%02x] tmp=[%02x] R3=[%04x] R7=[%04x]\n", ins, registers[PC].word - 1, acc, treg, register_read_word(3), register_read_word(7));
                 dump(0x0200, 0x021f);
                 dump(0x0f80, 0x0f8f);
@@ -812,13 +810,23 @@ int main(int argc, char** argv) {
                     //printf("in char %x\n", acc);
                 }
                 break;
-
+                
+            case OPCODE_A5:
+                badOpcode(ins);
+                break;
+            case OPCODE_AD:
+                badOpcode(ins);
+                break;
+                
+            case OPCODE_AE:    
+                badOpcode(ins);
+                break;
+                
             case BR:
             case BRZ:
             case BRNZ:
             case BRINH:
             case BRINL:
-            case 0xa5:
             case BRC:
             case BRLT:
             case BREQ:
@@ -827,8 +835,7 @@ int main(int argc, char** argv) {
             case BR16Z:
             case BR16NZ:
             case BRDEV:
-            case 0xad:
-            case 0xae:
+            
                 hi = memory_read(register_read_word(PC));
                 register_inc(PC);
                 lo = memory_read(register_read_word(PC));
@@ -1036,7 +1043,7 @@ int main(int argc, char** argv) {
                     acc = acc | 0x80;
                 break;
 
-            case LDTVR + REG0: //YIKES
+            case LDTVR + REG0:
             case LDTVR + REG1:
             case LDTVR + REG2:
             case LDTVR + REG3:
@@ -1044,7 +1051,8 @@ int main(int argc, char** argv) {
             case LDTVR + REG5:
             case LDTVR + REG6:
             case LDTVR + REG7:
-                badOpcode(ins);
+                reg = ins & 0x07;
+                treg = memory_read(register_read_word(reg));
                 break;
 
             case STTVR + REG0:
@@ -1055,7 +1063,8 @@ int main(int argc, char** argv) {
             case STTVR + REG5:
             case STTVR + REG6:
             case STTVR + REG7:
-                badOpcode(ins);
+                reg = ins & 0x07;
+                memory[registers[reg].word] = treg;
                 break;
 
             case LDIVR + REG0:
@@ -1217,35 +1226,37 @@ int main(int argc, char** argv) {
                 register_inc(IR);
                 break;
 
-            case 0xf8:
+            case OPCODE_F8:
                 badOpcode(ins);
                 break;
 
-            case 0xf9:
+            case OPCODE_F9:
                 badOpcode(ins);
                 break;
 
-            case 0xfa:
+            case OPCODE_FA:
                 badOpcode(ins);
                 break;
 
-            case INTE: //hack interrupt enable - do nothing
+            case INTE:
+                // do nothing
                 break;
 
-            case 0xfc:
-                badOpcode(ins);
+            case INTD://HACK do nothing
+                // do nothing
                 break;
 
-            case 0xfd:
+            case IRET://hack do nothing
                 badOpcode(ins);
                 break;
 
             case IADDR: //hack load interrupt address for now just skip
                 register_inc(PC);
                 register_inc(PC);
+                // do nothing
                 break;
 
-            case 0xff:
+            case INT:
                 badOpcode(ins);
                 break;
         }
