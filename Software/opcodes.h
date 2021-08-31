@@ -25,9 +25,10 @@ extern "C" {
 }
 #endif
 
+#define        START    0x00
 #define        ON	0x01
 #define        OFF	0x02
-//#define        HALT	0x03
+#define        YHALT	0x03
 #define        JSR      0X04
 #define        RET      0x05
 #define        JSRUR    0x06
@@ -59,6 +60,10 @@ extern "C" {
 #define        BRNZ	0xA2
 #define        BRINH	0xA3
 #define        BRINL	0xA4
+
+//#define      BRNC     0xa5
+#define        OPCODE_A5 0xA5
+
 #define        BRC      0xA6
 #define        BRLT     0xA7
 #define        BREQ     0xA8
@@ -66,6 +71,12 @@ extern "C" {
 #define        BRNEQ    0xAA
 #define        BR16Z    0xAB
 #define        BR16NZ   0xAC
+
+//#define      0xad
+#define        OPCODE_AD 0xAD
+//#define      0xae
+#define        OPCODE_AE 0xAE
+
 #define        BRDEV    0xAF
 #define        ADDI	0xB0
 #define        SUBI	0xB1
@@ -97,6 +108,15 @@ extern "C" {
 #define        STT      0xE7
 #define        STR      0xE8
 #define        LDR      0xF0
+
+//#define 0xf8
+#define OPCODE_F8 0xF8
+//#define 0xf9
+#define OPCODE_F9 0xF9
+//#define 0xfa
+#define OPCODE_FA 0xFA
+
+
 #define        INTE     0XFB
 #define        INTD     0XFC
 #define        IRET     0XFD
