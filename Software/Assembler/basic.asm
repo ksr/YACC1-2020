@@ -12,6 +12,7 @@ showregs:   equ 0ffdch
 showbytea:  equ 0ffe0h
 showcarry:  equ 0ffe4h
 uartin:     equ 0ffe8h
+charavail:  equ 0ffech
 
 ;
 ; Basic interpreter tokens
@@ -61,6 +62,8 @@ TOKENIZER_EXIT: EQU 41
 TOKENIZER_INPUT: EQU 42
 TOKENIZER_INP: EQU 43
 TOKENIZER_OUTP: EQU 44
+TOKENIZER_ON: EQU 45
+TOKENIZER_OFF: EQU 46
 
 
 ;
@@ -1109,8 +1112,28 @@ exe_stmt4:
 
 exe_stmt5:
     LDTI TOKENIZER_GOTO
-    BRNEQ exe_stmt6
+    BRNEQ exe_stmt5a
     JSR exe_goto_stmt
+    ret
+
+exe_stmt5a:
+    LDTI TOKENIZER_ON
+    BRNEQ exe_stmt5b
+    ldai TOKENIZER_ON
+    jsr exe_accept
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    ON
+    ret
+
+exe_stmt5b:
+    LDTI TOKENIZER_OFF
+    BRNEQ exe_stmt6
+    ldai TOKENIZER_OFF
+    jsr exe_accept
+    ldai TOKENIZER_CR
+    jsr exe_accept
+    OFF
     ret
 
 exe_stmt6:
@@ -1211,6 +1234,7 @@ exe_run_cont:
 exe_finished:
 ;    MVIW R2,bas_run_ended
 ;    LDAVR R2
+    JSR test_input
     LDA bas_run_ended
     LDTI 1
     BREQ exe_finished_yes
@@ -1460,6 +1484,8 @@ tokl_call: DB "CALL ",0
 tokl_input: DB "INPUT ",0
 tokl_inp: DB "INP ",0
 tokl_outp: DB "OUTP ",0
+tokl_on: DB "ON ",0
+tokl_off: DB "OFF ",0
 tokl_error: DB "LIST ERROR",0
 
 
@@ -1671,8 +1697,24 @@ baslist19:
 
 baslist20:
     LDTI TOKENIZER_END
-    BRNEQ baslist21
+    BRNEQ baslist20a
     MVIW R7,tokl_end
+    JSR stringout
+    INCR R3
+    BR baslist_loop
+
+baslist20a:
+    LDTI TOKENIZER_ON
+    BRNEQ baslist20b
+    MVIW R7,tokl_on
+    JSR stringout
+    INCR R3
+    BR baslist_loop
+
+baslist20b:
+    LDTI TOKENIZER_OFF
+    BRNEQ baslist21
+    MVIW R7,tokl_off
     JSR stringout
     INCR R3
     BR baslist_loop
@@ -1916,6 +1958,8 @@ parse_keywords:
       DB "input",0,TOKENIZER_INPUT
       DB "inp",0,TOKENIZER_INP
       DB "outp",0,TOKENIZER_OUTP
+      DB "on",0,TOKENIZER_ON
+      DB "off",0,TOKENIZER_OFF
       DB 0,0,TOKENIZER_ERROR
 
 ;
@@ -3094,6 +3138,18 @@ get_inputline:
         MVIW R7,CRLF
         JSR STRINGOUT
         RET
+
+test_input:
+        jsr charavail
+        brnz setbreak
+        ret
+setbreak:
+        pushr r6
+        mviw r6,bas_run_ended
+        LDAI 1
+        STAVR r6
+        popr r6
+        ret
 
 ;
 ; STRINGS

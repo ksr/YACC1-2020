@@ -1603,6 +1603,13 @@ uartinc:
 ;        breq uartin
         JSR   uartout
         RET
+
+uarttest:
+        OUTI  P0,(UARTCS!UARTA5)
+        INP   p1
+        ANDI  01h
+        ret
+    
 ;
 ; long delay (approx 5 seconds)
 ; destroys r7
@@ -1964,6 +1971,9 @@ e_showcarry:
     ret
 e_uartin:
     jsr uartin
+    ret
+e_uarttest:
+    jsr uarttest
     ret
 ;
 ; The End
