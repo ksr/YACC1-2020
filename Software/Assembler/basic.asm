@@ -204,21 +204,21 @@ bas_tok_buf_end: EQU 2000h
 ;
 ; Copy test program into token Buffer, copies 0x0400 bytes
 ;
-      mviw R7,bas_tok_buf_start
-      mviw R6,BASIC_TEST
-      mviw R5,0400h
-
-bas_copyloop:
-      ldavr R6
-      stavr r7
-      incr r6
-      incr r7
-      decr r5
-      mvrha r5
-      brnz bas_copyloop
-      mvrla r5
-      brnz bas_copyloop
-      ret
+;      mviw R7,bas_tok_buf_start
+;     mviw R6,BASIC_TEST
+;      mviw R5,0400h
+;
+;bas_copyloop:
+;      ldavr R6
+;      stavr r7
+;      incr r6
+;      incr r7
+;      decr r5
+;      mvrha r5
+;      brnz bas_copyloop
+;      mvrla r5
+;      brnz bas_copyloop
+;      ret
 
 bigtest:
     mviw r5,0105
@@ -3157,38 +3157,7 @@ setbreak:
 CRLF: DB 0ah,0dh,0
 ;
 
-      ORG 0EF00h
-
-basic_test:
-
-;    DB  25h,0ah,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h,24h,25h,14h,00h
-;    DB  0ah,00h,06h,04h,00h,00h,24h,25h,1eh,00h,11h,00h,04h,00h,00h,23h
-;    DB  04h,00h,00h,17h,02h,01h,00h,24h,25h,28h,00h,13h,00h,07h,04h,00h
-;    DB  00h,21h,02h,0ah,00h,08h,0dh,02h,14h,00h,24h,01h,00h,00h,00h,00h
-
-;    DB  25h,0ah,00h,14h,00h,06h,1fh,02h,01h,00h,17h,02h,02h,00h,20h,17h
-;    DB  02h,03h,00h,24h,25h,14h,00h,0dh,00h,04h,00h,00h,23h,02h,01h,00h
-;    DB  24h,25h,1eh,00h,0dh,00h,04h,01h,00h,23h,02h,02h,00h,24h,25h,28h
-;    DB  00h,0eh,00h,06h,04h,00h,00h,17h,04h,01h,00h,24h,25h,32h,00h,15h
-;    DB  00h,04h,02h,00h,23h,04h,00h,00h,17h,04h,01h,00h,17h,02h,05h,00h
-;    DB  24h,25h,3ch,00h,0ah,00h,06h,04h,02h,00h,24h,01h,00h,00h,00h,00h
-
-;    DB  25h,0ah,00h,0eh,00h,06h,03h,68h,65h,6ch,6ch,6fh,00h,24h,25h,14h
-;    DB  00h,0dh,00h,04h,02h,00h,23h,02h,09h,00h,24h,25h,1eh,00h,0ah,00h
-;    DB  06h,04h,02h,00h,24h,25h,28h,00h,0dh,00h,04h,04h,00h,23h,02h,32h
-;    DB  00h,24h,25h,32h,00h,17h,00h,06h,03h,68h,32h,00h,15h,04h,02h,00h
-;    DB  15h,04h,04h,00h,15h,02h,16h,00h,24h,25h,3ch,00h,12h,00h,0ah,04h
-;    DB  03h,00h,23h,02h,01h,00h,0bh,02h,05h,00h,24h,25h,46h,00h,0ah,00h
-;    DB  06h,04h,03h,00h,24h,25h,50h,00h,0ah,00h,0ch,04h,03h,00h,24h,25h
-;    DB  51h,00h,12h,00h,06h,03h,6eh,65h,78h,74h,20h,64h,6fh,6eh,65h,00h
-;    DB  24h,25h,52h,00h,0ah,00h,0eh,02h,6eh,00h,24h,25h,55h,00h,0ah,00h
-;    DB  0dh,02h,7dh,00h,24h,25h,5ah,0h,12h,00h,06h,03h,6eh,65h,78h,74h
-;    DB  20h,64h,6fh,6eh,65h,00h,24h,25h,6eh,00h,11h,00h,06h,03h,69h,6eh
-;    DB  20h,67h,6fh,73h,75h,62h,00h,24h,25h,70h,00h,11h,00h,06h,03h,69h
-;    DB  6eh,20h,73h,75h,62h,20h,32h,00h,24h,25h,72h,00h,07h,00h,0fh,24h
-;    DB  25h,7dh,00h,0ch,00h,06h,03h,65h,6eh,64h,00h,24h,25h,7eh,00h,07h
-;    DB  00h,14h,24h,01h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
-
+  ORG 0EF00h
 ;
 ; The End
 ;
