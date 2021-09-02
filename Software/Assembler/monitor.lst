@@ -96,9 +96,9 @@ yacc1 -> Native
    90 f020:             ;
    91 f020:             ; Main
    92 f020:             ;
-   93 f020: 04 f8 e6              JSR lblink
-   94 f023: 1f f9 0c              MVIW R7,hello
-   95 f026: 04 f8 59              JSR stringout
+   93 f020: 04 f8 d0              JSR lblink
+   94 f023: 1f f8 f6              MVIW R7,hello
+   95 f026: 04 f8 43              JSR stringout
    96 f029: 04 e0 20              JSR basic_cold   ; initialize basic interpreter
    97 f02c:                                        ; hack should this pass in token buffer ptr
    98 f02c:             ;
@@ -107,30 +107,30 @@ yacc1 -> Native
   101 f02c:             ; show first 16 bytes of ROM & REGISTERS
   102 f02c:             ;
   103 f02c: 1f f0 00             MVIW R7,0f000h
-  104 f02f: 04 f7 45             JSR showaddr
-  105 f032: 04 f7 d2             JSR show16
-  106 f035: 04 f7 8d             JSR showregs
-  107 f038: 1f f9 2b             MVIW R7,CRLF
-  108 f03b: 04 f8 59             JSR stringout
+  104 f02f: 04 f7 2f             JSR showaddr
+  105 f032: 04 f7 bc             JSR show16
+  106 f035: 04 f7 77             JSR showregs
+  107 f038: 1f f9 15             MVIW R7,CRLF
+  108 f03b: 04 f8 43             JSR stringout
   109 f03e:             ;
   110 f03e:             ; show test code addr to use with go command
   111 f03e:             ;
   112 f03e: 1f f0 51             MVIW R7,tttt
-  113 f041: 04 f7 45             JSR showaddr
-  114 f044: 1f f9 2b             MVIW R7,CRLF
-  115 f047: 04 f8 59             JSR stringout
+  113 f041: 04 f7 2f             JSR showaddr
+  114 f044: 1f f9 15             MVIW R7,CRLF
+  115 f047: 04 f8 43             JSR stringout
   116 f04a:             ;
   117 f04a:             ; if INPUT high start the monitor
   118 f04a:             ;
   119 f04a: fe ff 90            iaddr isrcode
   120 f04d: fb                  INTE
-  121 f04e: a3 f4 81            BRINH cmdloop
+  121 f04e: a3 f4 6b            BRINH cmdloop
   122 f051:             ;
   123 f051:             ; else run test/code below at completetion blink OUT LED jump to cmdloop
   124 f051:             ;
   125 f051:             tttt:
-  126 f051: 1f fe 93            MVIW R7,TESTMSG
-  127 f054: 04 f8 59            JSR stringout
+  126 f051: 1f fe 7d            MVIW R7,TESTMSG
+  127 f054: 04 f8 43            JSR stringout
   128 f057:             ;
   129 f057:             ; Tests to be run at startup
   130 f057:             ;
@@ -138,7 +138,7 @@ yacc1 -> Native
   132 f057:             ;
   133 f057:             ; startup tests complete
   134 f057:             ;
-  135 f057: a0 f4 81            BR cmdloop
+  135 f057: a0 f4 6b            BR cmdloop
   136 f05a:             ;
   137 f05a:             ;
   138 f05a:             ;
@@ -173,7 +173,7 @@ yacc1 -> Native
   167 f05a:             ;         jsr sub16tests
   168 f05a:             
   169 f05a:             alltestsdone:
-  170 f05a: 04 f8 e6              JSR lblink
+  170 f05a: 04 f8 d0              JSR lblink
   171 f05d: a0 f0 5a              BR alltestsdone
   172 f060:             
   173 f060:             ;
@@ -289,13 +289,13 @@ yacc1 -> Native
   283 f0ce:             mem_indirect_util:
   284 f0ce: 09                  push
   285 f0cf: 1f 20 00            MVIW R7,02000h
-  286 f0d2: 04 f7 45            JSR showaddr
-  287 f0d5: 04 f7 d2            JSR show16
-  288 f0d8: 04 f7 8d            JSR showregs
+  286 f0d2: 04 f7 2f            JSR showaddr
+  287 f0d5: 04 f7 bc            JSR show16
+  288 f0d8: 04 f7 77            JSR showregs
   289 f0db: 0a                  pop
-  290 f0dc: 04 f8 14            JSR showbytea
-  291 f0df: 1f f9 2b            MVIW R7,CRLF
-  292 f0e2: 04 f8 59            JSR stringout
+  290 f0dc: 04 f7 fe            JSR showbytea
+  291 f0df: 1f f9 15            MVIW R7,CRLF
+  292 f0e2: 04 f8 43            JSR stringout
   293 f0e5: 05                  ret
   294 f0e6:             ;
   295 f0e6:             ; 16 bit add carry tests
@@ -327,9 +327,9 @@ yacc1 -> Native
   321 f113: 05                ret
   322 f114:             
   323 f114:             do_add16_util:
-  324 f114: 04 f7 8d          jsr showregs
+  324 f114: 04 f7 77          jsr showregs
   325 f117: 04 f1 1e          jsr do_add16
-  326 f11a: 04 f7 8d          jsr showregs
+  326 f11a: 04 f7 77          jsr showregs
   327 f11d: 05                ret
   328 f11e:             
   329 f11e:             do_add16:
@@ -380,9 +380,9 @@ yacc1 -> Native
   374 f159: 05                ret
   375 f15a:             
   376 f15a:             do_sub16_util:
-  377 f15a: 04 f7 8d          jsr showregs
+  377 f15a: 04 f7 77          jsr showregs
   378 f15d: 04 f1 64          jsr do_sub16
-  379 f160: 04 f7 8d          jsr showregs
+  379 f160: 04 f7 77          jsr showregs
   380 f163: 05                ret
   381 f164:             ;
   382 f164:             ; 16 bit subtract of r4 from r5, return result in r5
@@ -395,7 +395,7 @@ yacc1 -> Native
   389 f168: b5                inva
   390 f169: 34                mvarl r4
   391 f16a: 54                incr r4
-  392 f16b: 04 f7 8d          jsr showregs
+  392 f16b: 04 f7 77          jsr showregs
   393 f16e: a0 f1 1e          br do_add16
   394 f171:             ;
   395 f171:             ; pushr popr test
@@ -405,137 +405,137 @@ yacc1 -> Native
   399 f171:             pushr_popr_tests:
   400 f171: 1b 0f f0             MVIW R3,0ff0h  ;setup to show stack
   401 f174: 0f 51                movrr r1,r5    ;put a copy of stack ptr into r5
-  402 f176: 04 f7 45             JSR showaddr
-  403 f179: 04 f7 d2             JSR show16
-  404 f17c: 04 f7 8d             JSR showregs
-  405 f17f: 1f f9 2b             MVIW R7,CRLF
-  406 f182: 04 f8 59             JSR stringout
+  402 f176: 04 f7 2f             JSR showaddr
+  403 f179: 04 f7 bc             JSR show16
+  404 f17c: 04 f7 77             JSR showregs
+  405 f17f: 1f f9 15             MVIW R7,CRLF
+  406 f182: 04 f8 43             JSR stringout
   407 f185:             
   408 f185: 1c 12 34             mviw R4,01234h ;put a value into R4
   409 f188: 0f 51                movrr r1,r5
   410 f18a: 1b 0f f0             MVIW R3,0ff0h
-  411 f18d: 04 f7 45             JSR showaddr
-  412 f190: 04 f7 d2             JSR show16
-  413 f193: 04 f7 8d             JSR showregs
-  414 f196: 1f f9 2b             MVIW R7,CRLF
-  415 f199: 04 f8 59             JSR stringout
+  411 f18d: 04 f7 2f             JSR showaddr
+  412 f190: 04 f7 bc             JSR show16
+  413 f193: 04 f7 77             JSR showregs
+  414 f196: 1f f9 15             MVIW R7,CRLF
+  415 f199: 04 f8 43             JSR stringout
   416 f19c:             
   417 f19c: 07 04                pushr r4
   418 f19e: 0f 51                movrr r1,r5
   419 f1a0: 1b 0f f0             MVIW R3,0ff0h
-  420 f1a3: 04 f7 45             JSR showaddr
-  421 f1a6: 04 f7 d2             JSR show16
-  422 f1a9: 04 f7 8d             JSR showregs
-  423 f1ac: 1f f9 2b             MVIW R7,CRLF
-  424 f1af: 04 f8 59             JSR stringout
+  420 f1a3: 04 f7 2f             JSR showaddr
+  421 f1a6: 04 f7 bc             JSR show16
+  422 f1a9: 04 f7 77             JSR showregs
+  423 f1ac: 1f f9 15             MVIW R7,CRLF
+  424 f1af: 04 f8 43             JSR stringout
   425 f1b2:             
   426 f1b2: 1c 00 00             mviw r4,0h
   427 f1b5: 0f 51                movrr r1,r5
   428 f1b7: 1b 0f f0             MVIW R3,0ff0h
-  429 f1ba: 04 f7 45             JSR showaddr
-  430 f1bd: 04 f7 d2             JSR show16
-  431 f1c0: 04 f7 8d             JSR showregs
-  432 f1c3: 1f f9 2b             MVIW R7,CRLF
-  433 f1c6: 04 f8 59             JSR stringout
-  434 f1c9:             
-  435 f1c9: 08 40                popr r4
-  436 f1cb: 0f 51                movrr r1,r5
-  437 f1cd: 1b 0f f0             MVIW R3,0ff0h
-  438 f1d0: 04 f7 45             JSR showaddr
-  439 f1d3: 04 f7 d2             JSR show16
-  440 f1d6: 04 f7 8d             JSR showregs
-  441 f1d9: 1f f9 2b             MVIW R7,CRLF
-  442 f1dc: 04 f8 59             JSR stringout
-  443 f1df: 05                   ret
-  444 f1e0:             
-  445 f1e0:             ;
-  446 f1e0:             ; Register to Register move test
-  447 f1e0:             ;
-  448 f1e0:             movrrtest:
-  449 f1e0: 1f fe 85            MVIW   R7,MOVRRHELP
-  450 f1e3: 04 f8 59            JSR    stringout
-  451 f1e6:             
-  452 f1e6: 1b 12 34            MVIW R3,1234h
-  453 f1e9: 1c 56 78            MVIW R4,5678h
-  454 f1ec:             
-  455 f1ec: 04 f2 0f            jsr showreg34
-  456 f1ef:             
-  457 f1ef: 0f 43               MOVRR R3,R4
-  458 f1f1:             
-  459 f1f1: 04 f2 0f            jsr showreg34
-  460 f1f4:             
-  461 f1f4: 1b 43 21            MVIW R3,4321h
-  462 f1f7:             
-  463 f1f7: 04 f2 0f            jsr SHOWREG34
-  464 f1fa:             
-  465 f1fa: 1c 12 34            MVIW R4,1234h
-  466 f1fd: 1d 56 78            MVIW R5,5678h
-  467 f200:             
-  468 f200: 04 f2 40            jsr showreg45
-  469 f203:             
-  470 f203: 0f 54               MOVRR R4,R5
-  471 f205:             
-  472 f205: 04 f2 40            jsr showreg45
-  473 f208:             
-  474 f208: 1c 43 21            MVIW R4,4321h
-  475 f20b:             
-  476 f20b: 04 f2 40            jsr showreg45
-  477 f20e:             
-  478 f20e: 05                  ret
-  479 f20f:             
-  480 f20f:             ;
-  481 f20f:             ; sho registers (hard coded)
-  482 f20f:             ;
-  483 f20f:             showreg34:              ; registers across two boards
-  484 f20f: 0e 00               LDAI 0h
-  485 f211: 04 f8 51            JSR ledout
-  486 f214: 2b                  MVRHA r3
-  487 f215: 04 f8 55            JSR TIL311out
-  488 f218: 04 f8 b6            JSR switchtoggle
-  489 f21b: 0e 01               LDAI 1h
-  490 f21d: 04 f8 51            JSR ledout
-  491 f220: 23                  MVRLA r3
-  492 f221: 04 f8 55            JSR TIL311out
-  493 f224: 04 f8 b6            JSR switchtoggle
-  494 f227: 0e 02               LDAI 2h
-  495 f229: 04 f8 51            JSR ledout
-  496 f22c: 2c                  MVRHA r4
-  497 f22d: 04 f8 55            JSR TIL311out
-  498 f230: 04 f8 b6            JSR switchtoggle
-  499 f233: 0e 03               LDAI 3h
-  500 f235: 04 f8 51            JSR ledout
-  501 f238: 24                  MVRLA r4
-  502 f239: 04 f8 55            JSR TIL311out
-  503 f23c: 04 f8 b6            JSR switchtoggle
-  504 f23f: 05                  ret
-  505 f240:             
-  506 f240:             showreg45:             ;register on same board
-  507 f240: 0e 00               LDAI 0h
-  508 f242: 04 f8 51            JSR ledout
-  509 f245: 2c                  MVRHA r4
-  510 f246: 04 f8 55            JSR TIL311out
-  511 f249: 04 f8 b6            JSR switchtoggle
-  512 f24c: 0e 01               LDAI 1h
-  513 f24e: 04 f8 51            JSR ledout
-  514 f251: 24                  MVRLA r4
-  515 f252: 04 f8 55            JSR TIL311out
-  516 f255: 04 f8 b6            JSR switchtoggle
-  517 f258: 0e 02               LDAI 2h
-  518 f25a: 04 f8 51            JSR ledout
-  519 f25d: 2d                  MVRHA r5
-  520 f25e: 04 f8 55            JSR TIL311out
-  521 f261: 04 f8 b6            JSR switchtoggle
-  522 f264: 0e 03               LDAI 3h
-  523 f266: 04 f8 51            JSR ledout
-  524 f269: 25                  MVRLA r5
-  525 f26a: 04 f8 55            JSR TIL311out
-  526 f26d: 04 f8 b6            JSR switchtoggle
-  527 f270: 05                  ret
-  528 f271:             
-  529 f271:             ;
-  530 f271:             ; OR - OR accumulator immediate
-  531 f271:             ;
-  532 f271: 4f 52 20 54 
+  429 f1ba: 04 f7 2f             JSR showaddr
+  430 f1bd: 04 f7 bc             JSR show16
+  431 f1c0: 04 f7 77             JSR showregs
+  432 f1c3: 1f f9 15             MVIW R7,CRLF
+  433 f1c6: 04 f8 43             JSR stringout
+  434 f1c9:             ; Hack to remove code to check if core blew when uarttest code added
+  435 f1c9:             ;         popr r4
+  436 f1c9:             ;         movrr r1,r5
+  437 f1c9:             ;         MVIW R3,0ff0h
+  438 f1c9:             ;         JSR showaddr
+  439 f1c9:             ;         JSR show16
+  440 f1c9:             ;         JSR showregs
+  441 f1c9:             ;         MVIW R7,CRLF
+  442 f1c9:             ;         JSR stringout
+  443 f1c9: 05                   ret
+  444 f1ca:             
+  445 f1ca:             ;
+  446 f1ca:             ; Register to Register move test
+  447 f1ca:             ;
+  448 f1ca:             movrrtest:
+  449 f1ca: 1f fe 6f            MVIW   R7,MOVRRHELP
+  450 f1cd: 04 f8 43            JSR    stringout
+  451 f1d0:             
+  452 f1d0: 1b 12 34            MVIW R3,1234h
+  453 f1d3: 1c 56 78            MVIW R4,5678h
+  454 f1d6:             
+  455 f1d6: 04 f1 f9            jsr showreg34
+  456 f1d9:             
+  457 f1d9: 0f 43               MOVRR R3,R4
+  458 f1db:             
+  459 f1db: 04 f1 f9            jsr showreg34
+  460 f1de:             
+  461 f1de: 1b 43 21            MVIW R3,4321h
+  462 f1e1:             
+  463 f1e1: 04 f1 f9            jsr SHOWREG34
+  464 f1e4:             
+  465 f1e4: 1c 12 34            MVIW R4,1234h
+  466 f1e7: 1d 56 78            MVIW R5,5678h
+  467 f1ea:             
+  468 f1ea: 04 f2 2a            jsr showreg45
+  469 f1ed:             
+  470 f1ed: 0f 54               MOVRR R4,R5
+  471 f1ef:             
+  472 f1ef: 04 f2 2a            jsr showreg45
+  473 f1f2:             
+  474 f1f2: 1c 43 21            MVIW R4,4321h
+  475 f1f5:             
+  476 f1f5: 04 f2 2a            jsr showreg45
+  477 f1f8:             
+  478 f1f8: 05                  ret
+  479 f1f9:             
+  480 f1f9:             ;
+  481 f1f9:             ; sho registers (hard coded)
+  482 f1f9:             ;
+  483 f1f9:             showreg34:              ; registers across two boards
+  484 f1f9: 0e 00               LDAI 0h
+  485 f1fb: 04 f8 3b            JSR ledout
+  486 f1fe: 2b                  MVRHA r3
+  487 f1ff: 04 f8 3f            JSR TIL311out
+  488 f202: 04 f8 a0            JSR switchtoggle
+  489 f205: 0e 01               LDAI 1h
+  490 f207: 04 f8 3b            JSR ledout
+  491 f20a: 23                  MVRLA r3
+  492 f20b: 04 f8 3f            JSR TIL311out
+  493 f20e: 04 f8 a0            JSR switchtoggle
+  494 f211: 0e 02               LDAI 2h
+  495 f213: 04 f8 3b            JSR ledout
+  496 f216: 2c                  MVRHA r4
+  497 f217: 04 f8 3f            JSR TIL311out
+  498 f21a: 04 f8 a0            JSR switchtoggle
+  499 f21d: 0e 03               LDAI 3h
+  500 f21f: 04 f8 3b            JSR ledout
+  501 f222: 24                  MVRLA r4
+  502 f223: 04 f8 3f            JSR TIL311out
+  503 f226: 04 f8 a0            JSR switchtoggle
+  504 f229: 05                  ret
+  505 f22a:             
+  506 f22a:             showreg45:             ;register on same board
+  507 f22a: 0e 00               LDAI 0h
+  508 f22c: 04 f8 3b            JSR ledout
+  509 f22f: 2c                  MVRHA r4
+  510 f230: 04 f8 3f            JSR TIL311out
+  511 f233: 04 f8 a0            JSR switchtoggle
+  512 f236: 0e 01               LDAI 1h
+  513 f238: 04 f8 3b            JSR ledout
+  514 f23b: 24                  MVRLA r4
+  515 f23c: 04 f8 3f            JSR TIL311out
+  516 f23f: 04 f8 a0            JSR switchtoggle
+  517 f242: 0e 02               LDAI 2h
+  518 f244: 04 f8 3b            JSR ledout
+  519 f247: 2d                  MVRHA r5
+  520 f248: 04 f8 3f            JSR TIL311out
+  521 f24b: 04 f8 a0            JSR switchtoggle
+  522 f24e: 0e 03               LDAI 3h
+  523 f250: 04 f8 3b            JSR ledout
+  524 f253: 25                  MVRLA r5
+  525 f254: 04 f8 3f            JSR TIL311out
+  526 f257: 04 f8 a0            JSR switchtoggle
+  527 f25a: 05                  ret
+  528 f25b:             
+  529 f25b:             ;
+  530 f25b:             ; OR - OR accumulator immediate
+  531 f25b:             ;
+  532 f25b: 4f 52 20 54 
             45 53 54 53 
             20 2d 20 4f 
             52 20 49 4e 
@@ -547,145 +547,145 @@ yacc1 -> Native
             35 35 20 28 
             35 58 29 0a 
             0d 00       ORHELP: DB "OR tests - or input switches with 0x55 (5x)",0ah,0dh,0
-  533 f29f:             ortest:
-  534 f29f: 1f f2 71             MVIW   R7,ORHELP
-  535 f2a2: 04 f8 59             JSR    stringout
-  536 f2a5: 13 05                MVIB   R3,5
-  537 f2a7:             orloop:
-  538 f2a7: 04 f8 b6             JSR switchtoggle
-  539 f2aa: 70 01                OUTI P0,(SWITCHLED)
-  540 f2ac: 91                   INP P1
-  541 f2ad: b2 55                ORI  055H
-  542 f2af: 61                   OUTA  P1
-  543 f2b0:             
-  544 f2b0: 5b                   DECR R3
-  545 f2b1: 23                   MVRLA R3
-  546 f2b2: a2 f2 a7             BRNZ orloop
-  547 f2b5: 05                   RET
-  548 f2b6:             
-  549 f2b6:             ;
-  550 f2b6:             ; ADDI - ADD accumulator with immediate
-  551 f2b6:             ;
-  552 f2b6:             additest:
-  553 f2b6: 1f fe 32           MVIW   R7,ADDIHELP
-  554 f2b9: 04 f8 59           JSR    stringout
-  555 f2bc: 13 05              MVIB   R3,5
-  556 f2be:             addiloop:
-  557 f2be: 04 f8 b6           JSR switchtoggle
-  558 f2c1: 70 01              OUTI P0,(SWITCHLED)
-  559 f2c3: 91                 INP P1
-  560 f2c4: b0 02              ADDI 02h
-  561 f2c6: 61                 OUTA  P1
-  562 f2c7:             
-  563 f2c7: 5b                 DECR R3
-  564 f2c8: 23                 MVRLA R3
-  565 f2c9: a2 f2 be           BRNZ addiloop
-  566 f2cc: 05                 RET
-  567 f2cd:             
-  568 f2cd:             ;
-  569 f2cd:             ; ADDIC - ADD accumulator with immediate with carry
-  570 f2cd:             ;
-  571 f2cd:             addictest:
-  572 f2cd: 1f fe 56          MVIW   R7,ADDICHELP
-  573 f2d0: 04 f8 59          JSR    stringout
-  574 f2d3: 13 05             MVIB   R3,5
-  575 f2d5:             addicloop:
-  576 f2d5: 04 f8 b6          JSR switchtoggle
-  577 f2d8: 70 01             OUTI P0,(SWITCHLED)
-  578 f2da: 91                INP P1
-  579 f2db: e2 02             ADDIC 02h
-  580 f2dd: 61                OUTA  P1
-  581 f2de:             
-  582 f2de: 5b                DECR R3
-  583 f2df: 23                MVRLA R3
-  584 f2e0: a2 f2 d5          BRNZ addicloop
-  585 f2e3: 05                RET
-  586 f2e4:             
-  587 f2e4:             ;
-  588 f2e4:             ; ORT - OR accumulator with tmp register
-  589 f2e4:             ;
-  590 f2e4:             orttest:
-  591 f2e4: 1f fe 1a            MVIW   R7,ORTHELP
-  592 f2e7: 04 f8 59            JSR    stringout
-  593 f2ea: 13 05               MVIB   R3,5
-  594 f2ec:             ortloop:
-  595 f2ec: 04 f8 b6            JSR switchtoggle
-  596 f2ef: 70 01               OUTI P0,(SWITCHLED)
-  597 f2f1: 91                  INP P1
-  598 f2f2: 0b                  MVAT
-  599 f2f3: 04 f8 b6            JSR switchtoggle
-  600 f2f6: 70 01               OUTI P0,(SWITCHLED)
-  601 f2f8: 91                  INP P1
-  602 f2f9: ba                  ORT
-  603 f2fa: 61                  OUTA  P1
-  604 f2fb:             
-  605 f2fb: 5b                  DECR R3
-  606 f2fc: 23                  MVRLA R3
-  607 f2fd: a2 f2 ec            BRNZ ortloop
-  608 f300: 05                  RET
-  609 f301:             ;
-  610 f301:             ; push pop tests - push 3 values onto stack, pop 3values from stack
-  611 f301:             ;
-  612 f301:             pushpoptest:
-  613 f301: 1f fd ff             MVIW   R7,PUSHPOPHELP
-  614 f304: 04 f8 59             JSR    stringout
-  615 f307:             
-  616 f307: 13 03                MVIB   R3,3
-  617 f309:             ppenterloop:
-  618 f309: 04 f8 b6             JSR switchtoggle
-  619 f30c: 70 01                OUTI P0,(SWITCHLED)
-  620 f30e: 91                   INP P1
-  621 f30f: 09                   push
-  622 f310:             
-  623 f310: 5b                   DECR R3
-  624 f311: 23                   MVRLA R3
-  625 f312: a2 f3 09             BRNZ ppenterloop
-  626 f315:             
-  627 f315: 13 03                MVIB   R3,3
-  628 f317:             ppdisloop:
-  629 f317: 04 f8 b6            JSR switchtoggle
-  630 f31a: 70 01               OUTI P0,(SWITCHLED)
-  631 f31c: 0a                  POP
-  632 f31d: 61                  OUTA  P1
-  633 f31e: 5b                  DECR R3
-  634 f31f: 23                  MVRLA R3
-  635 f320: a2 f3 17            BRNZ ppdisloop
-  636 f323:             
-  637 f323: 05                  RET
-  638 f324:             ;
-  639 f324:             ; accumulator register Tests - move values between accumulator and register HI 8 bits
-  640 f324:             ;                              move values between accumulator and register LO 8 bits
-  641 f324:             ;
-  642 f324:             accumtest:
-  643 f324: 1f fd ec             MVIW   R7,accumhelp
-  644 f327: 04 f8 59             JSR    stringout
-  645 f32a: 13 0a                MVIB   R3,10
-  646 f32c:             accloop:
-  647 f32c: 04 f8 b6             JSR switchtoggle
-  648 f32f: 70 01                OUTI P0,(SWITCHLED)
-  649 f331: 91                   INP P1
-  650 f332: 3b                   MVARH R3
-  651 f333: 53                   INCR R3
-  652 f334: 2b                   MVRHA R3
-  653 f335: 61                   OUTA P1
-  654 f336: 04 f8 b6             JSR switchtoggle
-  655 f339: 70 01                OUTI P0,(SWITCHLED)
-  656 f33b: 91                   INP P1
-  657 f33c: 33                   MVARL R3
-  658 f33d: 53                   INCR R3
-  659 f33e: 23                   MVRLA R3
-  660 f33f: 61                   OUTA P1
-  661 f340:             
-  662 f340: 5b                   DECR R3
-  663 f341: 23                   MVRLA R3
-  664 f342: a2 f3 2c             BRNZ accloop
-  665 f345: 05                   RET
-  666 f346:             ;
-  667 f346:             ; shift tests
-  668 f346:             ;
-  669 f346:             ; Shift left
-  670 f346:             ;
-  671 f346: 53 48 49 46 
+  533 f289:             ortest:
+  534 f289: 1f f2 5b             MVIW   R7,ORHELP
+  535 f28c: 04 f8 43             JSR    stringout
+  536 f28f: 13 05                MVIB   R3,5
+  537 f291:             orloop:
+  538 f291: 04 f8 a0             JSR switchtoggle
+  539 f294: 70 01                OUTI P0,(SWITCHLED)
+  540 f296: 91                   INP P1
+  541 f297: b2 55                ORI  055H
+  542 f299: 61                   OUTA  P1
+  543 f29a:             
+  544 f29a: 5b                   DECR R3
+  545 f29b: 23                   MVRLA R3
+  546 f29c: a2 f2 91             BRNZ orloop
+  547 f29f: 05                   RET
+  548 f2a0:             
+  549 f2a0:             ;
+  550 f2a0:             ; ADDI - ADD accumulator with immediate
+  551 f2a0:             ;
+  552 f2a0:             additest:
+  553 f2a0: 1f fe 1c           MVIW   R7,ADDIHELP
+  554 f2a3: 04 f8 43           JSR    stringout
+  555 f2a6: 13 05              MVIB   R3,5
+  556 f2a8:             addiloop:
+  557 f2a8: 04 f8 a0           JSR switchtoggle
+  558 f2ab: 70 01              OUTI P0,(SWITCHLED)
+  559 f2ad: 91                 INP P1
+  560 f2ae: b0 02              ADDI 02h
+  561 f2b0: 61                 OUTA  P1
+  562 f2b1:             
+  563 f2b1: 5b                 DECR R3
+  564 f2b2: 23                 MVRLA R3
+  565 f2b3: a2 f2 a8           BRNZ addiloop
+  566 f2b6: 05                 RET
+  567 f2b7:             
+  568 f2b7:             ;
+  569 f2b7:             ; ADDIC - ADD accumulator with immediate with carry
+  570 f2b7:             ;
+  571 f2b7:             addictest:
+  572 f2b7: 1f fe 40          MVIW   R7,ADDICHELP
+  573 f2ba: 04 f8 43          JSR    stringout
+  574 f2bd: 13 05             MVIB   R3,5
+  575 f2bf:             addicloop:
+  576 f2bf: 04 f8 a0          JSR switchtoggle
+  577 f2c2: 70 01             OUTI P0,(SWITCHLED)
+  578 f2c4: 91                INP P1
+  579 f2c5: e2 02             ADDIC 02h
+  580 f2c7: 61                OUTA  P1
+  581 f2c8:             
+  582 f2c8: 5b                DECR R3
+  583 f2c9: 23                MVRLA R3
+  584 f2ca: a2 f2 bf          BRNZ addicloop
+  585 f2cd: 05                RET
+  586 f2ce:             
+  587 f2ce:             ;
+  588 f2ce:             ; ORT - OR accumulator with tmp register
+  589 f2ce:             ;
+  590 f2ce:             orttest:
+  591 f2ce: 1f fe 04            MVIW   R7,ORTHELP
+  592 f2d1: 04 f8 43            JSR    stringout
+  593 f2d4: 13 05               MVIB   R3,5
+  594 f2d6:             ortloop:
+  595 f2d6: 04 f8 a0            JSR switchtoggle
+  596 f2d9: 70 01               OUTI P0,(SWITCHLED)
+  597 f2db: 91                  INP P1
+  598 f2dc: 0b                  MVAT
+  599 f2dd: 04 f8 a0            JSR switchtoggle
+  600 f2e0: 70 01               OUTI P0,(SWITCHLED)
+  601 f2e2: 91                  INP P1
+  602 f2e3: ba                  ORT
+  603 f2e4: 61                  OUTA  P1
+  604 f2e5:             
+  605 f2e5: 5b                  DECR R3
+  606 f2e6: 23                  MVRLA R3
+  607 f2e7: a2 f2 d6            BRNZ ortloop
+  608 f2ea: 05                  RET
+  609 f2eb:             ;
+  610 f2eb:             ; push pop tests - push 3 values onto stack, pop 3values from stack
+  611 f2eb:             ;
+  612 f2eb:             pushpoptest:
+  613 f2eb: 1f fd e9             MVIW   R7,PUSHPOPHELP
+  614 f2ee: 04 f8 43             JSR    stringout
+  615 f2f1:             
+  616 f2f1: 13 03                MVIB   R3,3
+  617 f2f3:             ppenterloop:
+  618 f2f3: 04 f8 a0             JSR switchtoggle
+  619 f2f6: 70 01                OUTI P0,(SWITCHLED)
+  620 f2f8: 91                   INP P1
+  621 f2f9: 09                   push
+  622 f2fa:             
+  623 f2fa: 5b                   DECR R3
+  624 f2fb: 23                   MVRLA R3
+  625 f2fc: a2 f2 f3             BRNZ ppenterloop
+  626 f2ff:             
+  627 f2ff: 13 03                MVIB   R3,3
+  628 f301:             ppdisloop:
+  629 f301: 04 f8 a0            JSR switchtoggle
+  630 f304: 70 01               OUTI P0,(SWITCHLED)
+  631 f306: 0a                  POP
+  632 f307: 61                  OUTA  P1
+  633 f308: 5b                  DECR R3
+  634 f309: 23                  MVRLA R3
+  635 f30a: a2 f3 01            BRNZ ppdisloop
+  636 f30d:             
+  637 f30d: 05                  RET
+  638 f30e:             ;
+  639 f30e:             ; accumulator register Tests - move values between accumulator and register HI 8 bits
+  640 f30e:             ;                              move values between accumulator and register LO 8 bits
+  641 f30e:             ;
+  642 f30e:             accumtest:
+  643 f30e: 1f fd d6             MVIW   R7,accumhelp
+  644 f311: 04 f8 43             JSR    stringout
+  645 f314: 13 0a                MVIB   R3,10
+  646 f316:             accloop:
+  647 f316: 04 f8 a0             JSR switchtoggle
+  648 f319: 70 01                OUTI P0,(SWITCHLED)
+  649 f31b: 91                   INP P1
+  650 f31c: 3b                   MVARH R3
+  651 f31d: 53                   INCR R3
+  652 f31e: 2b                   MVRHA R3
+  653 f31f: 61                   OUTA P1
+  654 f320: 04 f8 a0             JSR switchtoggle
+  655 f323: 70 01                OUTI P0,(SWITCHLED)
+  656 f325: 91                   INP P1
+  657 f326: 33                   MVARL R3
+  658 f327: 53                   INCR R3
+  659 f328: 23                   MVRLA R3
+  660 f329: 61                   OUTA P1
+  661 f32a:             
+  662 f32a: 5b                   DECR R3
+  663 f32b: 23                   MVRLA R3
+  664 f32c: a2 f3 16             BRNZ accloop
+  665 f32f: 05                   RET
+  666 f330:             ;
+  667 f330:             ; shift tests
+  668 f330:             ;
+  669 f330:             ; Shift left
+  670 f330:             ;
+  671 f330: 53 48 49 46 
             54 20 4c 45 
             46 54 20 2d 
             20 53 48 49 
@@ -696,25 +696,25 @@ yacc1 -> Native
             53 20 28 35 
             58 29 0a 0d 
             00          SHIFT_LEFTHELP: DB "Shift Left - shift input switches (5x)",0ah,0dh,0
-  672 f36f:             shltest:
-  673 f36f: 1f f3 46             MVIW   R7,SHIFT_LEFTHELP
-  674 f372: 04 f8 59             JSR    stringout
-  675 f375: 13 05                MVIB   R3,5
-  676 f377:             shlloop:
-  677 f377: 04 f8 b6             JSR switchtoggle
-  678 f37a: 70 01                OUTI P0,(SWITCHLED)
-  679 f37c: 91                   INP P1
-  680 f37d: b6                   SHL
-  681 f37e: 61                   OUTA  P1
-  682 f37f:             
-  683 f37f: 5b                   DECR R3
-  684 f380: 23                   MVRLA R3
-  685 f381: a2 f3 77             BRNZ shlloop
-  686 f384: 05                   RET
-  687 f385:             ;
-  688 f385:             ; shift Right
-  689 f385:             ;
-  690 f385: 53 48 49 46 
+  672 f359:             shltest:
+  673 f359: 1f f3 30             MVIW   R7,SHIFT_LEFTHELP
+  674 f35c: 04 f8 43             JSR    stringout
+  675 f35f: 13 05                MVIB   R3,5
+  676 f361:             shlloop:
+  677 f361: 04 f8 a0             JSR switchtoggle
+  678 f364: 70 01                OUTI P0,(SWITCHLED)
+  679 f366: 91                   INP P1
+  680 f367: b6                   SHL
+  681 f368: 61                   OUTA  P1
+  682 f369:             
+  683 f369: 5b                   DECR R3
+  684 f36a: 23                   MVRLA R3
+  685 f36b: a2 f3 61             BRNZ shlloop
+  686 f36e: 05                   RET
+  687 f36f:             ;
+  688 f36f:             ; shift Right
+  689 f36f:             ;
+  690 f36f: 53 48 49 46 
             54 20 52 49 
             47 48 54 20 
             2d 20 53 48 
@@ -725,1051 +725,1051 @@ yacc1 -> Native
             45 53 20 28 
             35 58 29 0a 
             0d 00       SHIFT_RIGHTHELP: DB "Shift Right - shift input switches (5x)",0ah,0dh,0
-  691 f3af:             shrtest:
-  692 f3af: 1f f3 85              MVIW   R7,SHIFT_RIGHTHELP
-  693 f3b2: 04 f8 59              JSR    stringout
-  694 f3b5: 13 05                 MVIB   R3,5
-  695 f3b7:             shrloop:
-  696 f3b7: 04 f8 b6              JSR switchtoggle
-  697 f3ba: 70 01                 OUTI P0,(SWITCHLED)
-  698 f3bc: 91                    INP P1
-  699 f3bd: b7                    SHR
-  700 f3be: 61                    OUTA  P1
-  701 f3bf:             
-  702 f3bf: 5b                    DECR R3
-  703 f3c0: 23                    MVRLA R3
-  704 f3c1: a2 f3 b7              BRNZ shrloop
-  705 f3c4: 05                    RET
-  706 f3c5:             ;
-  707 f3c5:             ; ring shift left
-  708 f3c5:             ;
-  709 f3c5:             rshltest:
-  710 f3c5: 1f fd 82             MVIW   R7,RSHIFT_LEFTHELP
-  711 f3c8: 04 f8 59             JSR    stringout
-  712 f3cb: 13 0a                MVIB   R3,10
-  713 f3cd:             rshlloop:
-  714 f3cd: 04 f8 b6             JSR switchtoggle
-  715 f3d0: 70 01                OUTI P0,(SWITCHLED)
-  716 f3d2: 91                   INP P1
-  717 f3d3: bd                   RSHL
-  718 f3d4: 61                   OUTA  P1
-  719 f3d5:             
-  720 f3d5: 5b                   DECR R3
-  721 f3d6: 23                   MVRLA R3
-  722 f3d7: a2 f3 cd             BRNZ rshlloop
-  723 f3da: 05                   RET
-  724 f3db:             ;
-  725 f3db:             ; ring shift right
-  726 f3db:             ;
-  727 f3db:             rshrtest:
-  728 f3db: 1f fd 94              MVIW   R7,RSHIFT_RIGHTHELP
-  729 f3de: 04 f8 59              JSR    stringout
-  730 f3e1: 13 0a                 MVIB   R3,10
-  731 f3e3:             rshrloop:
-  732 f3e3: 04 f8 b6              JSR switchtoggle
-  733 f3e6: 70 01                 OUTI P0,(SWITCHLED)
-  734 f3e8: 91                    INP P1
-  735 f3e9: be                    RSHR
-  736 f3ea: 61                    OUTA  P1
-  737 f3eb:             
-  738 f3eb: 5b                    DECR R3
-  739 f3ec: 23                    MVRLA R3
-  740 f3ed: a2 f3 e3              BRNZ rshrloop
-  741 f3f0: 05                    RET
-  742 f3f1:             ;
-  743 f3f1:             ; shift right and propagate sign bit
-  744 f3f1:             ;
-  745 f3f1:             pshrtest:
-  746 f3f1: 1f fd a7              MVIW   R7,PSHIFT_RIGHTHELP
-  747 f3f4: 04 f8 59              JSR    stringout
-  748 f3f7: 13 0a                 MVIB   R3,10
-  749 f3f9:             pshrloop:
-  750 f3f9: 04 f8 b6              JSR switchtoggle
-  751 f3fc: 70 01                 OUTI P0,(SWITCHLED)
-  752 f3fe: 91                    INP P1
-  753 f3ff: bf                    PSHR
-  754 f400: 61                    OUTA  P1
-  755 f401:             
-  756 f401: 5b                    DECR R3
-  757 f402: 23                    MVRLA R3
-  758 f403: a2 f3 f9              BRNZ pshrloop
-  759 f406: 05                    RET
-  760 f407:             ;
-  761 f407:             ; ring shift left through carry bit
-  762 f407:             ;
-  763 f407:             cshltest:
-  764 f407: 1f fd ba              MVIW   R7,CSHIFT_LEFTHELP
-  765 f40a: 04 f8 59              JSR    stringout
-  766 f40d: 13 0a                 MVIB   R3,10
-  767 f40f:             cshlloop:
-  768 f40f: 04 f8 b6              JSR switchtoggle
-  769 f412: 70 01                 OUTI P0,(SWITCHLED)
-  770 f414: 91                    INP P1
-  771 f415: e0                    CSHL
-  772 f416: 61                    OUTA  P1
-  773 f417:             
-  774 f417: 5b                    DECR R3
-  775 f418: 23                    MVRLA R3
-  776 f419: a2 f4 0f              BRNZ cshlloop
-  777 f41c: 05                    RET
-  778 f41d:             ;
-  779 f41d:             ; ring shift right through carry bit
-  780 f41d:             ;
-  781 f41d:             cshrtest:
-  782 f41d: 1f fd cd              MVIW   R7,CSHIFT_RIGHTHELP
-  783 f420: 04 f8 59              JSR    stringout
-  784 f423: 13 0a                 MVIB   R3,10
-  785 f425:             cshrloop:
-  786 f425: 04 f8 b6              JSR switchtoggle
-  787 f428: 70 01                 OUTI P0,(SWITCHLED)
-  788 f42a: 91                    INP P1
-  789 f42b: e1                    CSHR
-  790 f42c: 61                    OUTA  P1
-  791 f42d:             
-  792 f42d: 5b                    DECR R3
-  793 f42e: 23                    MVRLA R3
-  794 f42f: a2 f4 25              BRNZ cshrloop
-  795 f432: 05                    RET
-  796 f433:             ;
-  797 f433:             ; subtraction tests
-  798 f433:             ;
-  799 f433:             subtest:
-  800 f433: 1f fd e1              MVIW   R7,SUBHELP
-  801 f436: 04 f8 59              JSR    stringout
-  802 f439: 13 0a                 MVIB   R3,10
-  803 f43b:             subloop:
-  804 f43b: 04 f8 b6              JSR switchtoggle
-  805 f43e: 70 01                 OUTI P0,(SWITCHLED)
-  806 f440: 91                    INP P1
-  807 f441: b1 01                 SUBI  1
-  808 f443: 61                    OUTA  P1
-  809 f444:             
-  810 f444: 5b                    DECR R3
-  811 f445: 23                    MVRLA R3
-  812 f446: a2 f4 3b              BRNZ subloop
-  813 f449: 05                    RET
-  814 f44a:             ;
-  815 f44a:             ; Compare Tests/compare input switches to 0x55 10 times
-  816 f44a:             ;
-  817 f44a:             cmptest:
-  818 f44a: 1f fd 72              MVIW   R7,COMPAREHELP
-  819 f44d: 04 f8 59              JSR    stringout
-  820 f450: 13 0a                 MVIB   R3,10
-  821 f452: 0d 55                 LDTI   055H
-  822 f454:             cmploop:
-  823 f454: 04 f8 b6              JSR switchtoggle
-  824 f457: 70 01                 OUTI P0,(SWITCHLED)
-  825 f459: 91                    INP P1
-  826 f45a: a9 f4 68              BRGT OUTGT
-  827 f45d: a8 f4 6d              BREQ OUTEQ
-  828 f460: a7 f4 72              BRLT OUTLT
-  829 f463:             ;Should not happen
-  830 f463: 0e 3f                 LDAI '?'
-  831 f465: a0 f4 77              BR cmpres
-  832 f468:             OUTGT:
-  833 f468: 0e 47                 LDAI 'G'
-  834 f46a: a0 f4 77              BR cmpres
-  835 f46d:             OUTEQ:
-  836 f46d: 0e 45                 LDAI 'E'
-  837 f46f: a0 f4 77              BR cmpres
-  838 f472:             OUTLT:
-  839 f472: 0e 4c                 LDAI 'L'
-  840 f474: a0 f4 77              BR cmpres
-  841 f477:             
-  842 f477:             cmpres:
-  843 f477: 04 f8 67              JSR uartout
-  844 f47a: 5b                    DECR R3
-  845 f47b: 23                    MVRLA R3
-  846 f47c: a2 f4 54              BRNZ cmploop
-  847 f47f: 05                    RET
-  848 f480:             
-  849 f480:             ;
-  850 f480:             ; Monitor
-  851 f480:             ;
-  852 f480:             ; See help code below
-  853 f480:             
-  854 f480:             ;
-  855 f480:             ; eumaltor eat 0x0a
-  856 f480:             ;
-  857 f480:             ;
-  858 f480:             ; added for emulator eat cr
-  859 f480:             ;
-  860 f480:             eat_nl:
-  861 f480:             ;1      BRDEV eat_nl_done
-  862 f480:             ;1      PUSH
-  863 f480:             ;1      JSR uartin
-  864 f480:             ;1      pop
-  865 f480:             eat_nl_done:
-  866 f480: 05                ret
-  867 f481:             ;
-  868 f481:             ; Output Prompt
-  869 f481:             :
-  870 f481:             
-  871 f481:             cmdloop:
-  872 f481: 1f f9 29          MVIW R7,PROMPT
-  873 f484: 04 f8 59          JSR stringout
-  874 f487:             ;
-  875 f487:             ;
-  876 f487:             ; Input test
-  877 f487:             ;
-  878 f487:             ;intest:
-  879 f487:             ;      JSR uartin
-  880 f487:             ;      jsr showbytea
-  881 f487:             ;      BR intest
-  882 f487:             ;
-  883 f487:             ; end test
-  884 f487:             ;
-  885 f487: 04 f8 7c          JSR uartin
-  886 f48a: 04 f7 3c          JSR toupper
-  887 f48d:             
-  888 f48d:             ;
-  889 f48d:             ; added for emulator eat cr
-  890 f48d:             ;
-  891 f48d: 04 f4 80          jsr eat_nl
-  892 f490: 0d 48             LDTI 'H'
-  893 f492: aa f4 a4          BRNEQ testexamine
-  894 f495: 1f f9 2b          MVIW R7,CRLF
-  895 f498: 04 f8 59          JSR stringout
-  896 f49b: 1f f9 de          MVIW R7,helpmenu
-  897 f49e: 04 f8 59          JSR stringout
-  898 f4a1: a0 f4 81          BR cmdloop
-  899 f4a4:             
-  900 f4a4:             testexamine:
-  901 f4a4: 0d 30             LDTI '0'
-  902 f4a6: a8 f5 2f          BREQ cmd_exit
-  903 f4a9: 0d 42             LDTI 'B'
-  904 f4ab: a8 f5 94          BREQ dumpblock
-  905 f4ae: 0d 43             LDTI 'C'
-  906 f4b0: a8 f5 7c          BREQ cmd_basic_copy
-  907 f4b3: 0d 44             LDTI 'D'
-  908 f4b5: a8 f5 b7          BREQ dump
-  909 f4b8: 0d 45             LDTI 'E'
-  910 f4ba: a8 f5 dd          BREQ examine
-  911 f4bd: 0d 46             LDTI 'F'
-  912 f4bf: a8 f6 42          BREQ fillblock
-  913 f4c2: 0d 47             LDTI 'G'
-  914 f4c4: a8 f6 82          BREQ go
-  915 f4c7: 0d 49             ldti 'I'
-  916 f4c9: a8 f5 6a          BREQ interpreter
-  917 f4cc: 0d 4c             LDTI 'L'
-  918 f4ce: a8 f5 70          BREQ cmd_basiclist
-  919 f4d1: 0d 50             LDTI 'P'
-  920 f4d3: a8 f5 3f          BREQ cmd_basicparse
-  921 f4d6: 0d 52             LDTI 'R'
-  922 f4d8: a8 f6 8c          BREQ dumpreg
-  923 f4db: 0d 54             LDTI 'T'
-  924 f4dd: a8 f6 97          BREQ tests
-  925 f4e0: 0d 59             LDTI 'Y'
-  926 f4e2: a8 f5 88          BREQ cmd_basic_test
-  927 f4e5: 0d 5a             LDTI 'Z'
-  928 f4e7: a8 f5 33          BREQ cmd_basic
-  929 f4ea: 0d 0d             LDTI 0Dh        ; hardware continue
-  930 f4ec: a8 f5 09          BREQ continue
-  931 f4ef:             ;
-  932 f4ef:             ; add for emulator
-  933 f4ef:             ; hardware sends 0dh on CR but emulator sends 0dh 0ah
-  934 f4ef:             ; code at top of loop eats the 0dh if running in emulator
-  935 f4ef:             ; so continue on 0ah as well
-  936 f4ef:             ;
-  937 f4ef: 0d 0a             LDTI 0ah      ; emulator continue
-  938 f4f1: a8 f5 09          BREQ continue
-  939 f4f4:             
-  940 f4f4: 1f f9 2b          MVIW R7,CRLF
-  941 f4f7:             
-  942 f4f7: 04 f8 59          JSR stringout
-  943 f4fa:             
-  944 f4fa: 1f f9 2e          MVIW R7,ERROR
-  945 f4fd: 04 f8 59          JSR stringout
-  946 f500:             
-  947 f500: 1f f9 de          MVIW R7,helpmenu
-  948 f503: 04 f8 59          JSR stringout
-  949 f506: a0 f4 81          BR cmdloop
-  950 f509:             ;
-  951 f509:             continue:
-  952 f509:             
-  953 f509:             ;       MVRLA R6
-  954 f509: e4 0f 00           LDA MONMODE
-  955 f50c:             
-  956 f50c: 0d 03              LDTI BLOCKMODE
-  957 f50e: a8 f5 ab           BREQ dumpblockcont
-  958 f511:             
-  959 f511: 0d 02              LDTI DUMPMODE
-  960 f513: a8 f5 ce           BREQ dumpcont
-  961 f516:             
-  962 f516: 0d 01              LDTI EXAMINEMODE
-  963 f518: a8 f5 f4           BREQ examinecont
-  964 f51b:             
-  965 f51b: 0d 04              LDTI FILLMODE
-  966 f51d: a8 f6 59           BREQ fillcont
-  967 f520: a0 f4 81           BR cmdloop
-  968 f523:             ;
-  969 f523:             ;      ERROR
-  970 f523:             ;
-  971 f523: 1f f9 46           MVIW R7,CONTINUEERROR
-  972 f526: 04 f8 59           JSR stringout
-  973 f529: a0 f4 81           BR cmdloop
-  974 f52c:             
-  975 f52c: a0 f5 2c    stop:   BR stop
-  976 f52f:             
-  977 f52f:             cmd_exit:
-  978 f52f: af f5 2c          BRDEV stop
-  979 f532: 00                DB 0
-  980 f533:             
-  981 f533:             cmd_basic:
-  982 f533: 1f f9 2b            MVIW R7,CRLF
-  983 f536: 04 f8 59            JSR stringout
-  984 f539: 04 e0 10           jsr basic_run
-  985 f53c: a0 f4 81           BR cmdloop
-  986 f53f:             
-  987 f53f:             cmd_basicparse:
-  988 f53f:                     ;build input string
-  989 f53f:                     ;point register to BUFFER
-  990 f53f:                     ;loop fetch chars
-  991 f53f:                     ;until CR
-  992 f53f:                     ;be sure line ends with a NULL or CR
-  993 f53f:                     ;what does parse require???
-  994 f53f: 1f f9 d0            MVIW R7,BASIC_PARSEMSG
-  995 f542: 04 f8 59            JSR stringout
-  996 f545:             
-  997 f545: 1b 0f 80            mviw r3,line_buffer
-  998 f548:             parse_inputloop:
-  999 f548: 04 f8 7c            jsr uartin
- 1000 f54b: 4b                  stavr r3
- 1001 f54c: 53                  incr r3
- 1002 f54d: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
- 1003 f54f:             ;       halt
- 1004 f54f: aa f5 48            brneq parse_inputloop
- 1005 f552: 1f 0f 80            mviw r7,line_buffer
- 1006 f555: 04 f7 d2            jsr show16
- 1007 f558: 1f 0f 80            mviw r7,line_buffer
- 1008 f55b: 04 e0 50            JSR BASIC_PARSE
- 1009 f55e: 1f 04 00            mviw r7,0400H
- 1010 f561:             ;        jsr show256
- 1011 f561: a0 f4 81            BR cmdloop
- 1012 f564:             do_parse:
- 1013 f564: 04 e0 50            JSR basic_parse
- 1014 f567: a0 f4 81            BR cmdloop
- 1015 f56a:             
- 1016 f56a:             interpreter:
- 1017 f56a: 04 e0 40            JSR BASIC_INTERPRTER
- 1018 f56d: a0 f4 81            BR CMDLOOP
- 1019 f570:             
- 1020 f570:             cmd_basiclist:
- 1021 f570: 1f f9 2b            MVIW R7,CRLF
- 1022 f573: 04 f8 59            JSR stringout
- 1023 f576: 04 e0 00            JSR basic_list
- 1024 f579: a0 f4 81            BR cmdloop
- 1025 f57c:             
- 1026 f57c:             cmd_basic_copy:
- 1027 f57c: 1f f9 2b            MVIW R7,CRLF
- 1028 f57f: 04 f8 59            JSR stringout
- 1029 f582: 04 e0 60            JSR basic_copy
- 1030 f585: a0 f4 81            BR cmdloop
- 1031 f588:             
- 1032 f588:             cmd_basic_test:
- 1033 f588: 1f f9 2b            MVIW R7,CRLF
- 1034 f58b: 04 f8 59            JSR stringout
- 1035 f58e: 04 e0 30            JSR basic_test
- 1036 f591: a0 f4 81            BR cmdloop
- 1037 f594:             
- 1038 f594:             dumpblock:
- 1039 f594:             ;      MVIB R6,BLOCKMODE
- 1040 f594: 0d 03              LDTI BLOCKMODE
- 1041 f596: e7 0f 00           STT monmode
- 1042 f599:             
- 1043 f599: 1f f9 68           MVIW R7,DUMPBLOCKMSG
- 1044 f59c: 04 f8 59           JSR stringout
- 1045 f59f: 04 f7 00           jsr getaddress
- 1046 f5a2: ef 0f 02           str r7,continue_addr
- 1047 f5a5: 1f f9 2b           MVIW R7,CRLF
- 1048 f5a8: 04 f8 59           JSR stringout
- 1049 f5ab:             
- 1050 f5ab:             dumpblockcont:
- 1051 f5ab: f7 0f 02           ldr r7,continue_addr
- 1052 f5ae: 04 f7 ec           jsr show256
- 1053 f5b1: ef 0f 02           str r7,continue_addr
- 1054 f5b4: a0 f4 81           BR cmdloop
- 1055 f5b7:             ;
- 1056 f5b7:             ; dump 16 bytes on 16 byte boundry
- 1057 f5b7:             ;
- 1058 f5b7:             dump:
- 1059 f5b7:             ;       MVIB R6,DUMPMODE
- 1060 f5b7: 0d 02              LDTI DUMPMODE
- 1061 f5b9: e7 0f 00           STT monmode
- 1062 f5bc: 1f f9 5b           MVIW R7,DUMPMSG
- 1063 f5bf: 04 f8 59           JSR stringout
- 1064 f5c2: 04 f7 00           jsr getaddress
- 1065 f5c5: ef 0f 02           str r7,continue_addr
- 1066 f5c8: 1f f9 2b           MVIW R7,CRLF
- 1067 f5cb: 04 f8 59           JSR stringout
- 1068 f5ce:             
- 1069 f5ce:             dumpcont:
- 1070 f5ce: f7 0f 02           ldr r7,continue_addr
- 1071 f5d1: 04 f7 45           jsr showaddr
- 1072 f5d4: 04 f7 d2           jsr show16
- 1073 f5d7: ef 0f 02           str r7,continue_addr
- 1074 f5da: a0 f4 81           BR cmdloop
- 1075 f5dd:             
- 1076 f5dd:             examine:
- 1077 f5dd:             ;       MVIB R6,EXAMINEMODE
- 1078 f5dd: 0d 01             LDTI EXAMINEMODE
- 1079 f5df: e7 0f 00          STT monmode
- 1080 f5e2: 1f f9 9c          MVIW R7,EXAMINEMSG
- 1081 f5e5: 04 f8 59          JSR stringout
- 1082 f5e8: 04 f7 00          jsr getaddress
- 1083 f5eb: ef 0f 02          str r7,continue_addr
- 1084 f5ee: 1f f9 2b          MVIW R7,CRLF
- 1085 f5f1: 04 f8 59          JSR stringout
- 1086 f5f4:             
- 1087 f5f4:             examinecont:
- 1088 f5f4: f7 0f 02          ldr r7,continue_addr
- 1089 f5f7: 04 f7 45          JSR showaddr
- 1090 f5fa: 0e 20             LDAI ' '
- 1091 f5fc: 04 f8 67          JSR uartout
- 1092 f5ff:             
- 1093 f5ff: 04 f8 03          JSR SHOWBYTE
- 1094 f602:             
- 1095 f602: 04 f8 7c          JSR uartin
- 1096 f605: 0d 1b             LDTI 01bh
- 1097 f607: a8 f6 39          BREQ examdone
- 1098 f60a: 0d 2d             LDTI '-'
- 1099 f60c: a8 f6 39          BREQ examdone
- 1100 f60f: 0d 0d             LDTI 0dh
- 1101 f611: a8 f6 28          BREQ examnext
- 1102 f614: 0d 0a             LDTI 0ah
- 1103 f616: a8 f6 28          BREQ examnext
- 1104 f619: 04 f7 2c          JSR getnibblec
- 1105 f61c: b6                SHL
- 1106 f61d: b6                SHL
- 1107 f61e: b6                SHL
- 1108 f61f: b6                SHL
- 1109 f620: 09                push
- 1110 f621: 04 f7 29          jsr getnibble
- 1111 f624: 0b                MVAT
- 1112 f625: 0a                Pop
- 1113 f626: ba                ORT
- 1114 f627: 4f                STAVR R7
- 1115 f628:             
- 1116 f628:             examnext:
- 1117 f628: 57                INCR R7
- 1118 f629: ef 0f 02          str r7,continue_addr
- 1119 f62c: 0e 0a             LDAI 0ah
- 1120 f62e: 04 f8 67          JSR uartout
- 1121 f631: 0e 0d             LDAI 0dh
- 1122 f633: 04 f8 67          JSR uartout
- 1123 f636: a0 f5 f4          BR examinecont
- 1124 f639:             
- 1125 f639:             examdone:
- 1126 f639: 1f f9 2b          MVIW R7,CRLF
- 1127 f63c: 04 f8 59          JSR stringout
- 1128 f63f: a0 f4 81          BR cmdloop
- 1129 f642:             
- 1130 f642:             fillblock:
- 1131 f642:             ;       MVIB R6,FILLMODE
- 1132 f642: 0d 04              LDTI FILLMODE
- 1133 f644: e7 0f 00           STT monmode
- 1134 f647:             
- 1135 f647: 1f f9 7b           MVIW R7,FILLMSG
- 1136 f64a: 04 f8 59           JSR stringout
- 1137 f64d: 04 f7 00           jsr getaddress
- 1138 f650: ef 0f 02           STR r7,continue_addr
- 1139 f653: 1f f9 2b           MVIW R7,CRLF
- 1140 f656: 04 f8 59           JSR stringout
- 1141 f659:             
- 1142 f659:             fillcont:
- 1143 f659: f7 0f 02          ldr r7,continue_addr
- 1144 f65c: 04 f7 45          jsr showaddr
- 1145 f65f: 1f f9 2b          MVIW R7,CRLF
- 1146 f662: 04 f8 59          JSR stringout
- 1147 f665: f7 0f 02          ldr r7,continue_addr
- 1148 f668:             morefill:
- 1149 f668: 0e 00             LDAI 0
- 1150 f66a: 4f                STAVR R7
- 1151 f66b: 57                INCR R7
- 1152 f66c: 27                MVRLA R7
- 1153 f66d: b3 ff             ANDI  0FFH
- 1154 f66f: a2 f6 68          BRNZ morefill
- 1155 f672: ef 0f 02          str r7,continue_addr
- 1156 f675: 0e 0a             LDAI 0ah
- 1157 f677: 04 f8 67          JSR uartout
- 1158 f67a: 0e 0d             LDAI 0dh
- 1159 f67c: 04 f8 67          JSR uartout
- 1160 f67f: a0 f4 81          BR cmdloop
- 1161 f682:             
- 1162 f682:             
- 1163 f682:             go:
- 1164 f682: 1f f9 8e          MVIW R7,GOMSG
- 1165 f685: 04 f8 59          JSR stringout
- 1166 f688: 04 f7 00          jsr getaddress
- 1167 f68b: df                BRVR R7
- 1168 f68c:             
- 1169 f68c:             dumpreg:
- 1170 f68c: 04 f7 8d          JSR showregs
- 1171 f68f:             ;      MVIB R6,NOMODE
- 1172 f68f: 0d 00             LDTI NOMODE
- 1173 f691: e7 0f 00          STT monmode
- 1174 f694:             
- 1175 f694: a0 f4 81          BR cmdloop
- 1176 f697:             
- 1177 f697:             tests:
- 1178 f697:             ;      MVIB R6,NOMODE
- 1179 f697: 0d 00             LDTI NOMODE
- 1180 f699: e7 0f 00          STT monmode
- 1181 f69c: 1f f9 2b          MVIW R7,CRLF
- 1182 f69f: 04 f8 59          JSR stringout
- 1183 f6a2: 1b fe a3          MVIW R3,testmenu
- 1184 f6a5: 1c 00 00          MVIW R4,0000h  ; counter
- 1185 f6a8:             
- 1186 f6a8:             testsloop:
- 1187 f6a8:             
- 1188 f6a8: 53                INCR R3
- 1189 f6a9: 53                INCR R3
- 1190 f6aa: 43                LDAVR R3
- 1191 f6ab: 3f                MVARH R7
- 1192 f6ac: 53                INCR  R3
- 1193 f6ad: 43                LDAVR R3
- 1194 f6ae: 37                MVARL R7
- 1195 f6af: 53                INCR R3
- 1196 f6b0: 47                LDAVR R7
- 1197 f6b1: 0d 2d             LDTI '-'
- 1198 f6b3: a8 f6 cc          BREQ testsloopdone
- 1199 f6b6: 24                MVRLA R4
- 1200 f6b7: 04 f8 14          JSR showbytea
- 1201 f6ba: 0e 2d             LDAI  '-'
- 1202 f6bc: 04 f8 67          JSR uartout
- 1203 f6bf: 04 f8 59          JSR stringout
- 1204 f6c2: 1f f9 2b          MVIW R7,CRLF
- 1205 f6c5: 04 f8 59          JSR stringout
- 1206 f6c8: 54                INCR R4
- 1207 f6c9: a0 f6 a8          BR testsloop
- 1208 f6cc:             
- 1209 f6cc:             testsloopdone:
- 1210 f6cc:             ; get test number
- 1211 f6cc:             ; multiple by 4 and add to test list base
- 1212 f6cc:             ; JSR via register holding info
- 1213 f6cc:             ;
- 1214 f6cc: 1f f9 bd          MVIW R7,gettestpromopt
- 1215 f6cf: 04 f8 59          JSR stringout
- 1216 f6d2:             
- 1217 f6d2: 04 f7 29          JSR getnibble
- 1218 f6d5: b6                SHL
- 1219 f6d6: b6                SHL
- 1220 f6d7: b6                SHL
- 1221 f6d8: b6                SHL
- 1222 f6d9: 09                push
- 1223 f6da: 04 f7 29          jsr getnibble
- 1224 f6dd: 0b                MVAT
- 1225 f6de: 0a                Pop
- 1226 f6df: ba                ORT
- 1227 f6e0:             ; calculate test address
- 1228 f6e0: b6                shl
- 1229 f6e1: b6                shl
- 1230 f6e2: 04 f8 55          JSR TIL311out
- 1231 f6e5: 0b                MVAT
- 1232 f6e6: 1b fe a3          MVIW R3,testmenu
- 1233 f6e9: 23                MVRLA R3
- 1234 f6ea: b8                ADDT
- 1235 f6eb: 33                MVARL R3
- 1236 f6ec: 04 f8 55          JSR TIL311out
- 1237 f6ef: a6 f6 f5          BRC menucarry
- 1238 f6f2: a0 f6 f6          BR dotest
- 1239 f6f5:             
- 1240 f6f5:             menucarry:
- 1241 f6f5: 53                incr r3
- 1242 f6f6:             
- 1243 f6f6:             dotest:
- 1244 f6f6: 43                LDAVR R3
- 1245 f6f7: 3f                MVARH R7
- 1246 f6f8: 53                INCR  R3
- 1247 f6f9: 43                LDAVR R3
- 1248 f6fa: 37                MVARL R7
- 1249 f6fb: 06 07             JSRUR R7
- 1250 f6fd: a0 f4 81          BR cmdloop
- 1251 f700:             
- 1252 f700:             getaddress:
- 1253 f700:             ;
- 1254 f700:             ; Read 4 char address and return in R7
- 1255 f700:             ;
- 1256 f700: 09                      Push
- 1257 f701: 04 f7 29                JSR getnibble
- 1258 f704: b6                      SHL
- 1259 f705: b6                      SHL
- 1260 f706: b6                      SHL
- 1261 f707: b6                      SHL
- 1262 f708: b3 f0                   ANDI 0f0h
- 1263 f70a: 09                      Push
- 1264 f70b: 04 f7 29                JSR getnibble
- 1265 f70e: b3 0f                   ANDI 0FH
- 1266 f710: 0b                      MVAT
- 1267 f711: 0a                      Pop
- 1268 f712: ba                      ORT
- 1269 f713: 3f                      MVARH R7
- 1270 f714:             
- 1271 f714: 04 f7 29                JSR getnibble
- 1272 f717: b6                      SHL
- 1273 f718: b6                      shl
- 1274 f719: b6                      shl
- 1275 f71a: b6                      shl
- 1276 f71b: b3 f0                   ANDI 0f0h
- 1277 f71d: 09                      push
- 1278 f71e: 04 f7 29                JSR getnibble
- 1279 f721: b3 0f                   ANDI 0FH
- 1280 f723: 0b                      MVAT
- 1281 f724: 0a                      pop
- 1282 f725: ba                      ORT
- 1283 f726: 37                      MVARL R7
- 1284 f727: 0a                      POP
- 1285 f728: 05                      RET
- 1286 f729:             ;
- 1287 f729:             ; getnibble return in accumulator
- 1288 f729:             ;
- 1289 f729:             getnibble:
- 1290 f729: 04 f8 7c              JSR uartin
- 1291 f72c:             getnibblec:
- 1292 f72c: 0d 39                 LDTI '9'
- 1293 f72e: a9 f7 34              BRGT INAF
- 1294 f731: b1 30                 SUBI '0'
- 1295 f733: 05                    RET
- 1296 f734: 04 f7 3c    INAF:     JSR toupper
- 1297 f737: b1 41                 SUBI 'A'
- 1298 f739: b0 0a                 ADDI 10
- 1299 f73b: 05                    RET
- 1300 f73c:             ;
- 1301 f73c:             ; value in accumulator convert to uppercase
- 1302 f73c:             ;
- 1303 f73c: 0d 5a       toupper:  LDTI 'Z'
- 1304 f73e: a9 f7 42              BRGT lower
- 1305 f741: 05                    RET
- 1306 f742:             lower:
- 1307 f742: b1 20                 SUBI 020h
- 1308 f744: 05                    RET
- 1309 f745:             ;
- 1310 f745:             ; display R7 (old r3) followed by
- 1311 f745:             ; ":" and " " for showaddr and nothing for shownum
- 1312 f745:             ;
- 1313 f745: 09          showaddr:   Push
- 1314 f746: 2f                      MVRHA R7
- 1315 f747: b7                      SHR
- 1316 f748: b7                      SHR
- 1317 f749: b7                      SHR
- 1318 f74a: b7                      SHR
- 1319 f74b: 04 f8 37                JSR shownibble
- 1320 f74e: 2f                      MVRHA R7
- 1321 f74f: b3 0f                   ANDI 0FH
- 1322 f751: 04 f8 37                JSR shownibble
- 1323 f754: 27                      MVRLA R7
- 1324 f755: b7                      SHR
- 1325 f756: b7                      SHR
- 1326 f757: b7                      SHR
- 1327 f758: b7                      SHR
- 1328 f759: 04 f8 37                JSR shownibble
- 1329 f75c: 27                      MVRLA R7
- 1330 f75d: b3 0f                   ANDI 0FH
- 1331 f75f: 04 f8 37                JSR shownibble
- 1332 f762: 0e 3a                   LDAI ':'
- 1333 f764: 04 f8 67                JSR uartout
- 1334 f767: 0e 20                   LDAI ' '
- 1335 f769: 04 f8 67                JSR uartout
- 1336 f76c: 0a                      POP
- 1337 f76d: 05                      RET
- 1338 f76e:             
- 1339 f76e:             shownum:
- 1340 f76e: 09          showr7:     Push
- 1341 f76f: 2f                      MVRHA R7
- 1342 f770: b7                      SHR
- 1343 f771: b7                      SHR
- 1344 f772: b7                      SHR
- 1345 f773: b7                      SHR
- 1346 f774: 04 f8 37                JSR shownibble
- 1347 f777: 2f                      MVRHA R7
- 1348 f778: b3 0f                   ANDI 0FH
- 1349 f77a: 04 f8 37                JSR shownibble
- 1350 f77d: 27                      MVRLA R7
- 1351 f77e: b7                      SHR
- 1352 f77f: b7                      SHR
- 1353 f780: b7                      SHR
- 1354 f781: b7                      SHR
- 1355 f782: 04 f8 37                JSR shownibble
- 1356 f785: 27                      MVRLA R7
- 1357 f786: b3 0f                   ANDI 0FH
- 1358 f788: 04 f8 37                JSR shownibble
- 1359 f78b: 0a                      POP
- 1360 f78c: 05                      RET
- 1361 f78d:             ;
- 1362 f78d:             ;
- 1363 f78d:             ;
- 1364 f78d:             showregs:
- 1365 f78d: 07 07                   pushr r7
- 1366 f78f: 07 07                   pushr r7
- 1367 f791: 1f f9 2b                MVIW R7,CRLF
- 1368 f794: 04 f8 59                JSR stringout
- 1369 f797: 0f 70                   MOVRR r0,r7
- 1370 f799: 04 f7 45                jsr showaddr
- 1371 f79c: 0f 71                   MOVRR r1,r7
- 1372 f79e: 04 f7 45                jsr showaddr
- 1373 f7a1: 0f 72                   MOVRR r2,r7
- 1374 f7a3: 04 f7 45                jsr showaddr
- 1375 f7a6: 0f 73                   MOVRR r3,r7
- 1376 f7a8: 04 f7 45                jsr showaddr
- 1377 f7ab: 0f 74                   MOVRR r4,r7
- 1378 f7ad: 04 f7 45                jsr showaddr
- 1379 f7b0: 0f 75                   MOVRR r5,r7
- 1380 f7b2: 04 f7 45                jsr showaddr
- 1381 f7b5: 0f 76                   MOVRR r6,r7
- 1382 f7b7: 04 f7 45                jsr showaddr
- 1383 f7ba: 08 70                   popr r7
- 1384 f7bc: 04 f7 45                jsr showaddr
- 1385 f7bf: 09                      push
- 1386 f7c0: 0e 20                   ldai ' '
- 1387 f7c2: 04 f8 67                jsr uartout
- 1388 f7c5: 0a                      pop
- 1389 f7c6: 04 f8 25                jsr showcarry
- 1390 f7c9:             
- 1391 f7c9: 1f f9 2b                MVIW R7,CRLF
- 1392 f7cc: 04 f8 59                JSR stringout
- 1393 f7cf: 08 70                   popr r7
- 1394 f7d1: 05                      RET
- 1395 f7d2:             ;
- 1396 f7d2:             ; display upto 16 bytes point to by R7 (old r3), stops on a 16 byte boundry
- 1397 f7d2:             ; increments R7
- 1398 f7d2:             ;
- 1399 f7d2: 04 f8 03    show16:     JSR showbyte
- 1400 f7d5: 57                      INCR R7
- 1401 f7d6: 0e 20                   LDAI ' '
- 1402 f7d8: 04 f8 67                JSR uartout
- 1403 f7db: 27                      MVRLA R7
- 1404 f7dc: b3 0f                   ANDI 0FH
- 1405 f7de: a2 f7 d2                BRNZ show16
- 1406 f7e1: 0e 0a                   LDAI 0ah
- 1407 f7e3: 04 f8 67                JSR uartout
- 1408 f7e6: 0e 0d                   LDAI 0dh
- 1409 f7e8: 04 f8 67                JSR uartout
- 1410 f7eb: 05                      RET
- 1411 f7ec:             ;
- 1412 f7ec:             ; display upto 256 bytes point to by R7 (old r3),
- 1413 f7ec:             ; stops on a 256 byte boundry, increments R7
- 1414 f7ec:             ;
- 1415 f7ec:             show256:
- 1416 f7ec: 09                    push
- 1417 f7ed:             show256loop:
- 1418 f7ed: 04 f7 45              jsr showaddr
- 1419 f7f0: 04 f7 d2              jsr show16
- 1420 f7f3:             
- 1421 f7f3:             ;         MVIW R7,CRLF
- 1422 f7f3:             ;         JSR stringout
- 1423 f7f3:             
- 1424 f7f3: 27                    MVRLA R7
- 1425 f7f4: b3 ff                 ANDI  0FFH
- 1426 f7f6: a2 f7 ed              BRNZ show256loop
- 1427 f7f9: 04 f8 67              JSR uartout
- 1428 f7fc: 0e 0d                 LDAI 0dh
- 1429 f7fe: 04 f8 67              JSR uartout
- 1430 f801: 0a                    pop
- 1431 f802: 05                    RET
- 1432 f803:             ;
- 1433 f803:             ; Output ASCII representation of a BYTE pointed to by R7 (OLD r7)
- 1434 f803:             ; or use showbytea in accumulator
- 1435 f803:             ; both destructive for accumulator - no longer true with push/pop
- 1436 f803:             :
- 1437 f803: 09          showbyte:   PUSH
- 1438 f804: 47                      LDAVR R7
- 1439 f805: b7                      SHR
- 1440 f806: b7                      SHR
- 1441 f807: b7                      SHR
- 1442 f808: b7                      SHR
- 1443 f809: 04 f8 37                JSR shownibble
- 1444 f80c: 47                      LDAVR R7
- 1445 f80d: b3 0f                   ANDI 0FH
- 1446 f80f: 04 f8 37                JSR shownibble
- 1447 f812: 0a                      POP
- 1448 f813: 05                      RET
- 1449 f814:             ;
- 1450 f814: 09          showbytea:  PUSH
- 1451 f815: 09                      PUSH
- 1452 f816: b7                      SHR
- 1453 f817: b7                      SHR
- 1454 f818: b7                      SHR
- 1455 f819: b7                      SHR
- 1456 f81a: 04 f8 37                JSR shownibble
- 1457 f81d: 0a                      POP
- 1458 f81e: b3 0f                   ANDI 0FH
- 1459 f820: 04 f8 37                JSR shownibble
- 1460 f823: 0a                      POP
- 1461 f824: 05                      RET
- 1462 f825:             ;
- 1463 f825:             ; Show carry flag
- 1464 f825:             ;
- 1465 f825:             showcarry:
- 1466 f825: 09                      Push
- 1467 f826: a6 f8 30                brc show_yescarry
- 1468 f829: 0e 58                   ldai 'X'
- 1469 f82b: 04 f8 67                JSR uartout
- 1470 f82e: 0a                      pop
- 1471 f82f: 05                      ret
- 1472 f830:             show_yescarry:
- 1473 f830: 0e 43                   ldai 'C'
- 1474 f832: 04 f8 67                JSR uartout
- 1475 f835: 0a                      pop
- 1476 f836: 05                      ret
- 1477 f837:             
- 1478 f837:             ;
- 1479 f837:             ; Display nibble in accumulator ((this looks wrong) destructive)
- 1480 f837:             ;  destroys tmp register  - maybe add pusht - popt
- 1481 f837:             ;
- 1482 f837: 09          shownibble:  PUSH
- 1483 f838: 0d 09                    LDTI 9
- 1484 f83a: a9 f8 44                 BRGT AF
- 1485 f83d: b0 30                    ADDI '0'
- 1486 f83f: 04 f8 67                 JSR uartout
- 1487 f842: 0a                       Pop
- 1488 f843: 05                       RET
- 1489 f844:             
- 1490 f844: b1 0a       AF:          SUBI 10
- 1491 f846: b0 41                    ADDI 'A'
- 1492 f848: 04 f8 67                 JSR uartout
- 1493 f84b: 0a                       Pop
- 1494 f84c: 05                       RET
- 1495 f84d:             ;
- 1496 f84d:             ; reading switches into accumulator
- 1497 f84d:             ;
- 1498 f84d:             switchin:
- 1499 f84d: 70 01               OUTI  P0,(SWITCHLED)
- 1500 f84f: 91                  INP   P1
- 1501 f850: 05                  RET
- 1502 f851:             ;
- 1503 f851:             ;
- 1504 f851:             ; output accumulator to LEDS or Hex displays (non distructive)
- 1505 f851:             ;
- 1506 f851:             ledout:
- 1507 f851: 70 01               OUTI  P0,(SWITCHLED)
- 1508 f853: 61                  OUTA  P1
- 1509 f854: 05                  RET
- 1510 f855:             ;
- 1511 f855:             TIL311out:
- 1512 f855: 70 80               OUTI  P0,(TIL311)
- 1513 f857: 61                  OUTA  P1
- 1514 f858: 05                  RET
- 1515 f859:             ;
- 1516 f859:             ; OLD: Output null terminated string pointed to by R2 to UART then send CR and LF
- 1517 f859:             ; Advances R2 to end of string
- 1518 f859:             ;
- 1519 f859:             ; Output null terminated string pointed to by R7 to UART
- 1520 f859:             ; Advances R7 to end of string
- 1521 f859:             ;
- 1522 f859:             stringout:
- 1523 f859: 09                  Push
- 1524 f85a:             sloop:
- 1525 f85a: 47                  LDAVR R7
- 1526 f85b: a1 f8 65            BRZ sloopdone
- 1527 f85e: 04 f8 67            JSR uartout
- 1528 f861: 57                  INCR R7
- 1529 f862: a0 f8 5a            BR sloop
- 1530 f865:             ;
- 1531 f865:             ; (not done send CR and LF)
- 1532 f865:             ;
- 1533 f865:             sloopdone:
- 1534 f865: 0a                  POP
- 1535 f866: 05                  RET
- 1536 f867:             ;
- 1537 f867:             ; output accumulator to UART, wait for UART out available
- 1538 f867:             ;
- 1539 f867:             charout:
- 1540 f867:             uartout:
- 1541 f867:             ;
- 1542 f867:             ; add for emulator, outputs via putch
- 1543 f867:             ;
- 1544 f867: af f8 6c            BRDEV emulator2
- 1545 f86a: 62                  outa p2
- 1546 f86b: 05                  ret
- 1547 f86c:             ;
- 1548 f86c:             emulator2:
- 1549 f86c: 09                  PUSH
- 1550 f86d: 09                  push
- 1551 f86e:             ;
- 1552 f86e:             ; doubt 2nd push pop is needed, to be tested
- 1553 f86e:             ;
- 1554 f86e:             uartoutw:
- 1555 f86e:             ;
- 1556 f86e:             ; test uart out is available
- 1557 f86e:             ;
- 1558 f86e: 70 68               OUTI  P0,(UARTCS!UARTA5)
- 1559 f870: 91                  INP   p1
- 1560 f871: b3 40               ANDI  040h
- 1561 f873: a1 f8 6e            BRZ   uartoutw
- 1562 f876: 0a                  POP
- 1563 f877: 70 40               OUTI  P0,UARTCS
- 1564 f879: 61                  OUTA  P1
- 1565 f87a:             ;
- 1566 f87a:             ; may not be needed
- 1567 f87a: 0a                 Pop
- 1568 f87b: 05                 RET
- 1569 f87c:             
- 1570 f87c:             ;
- 1571 f87c:             ; wait for UART character available then input to accumulator
- 1572 f87c:             ;
- 1573 f87c:             ; Looks like this echos out character
- 1574 f87c:             ; should this be settable via a flag
- 1575 f87c:             ;
- 1576 f87c:             uartin:
- 1577 f87c:             ;
- 1578 f87c:             ; added for emulator, emulator P2 reads a char via getch
- 1579 f87c:             ;
- 1580 f87c: af f8 81            BRDEV emulator3
- 1581 f87f: 92                  inp p2
- 1582 f880: 05                  ret
- 1583 f881:             ;
- 1584 f881:             emulator3:
- 1585 f881:             ;
- 1586 f881:             ; wait for a charater available at input
- 1587 f881:             ;
- 1588 f881: 70 68               OUTI  P0,(UARTCS!UARTA5)
- 1589 f883: 91                  INP   p1
- 1590 f884: b3 01               ANDI  01h
- 1591 f886: a1 f8 7c            BRZ   uartin
- 1592 f889: 70 40               OUTI  P0,(UARTCS)
- 1593 f88b: 91                  INP   P1
- 1594 f88c: 0d 0d               ldti 0dh          ; cobvert 0x0d to 0x0a
- 1595 f88e: aa f8 93            brneq uartinc
- 1596 f891: 0e 0a               ldai 0ah
- 1597 f893:             uartinc:
- 1598 f893: 04 f8 51            JSR   LEDOUT
- 1599 f896:             ;
- 1600 f896:             ; emulator
- 1601 f896:             ;
- 1602 f896:             ;        ldti  0ah
- 1603 f896:             ;        breq uartin
- 1604 f896: 04 f8 67            JSR   uartout
- 1605 f899: 05                  RET
- 1606 f89a:             
- 1607 f89a:             uarttest:
- 1608 f89a: 70 68               OUTI  P0,(UARTCS!UARTA5)
- 1609 f89c: 91                  INP   p1
- 1610 f89d: b3 01               ANDI  01h
- 1611 f89f: 05                  ret
- 1612 f8a0:                 
- 1613 f8a0:             ;
- 1614 f8a0:             ; long delay (approx 5 seconds)
- 1615 f8a0:             ; destroys r7
- 1616 f8a0:             ;
- 1617 f8a0:             LONGDELAY:
- 1618 f8a0: 09                  PUSH
- 1619 f8a1: 1f ff ff            MVIW R7,0FFFFh
- 1620 f8a4:             longdelayloop:
- 1621 f8a4: 5f                  DECR R7
- 1622 f8a5: 2f                  MVRHA R7
- 1623 f8a6: a2 f8 a4            BRNZ longdelayloop
- 1624 f8a9: 0a                  POP
- 1625 f8aa: 05                  RET
- 1626 f8ab:             ;
- 1627 f8ab:             ; short delay (approx 1 second)
- 1628 f8ab:             ; destroys R7
- 1629 f8ab:             ;
- 1630 f8ab:             SHORTDELAY:
- 1631 f8ab: 09                  PUSH
- 1632 f8ac: 1f 33 ff            MVIW R7,033FFh
- 1633 f8af:             shortdelayloop:
- 1634 f8af: 5f                  DECR R7
- 1635 f8b0: 2f                  MVRHA R7
- 1636 f8b1: a2 f8 af            BRNZ shortdelayloop
- 1637 f8b4: 0a                  POP
- 1638 f8b5: 05                  RET
- 1639 f8b6:             
- 1640 f8b6:             ;
- 1641 f8b6:             ; toggle input switch (with debounce)
- 1642 f8b6:             ; destroys r7
- 1643 f8b6:             ;
- 1644 f8b6:             switchtoggle:
- 1645 f8b6: 09                  Push
- 1646 f8b7: a4 f8 b7    offw:   BRINL offw
- 1647 f8ba: 1f 01 ff            MVIW R7,01FFh
- 1648 f8bd:             delaya:
- 1649 f8bd: 5f                  DECR R7
- 1650 f8be: 2f                  MVRHA R7
- 1651 f8bf: a2 f8 bd            BRNZ delaya
- 1652 f8c2: 01                  ON
- 1653 f8c3:             
- 1654 f8c3: a3 f8 c3    onw:    BRINH onw
- 1655 f8c6: 1f 01 ff            MVIW R7,01FFh
- 1656 f8c9:             delayb:
- 1657 f8c9: 5f                  DECR R7
- 1658 f8ca: 2f                  MVRHA R7
- 1659 f8cb: a2 f8 c9            BRNZ delayb
- 1660 f8ce: 02                  OFF
- 1661 f8cf: 0a                  Pop
- 1662 f8d0: 05                  RET
- 1663 f8d1:             ;
- 1664 f8d1:             ; quick blink LED
- 1665 f8d1:             ;
- 1666 f8d1:             blink:
- 1667 f8d1:             ;
- 1668 f8d1:             ; added for emulator, return immediately to skip counting
- 1669 f8d1:             ; destroys r7
- 1670 f8d1:             ;
- 1671 f8d1:             ;       ret
- 1672 f8d1: 09                  Push
- 1673 f8d2: 01                  ON
- 1674 f8d3: 1f 03 ff            MVIW R7,03FFh
- 1675 f8d6:             onloop:
- 1676 f8d6: 5f                  DECR R7
- 1677 f8d7: 2f                  MVRHA R7
- 1678 f8d8: a2 f8 d6            BRNZ onloop
- 1679 f8db:             
- 1680 f8db: 02                  OFF
- 1681 f8dc: 1f 03 ff            MVIW R7,003FFh
- 1682 f8df:             offloop:
- 1683 f8df: 5f                  DECR R7
- 1684 f8e0: 2f                  MVRHA R7
- 1685 f8e1: a2 f8 df            BRNZ offloop
- 1686 f8e4: 0a                  Pop
- 1687 f8e5: 05                  RET
- 1688 f8e6:             ;
- 1689 f8e6:             ; long blink LED
- 1690 f8e6:             ;
- 1691 f8e6:             lblink:
- 1692 f8e6:             ;
- 1693 f8e6:             ; emulator change, return immediately to skip counting
- 1694 f8e6:             ; destroys r7
- 1695 f8e6:             ;
- 1696 f8e6:             ;       ret
- 1697 f8e6: 09                  Push
- 1698 f8e7: 01                  ON
- 1699 f8e8: 1f 18 ff            MVIW R7,018FFh
- 1700 f8eb:             lonloop:
- 1701 f8eb: 5f                  DECR R7
- 1702 f8ec: 2f                  MVRHA R7
- 1703 f8ed: a2 f8 eb            BRNZ lonloop
- 1704 f8f0:             
- 1705 f8f0: 02                  OFF
- 1706 f8f1: 1f 18 ff            MVIW R7,018FFh
- 1707 f8f4:             loffloop:
- 1708 f8f4: 5f                  DECR R7
- 1709 f8f5: 2f                  MVRHA R7
- 1710 f8f6: a2 f8 f4            BRNZ loffloop
- 1711 f8f9: 0a                  Pop
- 1712 f8fa: 05                  RET
- 1713 f8fb:             ;
- 1714 f8fb:             ; blink n times in accumulator
- 1715 f8fb:             ;
- 1716 f8fb:             ; emulator change, return immediately to skip counting
- 1717 f8fb:             ;
- 1718 f8fb:             ;    ret
- 1719 f8fb:             nblink:
- 1720 f8fb: 09                  push
- 1721 f8fc:             nblinkloop:
- 1722 f8fc: 04 f8 55            JSR TIL311out
- 1723 f8ff: a1 f9 0a            BRZ nblinkdone
- 1724 f902: 04 f8 d1            JSR blink
- 1725 f905: b1 01               subi 1
- 1726 f907: a0 f8 fc            BR nblinkloop
- 1727 f90a:             nblinkdone:
- 1728 f90a: 0a                  POP
- 1729 f90b: 05                  RET
- 1730 f90c:             
- 1731 f90c:             
- 1732 f90c:             ;
- 1733 f90c:             ; MONITOR STRINGS
- 1734 f90c:             ;
- 1735 f90c: 0a 0d 59 41 
+  691 f399:             shrtest:
+  692 f399: 1f f3 6f              MVIW   R7,SHIFT_RIGHTHELP
+  693 f39c: 04 f8 43              JSR    stringout
+  694 f39f: 13 05                 MVIB   R3,5
+  695 f3a1:             shrloop:
+  696 f3a1: 04 f8 a0              JSR switchtoggle
+  697 f3a4: 70 01                 OUTI P0,(SWITCHLED)
+  698 f3a6: 91                    INP P1
+  699 f3a7: b7                    SHR
+  700 f3a8: 61                    OUTA  P1
+  701 f3a9:             
+  702 f3a9: 5b                    DECR R3
+  703 f3aa: 23                    MVRLA R3
+  704 f3ab: a2 f3 a1              BRNZ shrloop
+  705 f3ae: 05                    RET
+  706 f3af:             ;
+  707 f3af:             ; ring shift left
+  708 f3af:             ;
+  709 f3af:             rshltest:
+  710 f3af: 1f fd 6c             MVIW   R7,RSHIFT_LEFTHELP
+  711 f3b2: 04 f8 43             JSR    stringout
+  712 f3b5: 13 0a                MVIB   R3,10
+  713 f3b7:             rshlloop:
+  714 f3b7: 04 f8 a0             JSR switchtoggle
+  715 f3ba: 70 01                OUTI P0,(SWITCHLED)
+  716 f3bc: 91                   INP P1
+  717 f3bd: bd                   RSHL
+  718 f3be: 61                   OUTA  P1
+  719 f3bf:             
+  720 f3bf: 5b                   DECR R3
+  721 f3c0: 23                   MVRLA R3
+  722 f3c1: a2 f3 b7             BRNZ rshlloop
+  723 f3c4: 05                   RET
+  724 f3c5:             ;
+  725 f3c5:             ; ring shift right
+  726 f3c5:             ;
+  727 f3c5:             rshrtest:
+  728 f3c5: 1f fd 7e              MVIW   R7,RSHIFT_RIGHTHELP
+  729 f3c8: 04 f8 43              JSR    stringout
+  730 f3cb: 13 0a                 MVIB   R3,10
+  731 f3cd:             rshrloop:
+  732 f3cd: 04 f8 a0              JSR switchtoggle
+  733 f3d0: 70 01                 OUTI P0,(SWITCHLED)
+  734 f3d2: 91                    INP P1
+  735 f3d3: be                    RSHR
+  736 f3d4: 61                    OUTA  P1
+  737 f3d5:             
+  738 f3d5: 5b                    DECR R3
+  739 f3d6: 23                    MVRLA R3
+  740 f3d7: a2 f3 cd              BRNZ rshrloop
+  741 f3da: 05                    RET
+  742 f3db:             ;
+  743 f3db:             ; shift right and propagate sign bit
+  744 f3db:             ;
+  745 f3db:             pshrtest:
+  746 f3db: 1f fd 91              MVIW   R7,PSHIFT_RIGHTHELP
+  747 f3de: 04 f8 43              JSR    stringout
+  748 f3e1: 13 0a                 MVIB   R3,10
+  749 f3e3:             pshrloop:
+  750 f3e3: 04 f8 a0              JSR switchtoggle
+  751 f3e6: 70 01                 OUTI P0,(SWITCHLED)
+  752 f3e8: 91                    INP P1
+  753 f3e9: bf                    PSHR
+  754 f3ea: 61                    OUTA  P1
+  755 f3eb:             
+  756 f3eb: 5b                    DECR R3
+  757 f3ec: 23                    MVRLA R3
+  758 f3ed: a2 f3 e3              BRNZ pshrloop
+  759 f3f0: 05                    RET
+  760 f3f1:             ;
+  761 f3f1:             ; ring shift left through carry bit
+  762 f3f1:             ;
+  763 f3f1:             cshltest:
+  764 f3f1: 1f fd a4              MVIW   R7,CSHIFT_LEFTHELP
+  765 f3f4: 04 f8 43              JSR    stringout
+  766 f3f7: 13 0a                 MVIB   R3,10
+  767 f3f9:             cshlloop:
+  768 f3f9: 04 f8 a0              JSR switchtoggle
+  769 f3fc: 70 01                 OUTI P0,(SWITCHLED)
+  770 f3fe: 91                    INP P1
+  771 f3ff: e0                    CSHL
+  772 f400: 61                    OUTA  P1
+  773 f401:             
+  774 f401: 5b                    DECR R3
+  775 f402: 23                    MVRLA R3
+  776 f403: a2 f3 f9              BRNZ cshlloop
+  777 f406: 05                    RET
+  778 f407:             ;
+  779 f407:             ; ring shift right through carry bit
+  780 f407:             ;
+  781 f407:             cshrtest:
+  782 f407: 1f fd b7              MVIW   R7,CSHIFT_RIGHTHELP
+  783 f40a: 04 f8 43              JSR    stringout
+  784 f40d: 13 0a                 MVIB   R3,10
+  785 f40f:             cshrloop:
+  786 f40f: 04 f8 a0              JSR switchtoggle
+  787 f412: 70 01                 OUTI P0,(SWITCHLED)
+  788 f414: 91                    INP P1
+  789 f415: e1                    CSHR
+  790 f416: 61                    OUTA  P1
+  791 f417:             
+  792 f417: 5b                    DECR R3
+  793 f418: 23                    MVRLA R3
+  794 f419: a2 f4 0f              BRNZ cshrloop
+  795 f41c: 05                    RET
+  796 f41d:             ;
+  797 f41d:             ; subtraction tests
+  798 f41d:             ;
+  799 f41d:             subtest:
+  800 f41d: 1f fd cb              MVIW   R7,SUBHELP
+  801 f420: 04 f8 43              JSR    stringout
+  802 f423: 13 0a                 MVIB   R3,10
+  803 f425:             subloop:
+  804 f425: 04 f8 a0              JSR switchtoggle
+  805 f428: 70 01                 OUTI P0,(SWITCHLED)
+  806 f42a: 91                    INP P1
+  807 f42b: b1 01                 SUBI  1
+  808 f42d: 61                    OUTA  P1
+  809 f42e:             
+  810 f42e: 5b                    DECR R3
+  811 f42f: 23                    MVRLA R3
+  812 f430: a2 f4 25              BRNZ subloop
+  813 f433: 05                    RET
+  814 f434:             ;
+  815 f434:             ; Compare Tests/compare input switches to 0x55 10 times
+  816 f434:             ;
+  817 f434:             cmptest:
+  818 f434: 1f fd 5c              MVIW   R7,COMPAREHELP
+  819 f437: 04 f8 43              JSR    stringout
+  820 f43a: 13 0a                 MVIB   R3,10
+  821 f43c: 0d 55                 LDTI   055H
+  822 f43e:             cmploop:
+  823 f43e: 04 f8 a0              JSR switchtoggle
+  824 f441: 70 01                 OUTI P0,(SWITCHLED)
+  825 f443: 91                    INP P1
+  826 f444: a9 f4 52              BRGT OUTGT
+  827 f447: a8 f4 57              BREQ OUTEQ
+  828 f44a: a7 f4 5c              BRLT OUTLT
+  829 f44d:             ;Should not happen
+  830 f44d: 0e 3f                 LDAI '?'
+  831 f44f: a0 f4 61              BR cmpres
+  832 f452:             OUTGT:
+  833 f452: 0e 47                 LDAI 'G'
+  834 f454: a0 f4 61              BR cmpres
+  835 f457:             OUTEQ:
+  836 f457: 0e 45                 LDAI 'E'
+  837 f459: a0 f4 61              BR cmpres
+  838 f45c:             OUTLT:
+  839 f45c: 0e 4c                 LDAI 'L'
+  840 f45e: a0 f4 61              BR cmpres
+  841 f461:             
+  842 f461:             cmpres:
+  843 f461: 04 f8 51              JSR uartout
+  844 f464: 5b                    DECR R3
+  845 f465: 23                    MVRLA R3
+  846 f466: a2 f4 3e              BRNZ cmploop
+  847 f469: 05                    RET
+  848 f46a:             
+  849 f46a:             ;
+  850 f46a:             ; Monitor
+  851 f46a:             ;
+  852 f46a:             ; See help code below
+  853 f46a:             
+  854 f46a:             ;
+  855 f46a:             ; eumaltor eat 0x0a
+  856 f46a:             ;
+  857 f46a:             ;
+  858 f46a:             ; added for emulator eat cr
+  859 f46a:             ;
+  860 f46a:             eat_nl:
+  861 f46a:             ;1      BRDEV eat_nl_done
+  862 f46a:             ;1      PUSH
+  863 f46a:             ;1      JSR uartin
+  864 f46a:             ;1      pop
+  865 f46a:             eat_nl_done:
+  866 f46a: 05                ret
+  867 f46b:             ;
+  868 f46b:             ; Output Prompt
+  869 f46b:             :
+  870 f46b:             
+  871 f46b:             cmdloop:
+  872 f46b: 1f f9 13          MVIW R7,PROMPT
+  873 f46e: 04 f8 43          JSR stringout
+  874 f471:             ;
+  875 f471:             ;
+  876 f471:             ; Input test
+  877 f471:             ;
+  878 f471:             ;intest:
+  879 f471:             ;      JSR uartin
+  880 f471:             ;      jsr showbytea
+  881 f471:             ;      BR intest
+  882 f471:             ;
+  883 f471:             ; end test
+  884 f471:             ;
+  885 f471: 04 f8 66          JSR uartin
+  886 f474: 04 f7 26          JSR toupper
+  887 f477:             
+  888 f477:             ;
+  889 f477:             ; added for emulator eat cr
+  890 f477:             ;
+  891 f477: 04 f4 6a          jsr eat_nl
+  892 f47a: 0d 48             LDTI 'H'
+  893 f47c: aa f4 8e          BRNEQ testexamine
+  894 f47f: 1f f9 15          MVIW R7,CRLF
+  895 f482: 04 f8 43          JSR stringout
+  896 f485: 1f f9 c8          MVIW R7,helpmenu
+  897 f488: 04 f8 43          JSR stringout
+  898 f48b: a0 f4 6b          BR cmdloop
+  899 f48e:             
+  900 f48e:             testexamine:
+  901 f48e: 0d 30             LDTI '0'
+  902 f490: a8 f5 19          BREQ cmd_exit
+  903 f493: 0d 42             LDTI 'B'
+  904 f495: a8 f5 7e          BREQ dumpblock
+  905 f498: 0d 43             LDTI 'C'
+  906 f49a: a8 f5 66          BREQ cmd_basic_copy
+  907 f49d: 0d 44             LDTI 'D'
+  908 f49f: a8 f5 a1          BREQ dump
+  909 f4a2: 0d 45             LDTI 'E'
+  910 f4a4: a8 f5 c7          BREQ examine
+  911 f4a7: 0d 46             LDTI 'F'
+  912 f4a9: a8 f6 2c          BREQ fillblock
+  913 f4ac: 0d 47             LDTI 'G'
+  914 f4ae: a8 f6 6c          BREQ go
+  915 f4b1: 0d 49             ldti 'I'
+  916 f4b3: a8 f5 54          BREQ interpreter
+  917 f4b6: 0d 4c             LDTI 'L'
+  918 f4b8: a8 f5 5a          BREQ cmd_basiclist
+  919 f4bb: 0d 50             LDTI 'P'
+  920 f4bd: a8 f5 29          BREQ cmd_basicparse
+  921 f4c0: 0d 52             LDTI 'R'
+  922 f4c2: a8 f6 76          BREQ dumpreg
+  923 f4c5: 0d 54             LDTI 'T'
+  924 f4c7: a8 f6 81          BREQ tests
+  925 f4ca: 0d 59             LDTI 'Y'
+  926 f4cc: a8 f5 72          BREQ cmd_basic_test
+  927 f4cf: 0d 5a             LDTI 'Z'
+  928 f4d1: a8 f5 1d          BREQ cmd_basic
+  929 f4d4: 0d 0d             LDTI 0Dh        ; hardware continue
+  930 f4d6: a8 f4 f3          BREQ continue
+  931 f4d9:             ;
+  932 f4d9:             ; add for emulator
+  933 f4d9:             ; hardware sends 0dh on CR but emulator sends 0dh 0ah
+  934 f4d9:             ; code at top of loop eats the 0dh if running in emulator
+  935 f4d9:             ; so continue on 0ah as well
+  936 f4d9:             ;
+  937 f4d9: 0d 0a             LDTI 0ah      ; emulator continue
+  938 f4db: a8 f4 f3          BREQ continue
+  939 f4de:             
+  940 f4de: 1f f9 15          MVIW R7,CRLF
+  941 f4e1:             
+  942 f4e1: 04 f8 43          JSR stringout
+  943 f4e4:             
+  944 f4e4: 1f f9 18          MVIW R7,ERROR
+  945 f4e7: 04 f8 43          JSR stringout
+  946 f4ea:             
+  947 f4ea: 1f f9 c8          MVIW R7,helpmenu
+  948 f4ed: 04 f8 43          JSR stringout
+  949 f4f0: a0 f4 6b          BR cmdloop
+  950 f4f3:             ;
+  951 f4f3:             continue:
+  952 f4f3:             
+  953 f4f3:             ;       MVRLA R6
+  954 f4f3: e4 0f 00           LDA MONMODE
+  955 f4f6:             
+  956 f4f6: 0d 03              LDTI BLOCKMODE
+  957 f4f8: a8 f5 95           BREQ dumpblockcont
+  958 f4fb:             
+  959 f4fb: 0d 02              LDTI DUMPMODE
+  960 f4fd: a8 f5 b8           BREQ dumpcont
+  961 f500:             
+  962 f500: 0d 01              LDTI EXAMINEMODE
+  963 f502: a8 f5 de           BREQ examinecont
+  964 f505:             
+  965 f505: 0d 04              LDTI FILLMODE
+  966 f507: a8 f6 43           BREQ fillcont
+  967 f50a: a0 f4 6b           BR cmdloop
+  968 f50d:             ;
+  969 f50d:             ;      ERROR
+  970 f50d:             ;
+  971 f50d: 1f f9 30           MVIW R7,CONTINUEERROR
+  972 f510: 04 f8 43           JSR stringout
+  973 f513: a0 f4 6b           BR cmdloop
+  974 f516:             
+  975 f516: a0 f5 16    stop:   BR stop
+  976 f519:             
+  977 f519:             cmd_exit:
+  978 f519: af f5 16          BRDEV stop
+  979 f51c: 00                DB 0
+  980 f51d:             
+  981 f51d:             cmd_basic:
+  982 f51d: 1f f9 15            MVIW R7,CRLF
+  983 f520: 04 f8 43            JSR stringout
+  984 f523: 04 e0 10           jsr basic_run
+  985 f526: a0 f4 6b           BR cmdloop
+  986 f529:             
+  987 f529:             cmd_basicparse:
+  988 f529:                     ;build input string
+  989 f529:                     ;point register to BUFFER
+  990 f529:                     ;loop fetch chars
+  991 f529:                     ;until CR
+  992 f529:                     ;be sure line ends with a NULL or CR
+  993 f529:                     ;what does parse require???
+  994 f529: 1f f9 ba            MVIW R7,BASIC_PARSEMSG
+  995 f52c: 04 f8 43            JSR stringout
+  996 f52f:             
+  997 f52f: 1b 0f 80            mviw r3,line_buffer
+  998 f532:             parse_inputloop:
+  999 f532: 04 f8 66            jsr uartin
+ 1000 f535: 4b                  stavr r3
+ 1001 f536: 53                  incr r3
+ 1002 f537: 0d 0a               ldti 0ah  ;1 changed from 0a to 0D for new emulator code, changed back
+ 1003 f539:             ;       halt
+ 1004 f539: aa f5 32            brneq parse_inputloop
+ 1005 f53c: 1f 0f 80            mviw r7,line_buffer
+ 1006 f53f: 04 f7 bc            jsr show16
+ 1007 f542: 1f 0f 80            mviw r7,line_buffer
+ 1008 f545: 04 e0 50            JSR BASIC_PARSE
+ 1009 f548: 1f 04 00            mviw r7,0400H
+ 1010 f54b:             ;        jsr show256
+ 1011 f54b: a0 f4 6b            BR cmdloop
+ 1012 f54e:             do_parse:
+ 1013 f54e: 04 e0 50            JSR basic_parse
+ 1014 f551: a0 f4 6b            BR cmdloop
+ 1015 f554:             
+ 1016 f554:             interpreter:
+ 1017 f554: 04 e0 40            JSR BASIC_INTERPRTER
+ 1018 f557: a0 f4 6b            BR CMDLOOP
+ 1019 f55a:             
+ 1020 f55a:             cmd_basiclist:
+ 1021 f55a: 1f f9 15            MVIW R7,CRLF
+ 1022 f55d: 04 f8 43            JSR stringout
+ 1023 f560: 04 e0 00            JSR basic_list
+ 1024 f563: a0 f4 6b            BR cmdloop
+ 1025 f566:             
+ 1026 f566:             cmd_basic_copy:
+ 1027 f566: 1f f9 15            MVIW R7,CRLF
+ 1028 f569: 04 f8 43            JSR stringout
+ 1029 f56c: 04 e0 60            JSR basic_copy
+ 1030 f56f: a0 f4 6b            BR cmdloop
+ 1031 f572:             
+ 1032 f572:             cmd_basic_test:
+ 1033 f572: 1f f9 15            MVIW R7,CRLF
+ 1034 f575: 04 f8 43            JSR stringout
+ 1035 f578: 04 e0 30            JSR basic_test
+ 1036 f57b: a0 f4 6b            BR cmdloop
+ 1037 f57e:             
+ 1038 f57e:             dumpblock:
+ 1039 f57e:             ;      MVIB R6,BLOCKMODE
+ 1040 f57e: 0d 03              LDTI BLOCKMODE
+ 1041 f580: e7 0f 00           STT monmode
+ 1042 f583:             
+ 1043 f583: 1f f9 52           MVIW R7,DUMPBLOCKMSG
+ 1044 f586: 04 f8 43           JSR stringout
+ 1045 f589: 04 f6 ea           jsr getaddress
+ 1046 f58c: ef 0f 02           str r7,continue_addr
+ 1047 f58f: 1f f9 15           MVIW R7,CRLF
+ 1048 f592: 04 f8 43           JSR stringout
+ 1049 f595:             
+ 1050 f595:             dumpblockcont:
+ 1051 f595: f7 0f 02           ldr r7,continue_addr
+ 1052 f598: 04 f7 d6           jsr show256
+ 1053 f59b: ef 0f 02           str r7,continue_addr
+ 1054 f59e: a0 f4 6b           BR cmdloop
+ 1055 f5a1:             ;
+ 1056 f5a1:             ; dump 16 bytes on 16 byte boundry
+ 1057 f5a1:             ;
+ 1058 f5a1:             dump:
+ 1059 f5a1:             ;       MVIB R6,DUMPMODE
+ 1060 f5a1: 0d 02              LDTI DUMPMODE
+ 1061 f5a3: e7 0f 00           STT monmode
+ 1062 f5a6: 1f f9 45           MVIW R7,DUMPMSG
+ 1063 f5a9: 04 f8 43           JSR stringout
+ 1064 f5ac: 04 f6 ea           jsr getaddress
+ 1065 f5af: ef 0f 02           str r7,continue_addr
+ 1066 f5b2: 1f f9 15           MVIW R7,CRLF
+ 1067 f5b5: 04 f8 43           JSR stringout
+ 1068 f5b8:             
+ 1069 f5b8:             dumpcont:
+ 1070 f5b8: f7 0f 02           ldr r7,continue_addr
+ 1071 f5bb: 04 f7 2f           jsr showaddr
+ 1072 f5be: 04 f7 bc           jsr show16
+ 1073 f5c1: ef 0f 02           str r7,continue_addr
+ 1074 f5c4: a0 f4 6b           BR cmdloop
+ 1075 f5c7:             
+ 1076 f5c7:             examine:
+ 1077 f5c7:             ;       MVIB R6,EXAMINEMODE
+ 1078 f5c7: 0d 01             LDTI EXAMINEMODE
+ 1079 f5c9: e7 0f 00          STT monmode
+ 1080 f5cc: 1f f9 86          MVIW R7,EXAMINEMSG
+ 1081 f5cf: 04 f8 43          JSR stringout
+ 1082 f5d2: 04 f6 ea          jsr getaddress
+ 1083 f5d5: ef 0f 02          str r7,continue_addr
+ 1084 f5d8: 1f f9 15          MVIW R7,CRLF
+ 1085 f5db: 04 f8 43          JSR stringout
+ 1086 f5de:             
+ 1087 f5de:             examinecont:
+ 1088 f5de: f7 0f 02          ldr r7,continue_addr
+ 1089 f5e1: 04 f7 2f          JSR showaddr
+ 1090 f5e4: 0e 20             LDAI ' '
+ 1091 f5e6: 04 f8 51          JSR uartout
+ 1092 f5e9:             
+ 1093 f5e9: 04 f7 ed          JSR SHOWBYTE
+ 1094 f5ec:             
+ 1095 f5ec: 04 f8 66          JSR uartin
+ 1096 f5ef: 0d 1b             LDTI 01bh
+ 1097 f5f1: a8 f6 23          BREQ examdone
+ 1098 f5f4: 0d 2d             LDTI '-'
+ 1099 f5f6: a8 f6 23          BREQ examdone
+ 1100 f5f9: 0d 0d             LDTI 0dh
+ 1101 f5fb: a8 f6 12          BREQ examnext
+ 1102 f5fe: 0d 0a             LDTI 0ah
+ 1103 f600: a8 f6 12          BREQ examnext
+ 1104 f603: 04 f7 16          JSR getnibblec
+ 1105 f606: b6                SHL
+ 1106 f607: b6                SHL
+ 1107 f608: b6                SHL
+ 1108 f609: b6                SHL
+ 1109 f60a: 09                push
+ 1110 f60b: 04 f7 13          jsr getnibble
+ 1111 f60e: 0b                MVAT
+ 1112 f60f: 0a                Pop
+ 1113 f610: ba                ORT
+ 1114 f611: 4f                STAVR R7
+ 1115 f612:             
+ 1116 f612:             examnext:
+ 1117 f612: 57                INCR R7
+ 1118 f613: ef 0f 02          str r7,continue_addr
+ 1119 f616: 0e 0a             LDAI 0ah
+ 1120 f618: 04 f8 51          JSR uartout
+ 1121 f61b: 0e 0d             LDAI 0dh
+ 1122 f61d: 04 f8 51          JSR uartout
+ 1123 f620: a0 f5 de          BR examinecont
+ 1124 f623:             
+ 1125 f623:             examdone:
+ 1126 f623: 1f f9 15          MVIW R7,CRLF
+ 1127 f626: 04 f8 43          JSR stringout
+ 1128 f629: a0 f4 6b          BR cmdloop
+ 1129 f62c:             
+ 1130 f62c:             fillblock:
+ 1131 f62c:             ;       MVIB R6,FILLMODE
+ 1132 f62c: 0d 04              LDTI FILLMODE
+ 1133 f62e: e7 0f 00           STT monmode
+ 1134 f631:             
+ 1135 f631: 1f f9 65           MVIW R7,FILLMSG
+ 1136 f634: 04 f8 43           JSR stringout
+ 1137 f637: 04 f6 ea           jsr getaddress
+ 1138 f63a: ef 0f 02           STR r7,continue_addr
+ 1139 f63d: 1f f9 15           MVIW R7,CRLF
+ 1140 f640: 04 f8 43           JSR stringout
+ 1141 f643:             
+ 1142 f643:             fillcont:
+ 1143 f643: f7 0f 02          ldr r7,continue_addr
+ 1144 f646: 04 f7 2f          jsr showaddr
+ 1145 f649: 1f f9 15          MVIW R7,CRLF
+ 1146 f64c: 04 f8 43          JSR stringout
+ 1147 f64f: f7 0f 02          ldr r7,continue_addr
+ 1148 f652:             morefill:
+ 1149 f652: 0e 00             LDAI 0
+ 1150 f654: 4f                STAVR R7
+ 1151 f655: 57                INCR R7
+ 1152 f656: 27                MVRLA R7
+ 1153 f657: b3 ff             ANDI  0FFH
+ 1154 f659: a2 f6 52          BRNZ morefill
+ 1155 f65c: ef 0f 02          str r7,continue_addr
+ 1156 f65f: 0e 0a             LDAI 0ah
+ 1157 f661: 04 f8 51          JSR uartout
+ 1158 f664: 0e 0d             LDAI 0dh
+ 1159 f666: 04 f8 51          JSR uartout
+ 1160 f669: a0 f4 6b          BR cmdloop
+ 1161 f66c:             
+ 1162 f66c:             
+ 1163 f66c:             go:
+ 1164 f66c: 1f f9 78          MVIW R7,GOMSG
+ 1165 f66f: 04 f8 43          JSR stringout
+ 1166 f672: 04 f6 ea          jsr getaddress
+ 1167 f675: df                BRVR R7
+ 1168 f676:             
+ 1169 f676:             dumpreg:
+ 1170 f676: 04 f7 77          JSR showregs
+ 1171 f679:             ;      MVIB R6,NOMODE
+ 1172 f679: 0d 00             LDTI NOMODE
+ 1173 f67b: e7 0f 00          STT monmode
+ 1174 f67e:             
+ 1175 f67e: a0 f4 6b          BR cmdloop
+ 1176 f681:             
+ 1177 f681:             tests:
+ 1178 f681:             ;      MVIB R6,NOMODE
+ 1179 f681: 0d 00             LDTI NOMODE
+ 1180 f683: e7 0f 00          STT monmode
+ 1181 f686: 1f f9 15          MVIW R7,CRLF
+ 1182 f689: 04 f8 43          JSR stringout
+ 1183 f68c: 1b fe 8d          MVIW R3,testmenu
+ 1184 f68f: 1c 00 00          MVIW R4,0000h  ; counter
+ 1185 f692:             
+ 1186 f692:             testsloop:
+ 1187 f692:             
+ 1188 f692: 53                INCR R3
+ 1189 f693: 53                INCR R3
+ 1190 f694: 43                LDAVR R3
+ 1191 f695: 3f                MVARH R7
+ 1192 f696: 53                INCR  R3
+ 1193 f697: 43                LDAVR R3
+ 1194 f698: 37                MVARL R7
+ 1195 f699: 53                INCR R3
+ 1196 f69a: 47                LDAVR R7
+ 1197 f69b: 0d 2d             LDTI '-'
+ 1198 f69d: a8 f6 b6          BREQ testsloopdone
+ 1199 f6a0: 24                MVRLA R4
+ 1200 f6a1: 04 f7 fe          JSR showbytea
+ 1201 f6a4: 0e 2d             LDAI  '-'
+ 1202 f6a6: 04 f8 51          JSR uartout
+ 1203 f6a9: 04 f8 43          JSR stringout
+ 1204 f6ac: 1f f9 15          MVIW R7,CRLF
+ 1205 f6af: 04 f8 43          JSR stringout
+ 1206 f6b2: 54                INCR R4
+ 1207 f6b3: a0 f6 92          BR testsloop
+ 1208 f6b6:             
+ 1209 f6b6:             testsloopdone:
+ 1210 f6b6:             ; get test number
+ 1211 f6b6:             ; multiple by 4 and add to test list base
+ 1212 f6b6:             ; JSR via register holding info
+ 1213 f6b6:             ;
+ 1214 f6b6: 1f f9 a7          MVIW R7,gettestpromopt
+ 1215 f6b9: 04 f8 43          JSR stringout
+ 1216 f6bc:             
+ 1217 f6bc: 04 f7 13          JSR getnibble
+ 1218 f6bf: b6                SHL
+ 1219 f6c0: b6                SHL
+ 1220 f6c1: b6                SHL
+ 1221 f6c2: b6                SHL
+ 1222 f6c3: 09                push
+ 1223 f6c4: 04 f7 13          jsr getnibble
+ 1224 f6c7: 0b                MVAT
+ 1225 f6c8: 0a                Pop
+ 1226 f6c9: ba                ORT
+ 1227 f6ca:             ; calculate test address
+ 1228 f6ca: b6                shl
+ 1229 f6cb: b6                shl
+ 1230 f6cc: 04 f8 3f          JSR TIL311out
+ 1231 f6cf: 0b                MVAT
+ 1232 f6d0: 1b fe 8d          MVIW R3,testmenu
+ 1233 f6d3: 23                MVRLA R3
+ 1234 f6d4: b8                ADDT
+ 1235 f6d5: 33                MVARL R3
+ 1236 f6d6: 04 f8 3f          JSR TIL311out
+ 1237 f6d9: a6 f6 df          BRC menucarry
+ 1238 f6dc: a0 f6 e0          BR dotest
+ 1239 f6df:             
+ 1240 f6df:             menucarry:
+ 1241 f6df: 53                incr r3
+ 1242 f6e0:             
+ 1243 f6e0:             dotest:
+ 1244 f6e0: 43                LDAVR R3
+ 1245 f6e1: 3f                MVARH R7
+ 1246 f6e2: 53                INCR  R3
+ 1247 f6e3: 43                LDAVR R3
+ 1248 f6e4: 37                MVARL R7
+ 1249 f6e5: 06 07             JSRUR R7
+ 1250 f6e7: a0 f4 6b          BR cmdloop
+ 1251 f6ea:             
+ 1252 f6ea:             getaddress:
+ 1253 f6ea:             ;
+ 1254 f6ea:             ; Read 4 char address and return in R7
+ 1255 f6ea:             ;
+ 1256 f6ea: 09                      Push
+ 1257 f6eb: 04 f7 13                JSR getnibble
+ 1258 f6ee: b6                      SHL
+ 1259 f6ef: b6                      SHL
+ 1260 f6f0: b6                      SHL
+ 1261 f6f1: b6                      SHL
+ 1262 f6f2: b3 f0                   ANDI 0f0h
+ 1263 f6f4: 09                      Push
+ 1264 f6f5: 04 f7 13                JSR getnibble
+ 1265 f6f8: b3 0f                   ANDI 0FH
+ 1266 f6fa: 0b                      MVAT
+ 1267 f6fb: 0a                      Pop
+ 1268 f6fc: ba                      ORT
+ 1269 f6fd: 3f                      MVARH R7
+ 1270 f6fe:             
+ 1271 f6fe: 04 f7 13                JSR getnibble
+ 1272 f701: b6                      SHL
+ 1273 f702: b6                      shl
+ 1274 f703: b6                      shl
+ 1275 f704: b6                      shl
+ 1276 f705: b3 f0                   ANDI 0f0h
+ 1277 f707: 09                      push
+ 1278 f708: 04 f7 13                JSR getnibble
+ 1279 f70b: b3 0f                   ANDI 0FH
+ 1280 f70d: 0b                      MVAT
+ 1281 f70e: 0a                      pop
+ 1282 f70f: ba                      ORT
+ 1283 f710: 37                      MVARL R7
+ 1284 f711: 0a                      POP
+ 1285 f712: 05                      RET
+ 1286 f713:             ;
+ 1287 f713:             ; getnibble return in accumulator
+ 1288 f713:             ;
+ 1289 f713:             getnibble:
+ 1290 f713: 04 f8 66              JSR uartin
+ 1291 f716:             getnibblec:
+ 1292 f716: 0d 39                 LDTI '9'
+ 1293 f718: a9 f7 1e              BRGT INAF
+ 1294 f71b: b1 30                 SUBI '0'
+ 1295 f71d: 05                    RET
+ 1296 f71e: 04 f7 26    INAF:     JSR toupper
+ 1297 f721: b1 41                 SUBI 'A'
+ 1298 f723: b0 0a                 ADDI 10
+ 1299 f725: 05                    RET
+ 1300 f726:             ;
+ 1301 f726:             ; value in accumulator convert to uppercase
+ 1302 f726:             ;
+ 1303 f726: 0d 5a       toupper:  LDTI 'Z'
+ 1304 f728: a9 f7 2c              BRGT lower
+ 1305 f72b: 05                    RET
+ 1306 f72c:             lower:
+ 1307 f72c: b1 20                 SUBI 020h
+ 1308 f72e: 05                    RET
+ 1309 f72f:             ;
+ 1310 f72f:             ; display R7 (old r3) followed by
+ 1311 f72f:             ; ":" and " " for showaddr and nothing for shownum
+ 1312 f72f:             ;
+ 1313 f72f: 09          showaddr:   Push
+ 1314 f730: 2f                      MVRHA R7
+ 1315 f731: b7                      SHR
+ 1316 f732: b7                      SHR
+ 1317 f733: b7                      SHR
+ 1318 f734: b7                      SHR
+ 1319 f735: 04 f8 21                JSR shownibble
+ 1320 f738: 2f                      MVRHA R7
+ 1321 f739: b3 0f                   ANDI 0FH
+ 1322 f73b: 04 f8 21                JSR shownibble
+ 1323 f73e: 27                      MVRLA R7
+ 1324 f73f: b7                      SHR
+ 1325 f740: b7                      SHR
+ 1326 f741: b7                      SHR
+ 1327 f742: b7                      SHR
+ 1328 f743: 04 f8 21                JSR shownibble
+ 1329 f746: 27                      MVRLA R7
+ 1330 f747: b3 0f                   ANDI 0FH
+ 1331 f749: 04 f8 21                JSR shownibble
+ 1332 f74c: 0e 3a                   LDAI ':'
+ 1333 f74e: 04 f8 51                JSR uartout
+ 1334 f751: 0e 20                   LDAI ' '
+ 1335 f753: 04 f8 51                JSR uartout
+ 1336 f756: 0a                      POP
+ 1337 f757: 05                      RET
+ 1338 f758:             
+ 1339 f758:             shownum:
+ 1340 f758: 09          showr7:     Push
+ 1341 f759: 2f                      MVRHA R7
+ 1342 f75a: b7                      SHR
+ 1343 f75b: b7                      SHR
+ 1344 f75c: b7                      SHR
+ 1345 f75d: b7                      SHR
+ 1346 f75e: 04 f8 21                JSR shownibble
+ 1347 f761: 2f                      MVRHA R7
+ 1348 f762: b3 0f                   ANDI 0FH
+ 1349 f764: 04 f8 21                JSR shownibble
+ 1350 f767: 27                      MVRLA R7
+ 1351 f768: b7                      SHR
+ 1352 f769: b7                      SHR
+ 1353 f76a: b7                      SHR
+ 1354 f76b: b7                      SHR
+ 1355 f76c: 04 f8 21                JSR shownibble
+ 1356 f76f: 27                      MVRLA R7
+ 1357 f770: b3 0f                   ANDI 0FH
+ 1358 f772: 04 f8 21                JSR shownibble
+ 1359 f775: 0a                      POP
+ 1360 f776: 05                      RET
+ 1361 f777:             ;
+ 1362 f777:             ;
+ 1363 f777:             ;
+ 1364 f777:             showregs:
+ 1365 f777: 07 07                   pushr r7
+ 1366 f779: 07 07                   pushr r7
+ 1367 f77b: 1f f9 15                MVIW R7,CRLF
+ 1368 f77e: 04 f8 43                JSR stringout
+ 1369 f781: 0f 70                   MOVRR r0,r7
+ 1370 f783: 04 f7 2f                jsr showaddr
+ 1371 f786: 0f 71                   MOVRR r1,r7
+ 1372 f788: 04 f7 2f                jsr showaddr
+ 1373 f78b: 0f 72                   MOVRR r2,r7
+ 1374 f78d: 04 f7 2f                jsr showaddr
+ 1375 f790: 0f 73                   MOVRR r3,r7
+ 1376 f792: 04 f7 2f                jsr showaddr
+ 1377 f795: 0f 74                   MOVRR r4,r7
+ 1378 f797: 04 f7 2f                jsr showaddr
+ 1379 f79a: 0f 75                   MOVRR r5,r7
+ 1380 f79c: 04 f7 2f                jsr showaddr
+ 1381 f79f: 0f 76                   MOVRR r6,r7
+ 1382 f7a1: 04 f7 2f                jsr showaddr
+ 1383 f7a4: 08 70                   popr r7
+ 1384 f7a6: 04 f7 2f                jsr showaddr
+ 1385 f7a9: 09                      push
+ 1386 f7aa: 0e 20                   ldai ' '
+ 1387 f7ac: 04 f8 51                jsr uartout
+ 1388 f7af: 0a                      pop
+ 1389 f7b0: 04 f8 0f                jsr showcarry
+ 1390 f7b3:             
+ 1391 f7b3: 1f f9 15                MVIW R7,CRLF
+ 1392 f7b6: 04 f8 43                JSR stringout
+ 1393 f7b9: 08 70                   popr r7
+ 1394 f7bb: 05                      RET
+ 1395 f7bc:             ;
+ 1396 f7bc:             ; display upto 16 bytes point to by R7 (old r3), stops on a 16 byte boundry
+ 1397 f7bc:             ; increments R7
+ 1398 f7bc:             ;
+ 1399 f7bc: 04 f7 ed    show16:     JSR showbyte
+ 1400 f7bf: 57                      INCR R7
+ 1401 f7c0: 0e 20                   LDAI ' '
+ 1402 f7c2: 04 f8 51                JSR uartout
+ 1403 f7c5: 27                      MVRLA R7
+ 1404 f7c6: b3 0f                   ANDI 0FH
+ 1405 f7c8: a2 f7 bc                BRNZ show16
+ 1406 f7cb: 0e 0a                   LDAI 0ah
+ 1407 f7cd: 04 f8 51                JSR uartout
+ 1408 f7d0: 0e 0d                   LDAI 0dh
+ 1409 f7d2: 04 f8 51                JSR uartout
+ 1410 f7d5: 05                      RET
+ 1411 f7d6:             ;
+ 1412 f7d6:             ; display upto 256 bytes point to by R7 (old r3),
+ 1413 f7d6:             ; stops on a 256 byte boundry, increments R7
+ 1414 f7d6:             ;
+ 1415 f7d6:             show256:
+ 1416 f7d6: 09                    push
+ 1417 f7d7:             show256loop:
+ 1418 f7d7: 04 f7 2f              jsr showaddr
+ 1419 f7da: 04 f7 bc              jsr show16
+ 1420 f7dd:             
+ 1421 f7dd:             ;         MVIW R7,CRLF
+ 1422 f7dd:             ;         JSR stringout
+ 1423 f7dd:             
+ 1424 f7dd: 27                    MVRLA R7
+ 1425 f7de: b3 ff                 ANDI  0FFH
+ 1426 f7e0: a2 f7 d7              BRNZ show256loop
+ 1427 f7e3: 04 f8 51              JSR uartout
+ 1428 f7e6: 0e 0d                 LDAI 0dh
+ 1429 f7e8: 04 f8 51              JSR uartout
+ 1430 f7eb: 0a                    pop
+ 1431 f7ec: 05                    RET
+ 1432 f7ed:             ;
+ 1433 f7ed:             ; Output ASCII representation of a BYTE pointed to by R7 (OLD r7)
+ 1434 f7ed:             ; or use showbytea in accumulator
+ 1435 f7ed:             ; both destructive for accumulator - no longer true with push/pop
+ 1436 f7ed:             :
+ 1437 f7ed: 09          showbyte:   PUSH
+ 1438 f7ee: 47                      LDAVR R7
+ 1439 f7ef: b7                      SHR
+ 1440 f7f0: b7                      SHR
+ 1441 f7f1: b7                      SHR
+ 1442 f7f2: b7                      SHR
+ 1443 f7f3: 04 f8 21                JSR shownibble
+ 1444 f7f6: 47                      LDAVR R7
+ 1445 f7f7: b3 0f                   ANDI 0FH
+ 1446 f7f9: 04 f8 21                JSR shownibble
+ 1447 f7fc: 0a                      POP
+ 1448 f7fd: 05                      RET
+ 1449 f7fe:             ;
+ 1450 f7fe: 09          showbytea:  PUSH
+ 1451 f7ff: 09                      PUSH
+ 1452 f800: b7                      SHR
+ 1453 f801: b7                      SHR
+ 1454 f802: b7                      SHR
+ 1455 f803: b7                      SHR
+ 1456 f804: 04 f8 21                JSR shownibble
+ 1457 f807: 0a                      POP
+ 1458 f808: b3 0f                   ANDI 0FH
+ 1459 f80a: 04 f8 21                JSR shownibble
+ 1460 f80d: 0a                      POP
+ 1461 f80e: 05                      RET
+ 1462 f80f:             ;
+ 1463 f80f:             ; Show carry flag
+ 1464 f80f:             ;
+ 1465 f80f:             showcarry:
+ 1466 f80f: 09                      Push
+ 1467 f810: a6 f8 1a                brc show_yescarry
+ 1468 f813: 0e 58                   ldai 'X'
+ 1469 f815: 04 f8 51                JSR uartout
+ 1470 f818: 0a                      pop
+ 1471 f819: 05                      ret
+ 1472 f81a:             show_yescarry:
+ 1473 f81a: 0e 43                   ldai 'C'
+ 1474 f81c: 04 f8 51                JSR uartout
+ 1475 f81f: 0a                      pop
+ 1476 f820: 05                      ret
+ 1477 f821:             
+ 1478 f821:             ;
+ 1479 f821:             ; Display nibble in accumulator ((this looks wrong) destructive)
+ 1480 f821:             ;  destroys tmp register  - maybe add pusht - popt
+ 1481 f821:             ;
+ 1482 f821: 09          shownibble:  PUSH
+ 1483 f822: 0d 09                    LDTI 9
+ 1484 f824: a9 f8 2e                 BRGT AF
+ 1485 f827: b0 30                    ADDI '0'
+ 1486 f829: 04 f8 51                 JSR uartout
+ 1487 f82c: 0a                       Pop
+ 1488 f82d: 05                       RET
+ 1489 f82e:             
+ 1490 f82e: b1 0a       AF:          SUBI 10
+ 1491 f830: b0 41                    ADDI 'A'
+ 1492 f832: 04 f8 51                 JSR uartout
+ 1493 f835: 0a                       Pop
+ 1494 f836: 05                       RET
+ 1495 f837:             ;
+ 1496 f837:             ; reading switches into accumulator
+ 1497 f837:             ;
+ 1498 f837:             switchin:
+ 1499 f837: 70 01               OUTI  P0,(SWITCHLED)
+ 1500 f839: 91                  INP   P1
+ 1501 f83a: 05                  RET
+ 1502 f83b:             ;
+ 1503 f83b:             ;
+ 1504 f83b:             ; output accumulator to LEDS or Hex displays (non distructive)
+ 1505 f83b:             ;
+ 1506 f83b:             ledout:
+ 1507 f83b: 70 01               OUTI  P0,(SWITCHLED)
+ 1508 f83d: 61                  OUTA  P1
+ 1509 f83e: 05                  RET
+ 1510 f83f:             ;
+ 1511 f83f:             TIL311out:
+ 1512 f83f: 70 80               OUTI  P0,(TIL311)
+ 1513 f841: 61                  OUTA  P1
+ 1514 f842: 05                  RET
+ 1515 f843:             ;
+ 1516 f843:             ; OLD: Output null terminated string pointed to by R2 to UART then send CR and LF
+ 1517 f843:             ; Advances R2 to end of string
+ 1518 f843:             ;
+ 1519 f843:             ; Output null terminated string pointed to by R7 to UART
+ 1520 f843:             ; Advances R7 to end of string
+ 1521 f843:             ;
+ 1522 f843:             stringout:
+ 1523 f843: 09                  Push
+ 1524 f844:             sloop:
+ 1525 f844: 47                  LDAVR R7
+ 1526 f845: a1 f8 4f            BRZ sloopdone
+ 1527 f848: 04 f8 51            JSR uartout
+ 1528 f84b: 57                  INCR R7
+ 1529 f84c: a0 f8 44            BR sloop
+ 1530 f84f:             ;
+ 1531 f84f:             ; (not done send CR and LF)
+ 1532 f84f:             ;
+ 1533 f84f:             sloopdone:
+ 1534 f84f: 0a                  POP
+ 1535 f850: 05                  RET
+ 1536 f851:             ;
+ 1537 f851:             ; output accumulator to UART, wait for UART out available
+ 1538 f851:             ;
+ 1539 f851:             charout:
+ 1540 f851:             uartout:
+ 1541 f851:             ;
+ 1542 f851:             ; add for emulator, outputs via putch
+ 1543 f851:             ;
+ 1544 f851: af f8 56            BRDEV emulator2
+ 1545 f854: 62                  outa p2
+ 1546 f855: 05                  ret
+ 1547 f856:             ;
+ 1548 f856:             emulator2:
+ 1549 f856: 09                  PUSH
+ 1550 f857: 09                  push
+ 1551 f858:             ;
+ 1552 f858:             ; doubt 2nd push pop is needed, to be tested
+ 1553 f858:             ;
+ 1554 f858:             uartoutw:
+ 1555 f858:             ;
+ 1556 f858:             ; test uart out is available
+ 1557 f858:             ;
+ 1558 f858: 70 68               OUTI  P0,(UARTCS!UARTA5)
+ 1559 f85a: 91                  INP   p1
+ 1560 f85b: b3 40               ANDI  040h
+ 1561 f85d: a1 f8 58            BRZ   uartoutw
+ 1562 f860: 0a                  POP
+ 1563 f861: 70 40               OUTI  P0,UARTCS
+ 1564 f863: 61                  OUTA  P1
+ 1565 f864:             ;
+ 1566 f864:             ; may not be needed
+ 1567 f864: 0a                 Pop
+ 1568 f865: 05                 RET
+ 1569 f866:             
+ 1570 f866:             ;
+ 1571 f866:             ; wait for UART character available then input to accumulator
+ 1572 f866:             ;
+ 1573 f866:             ; Looks like this echos out character
+ 1574 f866:             ; should this be settable via a flag
+ 1575 f866:             ;
+ 1576 f866:             uartin:
+ 1577 f866:             ;
+ 1578 f866:             ; added for emulator, emulator P2 reads a char via getch
+ 1579 f866:             ;
+ 1580 f866: af f8 6b            BRDEV emulator3
+ 1581 f869: 92                  inp p2
+ 1582 f86a: 05                  ret
+ 1583 f86b:             ;
+ 1584 f86b:             emulator3:
+ 1585 f86b:             ;
+ 1586 f86b:             ; wait for a charater available at input
+ 1587 f86b:             ;
+ 1588 f86b: 70 68               OUTI  P0,(UARTCS!UARTA5)
+ 1589 f86d: 91                  INP   p1
+ 1590 f86e: b3 01               ANDI  01h
+ 1591 f870: a1 f8 66            BRZ   uartin
+ 1592 f873: 70 40               OUTI  P0,(UARTCS)
+ 1593 f875: 91                  INP   P1
+ 1594 f876: 0d 0d               ldti 0dh          ; cobvert 0x0d to 0x0a
+ 1595 f878: aa f8 7d            brneq uartinc
+ 1596 f87b: 0e 0a               ldai 0ah
+ 1597 f87d:             uartinc:
+ 1598 f87d: 04 f8 3b            JSR   LEDOUT
+ 1599 f880:             ;
+ 1600 f880:             ; emulator
+ 1601 f880:             ;
+ 1602 f880:             ;        ldti  0ah
+ 1603 f880:             ;        breq uartin
+ 1604 f880: 04 f8 51            JSR   uartout
+ 1605 f883: 05                  RET
+ 1606 f884:             
+ 1607 f884:             uarttest:
+ 1608 f884: 70 68               OUTI  P0,(UARTCS!UARTA5)
+ 1609 f886: 91                  INP   p1
+ 1610 f887: b3 01               ANDI  01h
+ 1611 f889: 05                  ret
+ 1612 f88a:                 
+ 1613 f88a:             ;
+ 1614 f88a:             ; long delay (approx 5 seconds)
+ 1615 f88a:             ; destroys r7
+ 1616 f88a:             ;
+ 1617 f88a:             LONGDELAY:
+ 1618 f88a: 09                  PUSH
+ 1619 f88b: 1f ff ff            MVIW R7,0FFFFh
+ 1620 f88e:             longdelayloop:
+ 1621 f88e: 5f                  DECR R7
+ 1622 f88f: 2f                  MVRHA R7
+ 1623 f890: a2 f8 8e            BRNZ longdelayloop
+ 1624 f893: 0a                  POP
+ 1625 f894: 05                  RET
+ 1626 f895:             ;
+ 1627 f895:             ; short delay (approx 1 second)
+ 1628 f895:             ; destroys R7
+ 1629 f895:             ;
+ 1630 f895:             SHORTDELAY:
+ 1631 f895: 09                  PUSH
+ 1632 f896: 1f 33 ff            MVIW R7,033FFh
+ 1633 f899:             shortdelayloop:
+ 1634 f899: 5f                  DECR R7
+ 1635 f89a: 2f                  MVRHA R7
+ 1636 f89b: a2 f8 99            BRNZ shortdelayloop
+ 1637 f89e: 0a                  POP
+ 1638 f89f: 05                  RET
+ 1639 f8a0:             
+ 1640 f8a0:             ;
+ 1641 f8a0:             ; toggle input switch (with debounce)
+ 1642 f8a0:             ; destroys r7
+ 1643 f8a0:             ;
+ 1644 f8a0:             switchtoggle:
+ 1645 f8a0: 09                  Push
+ 1646 f8a1: a4 f8 a1    offw:   BRINL offw
+ 1647 f8a4: 1f 01 ff            MVIW R7,01FFh
+ 1648 f8a7:             delaya:
+ 1649 f8a7: 5f                  DECR R7
+ 1650 f8a8: 2f                  MVRHA R7
+ 1651 f8a9: a2 f8 a7            BRNZ delaya
+ 1652 f8ac: 01                  ON
+ 1653 f8ad:             
+ 1654 f8ad: a3 f8 ad    onw:    BRINH onw
+ 1655 f8b0: 1f 01 ff            MVIW R7,01FFh
+ 1656 f8b3:             delayb:
+ 1657 f8b3: 5f                  DECR R7
+ 1658 f8b4: 2f                  MVRHA R7
+ 1659 f8b5: a2 f8 b3            BRNZ delayb
+ 1660 f8b8: 02                  OFF
+ 1661 f8b9: 0a                  Pop
+ 1662 f8ba: 05                  RET
+ 1663 f8bb:             ;
+ 1664 f8bb:             ; quick blink LED
+ 1665 f8bb:             ;
+ 1666 f8bb:             blink:
+ 1667 f8bb:             ;
+ 1668 f8bb:             ; added for emulator, return immediately to skip counting
+ 1669 f8bb:             ; destroys r7
+ 1670 f8bb:             ;
+ 1671 f8bb:             ;       ret
+ 1672 f8bb: 09                  Push
+ 1673 f8bc: 01                  ON
+ 1674 f8bd: 1f 03 ff            MVIW R7,03FFh
+ 1675 f8c0:             onloop:
+ 1676 f8c0: 5f                  DECR R7
+ 1677 f8c1: 2f                  MVRHA R7
+ 1678 f8c2: a2 f8 c0            BRNZ onloop
+ 1679 f8c5:             
+ 1680 f8c5: 02                  OFF
+ 1681 f8c6: 1f 03 ff            MVIW R7,003FFh
+ 1682 f8c9:             offloop:
+ 1683 f8c9: 5f                  DECR R7
+ 1684 f8ca: 2f                  MVRHA R7
+ 1685 f8cb: a2 f8 c9            BRNZ offloop
+ 1686 f8ce: 0a                  Pop
+ 1687 f8cf: 05                  RET
+ 1688 f8d0:             ;
+ 1689 f8d0:             ; long blink LED
+ 1690 f8d0:             ;
+ 1691 f8d0:             lblink:
+ 1692 f8d0:             ;
+ 1693 f8d0:             ; emulator change, return immediately to skip counting
+ 1694 f8d0:             ; destroys r7
+ 1695 f8d0:             ;
+ 1696 f8d0:             ;       ret
+ 1697 f8d0: 09                  Push
+ 1698 f8d1: 01                  ON
+ 1699 f8d2: 1f 18 ff            MVIW R7,018FFh
+ 1700 f8d5:             lonloop:
+ 1701 f8d5: 5f                  DECR R7
+ 1702 f8d6: 2f                  MVRHA R7
+ 1703 f8d7: a2 f8 d5            BRNZ lonloop
+ 1704 f8da:             
+ 1705 f8da: 02                  OFF
+ 1706 f8db: 1f 18 ff            MVIW R7,018FFh
+ 1707 f8de:             loffloop:
+ 1708 f8de: 5f                  DECR R7
+ 1709 f8df: 2f                  MVRHA R7
+ 1710 f8e0: a2 f8 de            BRNZ loffloop
+ 1711 f8e3: 0a                  Pop
+ 1712 f8e4: 05                  RET
+ 1713 f8e5:             ;
+ 1714 f8e5:             ; blink n times in accumulator
+ 1715 f8e5:             ;
+ 1716 f8e5:             ; emulator change, return immediately to skip counting
+ 1717 f8e5:             ;
+ 1718 f8e5:             ;    ret
+ 1719 f8e5:             nblink:
+ 1720 f8e5: 09                  push
+ 1721 f8e6:             nblinkloop:
+ 1722 f8e6: 04 f8 3f            JSR TIL311out
+ 1723 f8e9: a1 f8 f4            BRZ nblinkdone
+ 1724 f8ec: 04 f8 bb            JSR blink
+ 1725 f8ef: b1 01               subi 1
+ 1726 f8f1: a0 f8 e6            BR nblinkloop
+ 1727 f8f4:             nblinkdone:
+ 1728 f8f4: 0a                  POP
+ 1729 f8f5: 05                  RET
+ 1730 f8f6:             
+ 1731 f8f6:             
+ 1732 f8f6:             ;
+ 1733 f8f6:             ; MONITOR STRINGS
+ 1734 f8f6:             ;
+ 1735 f8f6: 0a 0d 59 41 
             43 43 20 32 
             30 32 30 3a 
             20 48 45 4c 
@@ -1777,59 +1777,59 @@ yacc1 -> Native
             4f 52 4c 44 
             20 20 0a 0d 
             00          hello:  DB 0ah,0dh,"YACC 2020: hello world  ",0ah,0dh,0
- 1736 f929: 3e 00       PROMPT: DB ">",0
- 1737 f92b: 0a 0d 00    CRLF: DB 0ah,0dh,0
- 1738 f92e: 55 4e 52 45 
+ 1736 f913: 3e 00       PROMPT: DB ">",0
+ 1737 f915: 0a 0d 00    CRLF: DB 0ah,0dh,0
+ 1738 f918: 55 4e 52 45 
             43 4f 47 49 
             4e 49 5a 45 
             44 20 43 4f 
             4d 4d 41 4e 
             44 0a 0d 00 ERROR: DB "UNRECOGINIZED COMMAND",0ah,0dh,0
- 1739 f946: 43 4f 4e 54 
+ 1739 f930: 43 4f 4e 54 
             49 4e 55 45 
             20 43 4d 44 
             20 45 52 52 
             4f 52 0a 0d 
             00          CONTINUEERROR: DB "CONTINUE CMD ERROR",0ah,0dh,0
- 1740 f95b: 0a 0d 44 55 
+ 1740 f945: 0a 0d 44 55 
             4d 50 20 41 
             44 44 52 3a 
             00          DUMPMSG: DB 0ah,0dh,"DUMP ADDR:",0
- 1741 f968: 0a 0d 44 55 
+ 1741 f952: 0a 0d 44 55 
             4d 50 20 42 
             4c 4f 43 4b 
             20 41 44 44 
             52 3a 00    DUMPBLOCKMSG: DB 0ah,0dh,"DUMP BLOCK ADDR:",0
- 1742 f97b: 0a 0d 46 49 
+ 1742 f965: 0a 0d 46 49 
             4c 4c 20 42 
             4c 4f 43 4b 
             20 41 44 44 
             52 3a 00    FILLMSG: DB 0ah,0dh,"FILL BLOCK ADDR:",0
- 1743 f98e: 0a 0d 47 4f 
+ 1743 f978: 0a 0d 47 4f 
             20 41 44 44 
             52 45 53 53 
             3a 00       GOMSG: DB 0ah,0dh,"GO ADDRESS:",0
- 1744 f99c: 0a 0d 45 58 
+ 1744 f986: 0a 0d 45 58 
             41 4d 49 4e 
             45 20 41 44 
             44 52 45 53 
             53 3a 00    EXAMINEMSG: DB 0ah,0Dh,"EXAMINE ADDRESS:",0
- 1745 f9af: 43 4f 4e 54 
+ 1745 f999: 43 4f 4e 54 
             49 4e 55 45 
             20 4d 4f 44 
             45 00       CONTMSG: DB "CONTINUE MODE",0
- 1746 f9bd: 45 4e 54 45 
+ 1746 f9a7: 45 4e 54 45 
             52 20 54 45 
             53 54 20 4e 
             55 4d 42 45 
             52 3a 00    gettestpromopt: DB "Enter Test number:",0
- 1747 f9d0: 0a 0d 45 4e 
+ 1747 f9ba: 0a 0d 45 4e 
             54 45 52 20 
             4c 49 4e 45 
             3a 00       BASIC_PARSEMSG: DB 0ah,0dh,"Enter Line:",0
- 1748 f9de:             ;
- 1749 f9de:             helpmenu:
- 1750 f9de: 30 20 20 20 
+ 1748 f9c8:             ;
+ 1749 f9c8:             helpmenu:
+ 1750 f9c8: 30 20 20 20 
             20 20 2d 20 
             45 58 49 54 
             20 28 45 4d 
@@ -1837,14 +1837,14 @@ yacc1 -> Native
             4f 52 20 4f 
             4e 4c 59 29 
             0a 0d       DB "0     - Exit (emulator only)",0ah,0dh
- 1751 f9fc: 48 20 20 20 
+ 1751 f9e6: 48 20 20 20 
             20 20 2d 20 
             54 48 49 53 
             20 48 45 4c 
             50 20 4d 45 
             4e 55 0a 0d 
             0a 0d       DB "H     - This help menu",0ah,0dh,0ah,0dh
- 1752 fa16: 42 20 41 41 
+ 1752 fa00: 42 20 41 41 
             41 41 2d 20 
             53 48 4f 57 
             20 32 35 36 
@@ -1857,14 +1857,14 @@ yacc1 -> Native
             45 20 41 4c 
             49 47 4e 45 
             44 29       DB "B AAAA- Show 256 bytes of memory (16 byte aligned)"
- 1753 fa48: 20 43 52 20 
+ 1753 fa32: 20 43 52 20 
             44 49 53 50 
             4c 41 59 20 
             4e 45 58 54 
             20 32 35 36 
             20 42 59 54 
             45 53 0a 0d DB " CR display next 256 bytes",0ah,0dh
- 1754 fa64: 43 20 20 20 
+ 1754 fa4e: 43 20 20 20 
             20 20 2d 20 
             43 4f 50 59 
             20 42 41 53 
@@ -1879,7 +1879,7 @@ yacc1 -> Native
             20 42 55 46 
             46 45 52 0a 
             0d          DB "C     - Copy BASIC test program into interpreter buffer",0ah,0dh
- 1755 fa9d: 44 20 41 41 
+ 1755 fa87: 44 20 41 41 
             41 41 2d 20 
             53 48 4f 57 
             20 31 36 20 
@@ -1892,14 +1892,14 @@ yacc1 -> Native
             59 54 45 20 
             41 4c 49 47 
             4e 45 44 29 DB "D AAAA- Show 16 bytes of memory at (16 byte aligned)"
- 1756 fad1: 20 43 52 20 
+ 1756 fabb: 20 43 52 20 
             44 49 53 50 
             4c 41 59 20 
             4e 45 58 54 
             20 31 36 20 
             42 59 54 45 
             53 0a 0d    DB " CR display next 16 bytes",0ah,0dh
- 1757 faec: 45 20 41 41 
+ 1757 fad6: 45 20 41 41 
             41 41 2d 20 
             53 48 4f 57 
             20 43 4f 4e 
@@ -1914,7 +1914,7 @@ yacc1 -> Native
             41 41 41 3a 
             58 58 29 0a 
             0d          DB "E AAAA- show contents of location AAAA (Output AAAA:XX)",0ah,0dh
- 1758 fb25: 20 20 20 20 
+ 1758 fb0f: 20 20 20 20 
             20 20 20 20 
             49 46 20 46 
             4f 4c 4c 4f 
@@ -1935,7 +1935,7 @@ yacc1 -> Native
             49 53 50 4c 
             41 59 29 0a 
             0d          DB "        if followed by ASCII-HEX modify location with new value (and redisplay)",0ah,0DH
- 1759 fb76: 20 20 20 20 
+ 1759 fb60: 20 20 20 20 
             20 20 20 20 
             49 46 20 46 
             4f 4c 4c 4f 
@@ -1948,7 +1948,7 @@ yacc1 -> Native
             4f 43 41 54 
             49 4f 4e 0a 
             0d          DB "        if followed by CR display next location",0ah,0dh
- 1760 fba7: 46 20 41 41 
+ 1760 fb91: 46 20 41 41 
             41 41 20 20 
             46 49 4c 4c 
             20 43 4f 4e 
@@ -1971,7 +1971,7 @@ yacc1 -> Native
             29 20 57 49 
             54 48 20 30 
             0a 0d       DB "F AAAA  Fill contents 256 bytes of memory at address AAAA with 0(16 byte aligned) with 0",0ah,0dh
- 1761 fc01: 20 20 20 20 
+ 1761 fbeb: 20 20 20 20 
             20 20 20 20 
             49 46 20 46 
             4f 4c 4c 4f 
@@ -1983,7 +1983,7 @@ yacc1 -> Native
             32 35 36 20 
             42 59 54 45 
             53 0a 0d    DB "        if followed by CR fill next 256 bytes",0ah,0dh
- 1762 fc30: 47 20 41 41 
+ 1762 fc1a: 47 20 41 41 
             41 41 2d 20 
             4a 55 4d 50 
             20 54 4f 20 
@@ -1995,7 +1995,7 @@ yacc1 -> Native
             4e 47 20 41 
             54 20 41 41 
             41 41 0a 0d DB "G AAAA- Jump to (and execute) starting at AAAA",0ah,0dh
- 1763 fc60: 20 20 20 20 
+ 1763 fc4a: 20 20 20 20 
             20 20 20 20 
             43 4f 44 45 
             20 43 4f 55 
@@ -2017,16 +2017,16 @@ yacc1 -> Native
             56 49 41 20 
             4a 53 52 0a 
             0d          DB "        code could end in BR to 0xf000h to restart monitor or RET if called via JSR",0ah,0dh
- 1764 fcb5: 49 20 20 20 
+ 1764 fc9f: 49 20 20 20 
             20 20 2d 20 
             42 41 53 49 
             43 0a 0d    DB "I     - BASIC",0ah,0dh
- 1765 fcc4: 4c 20 20 20 
+ 1765 fcae: 4c 20 20 20 
             20 20 2d 20 
             4c 49 53 54 
             20 42 41 53 
             49 43 0a 0d DB "L     - List BASIC",0ah,0dh
- 1766 fcd8: 50 20 20 20 
+ 1766 fcc2: 50 20 20 20 
             20 20 2d 20 
             45 4e 54 45 
             52 20 50 52 
@@ -2036,18 +2036,18 @@ yacc1 -> Native
             4f 20 42 41 
             53 49 43 0a 
             0d          DB "P     - Enter program line to BASIC",0ah,0dh
- 1767 fcfd: 52 20 20 20 
+ 1767 fce7: 52 20 20 20 
             20 20 2d 20 
             53 48 4f 57 
             20 52 45 47 
             49 53 54 45 
             52 53 0a 0d DB "R     - Show registers",0ah,0dh
- 1768 fd15: 54 20 20 20 
+ 1768 fcff: 54 20 20 20 
             20 20 2d 20 
             54 45 53 54 
             20 4d 45 4e 
             55 0a 0d    DB "T     - Test menu",0ah,0DH
- 1769 fd28: 59 20 20 20 
+ 1769 fd12: 59 20 20 20 
             20 20 2d 20 
             52 55 4e 20 
             42 41 53 49 
@@ -2055,7 +2055,7 @@ yacc1 -> Native
             53 54 20 43 
             4f 44 45 0a 
             0d          DB "Y     - run BASIC test code",0ah,0DH
- 1770 fd45: 5a 20 20 20 
+ 1770 fd2f: 5a 20 20 20 
             20 20 2d 20 
             52 55 4e 20 
             50 52 4f 47 
@@ -2066,61 +2066,61 @@ yacc1 -> Native
             4e 54 45 52 
             50 52 45 54 
             45 52 0a 0d DB "Z     - Run program with Basic interpreter",0ah,0DH
- 1771 fd71: 00          DB 0
- 1772 fd72:             ;
- 1773 fd72:             ; TEST HELP MESSAGES
- 1774 fd72:             ;
- 1775 fd72: 43 4f 4d 50 
+ 1771 fd5b: 00          DB 0
+ 1772 fd5c:             ;
+ 1773 fd5c:             ; TEST HELP MESSAGES
+ 1774 fd5c:             ;
+ 1775 fd5c: 43 4f 4d 50 
             41 52 45 20 
             54 45 53 54 
             53 0a 0d 00 COMPAREHELP: DB "Compare Tests",0ah,0dh,0
- 1776 fd82: 52 49 4e 47 
+ 1776 fd6c: 52 49 4e 47 
             20 53 48 49 
             46 54 20 4c 
             45 46 54 0a 
             0d 00       RSHIFT_LEFTHELP: DB "Ring Shift Left",0ah,0dh,0
- 1777 fd94: 52 49 4e 47 
+ 1777 fd7e: 52 49 4e 47 
             20 53 48 49 
             46 54 20 52 
             49 47 48 54 
             0a 0d 00    RSHIFT_RIGHTHELP: DB "Ring Shift Right",0ah,0dh,0
- 1778 fda7: 50 52 4f 50 
+ 1778 fd91: 50 52 4f 50 
             20 53 48 49 
             46 54 20 52 
             49 47 48 54 
             0a 0d 00    PSHIFT_RIGHTHELP: DB "PROP Shift Right",0ah,0dh,0
- 1779 fdba: 43 41 52 52 
+ 1779 fda4: 43 41 52 52 
             59 20 53 48 
             49 46 54 20 
             4c 45 46 54 
             0a 0d 00    CSHIFT_LEFTHELP: DB "CARRY Shift Left",0ah,0dh,0
- 1780 fdcd: 43 41 52 52 
+ 1780 fdb7: 43 41 52 52 
             59 20 53 48 
             49 46 54 20 
             52 49 47 48 
             54 0a 0d 00 CSHIFT_RIGHTHELP: DB "CARRY Shift Right",0ah,0dh,0
- 1781 fde1: 53 55 42 54 
+ 1781 fdcb: 53 55 42 54 
             52 41 43 54 
             0a 0d 00    SUBHELP: DB "SUBTRACT",0ah,0dh,0
- 1782 fdec: 41 43 43 55 
+ 1782 fdd6: 41 43 43 55 
             4d 55 4c 41 
             54 4f 52 20 
             54 45 53 54 
             0a 0d 00    accumhelp: DB "accumulator test",0ah,0dh,0
- 1783 fdff: 50 55 53 48 
+ 1783 fde9: 50 55 53 48 
             20 50 4f 50 
             20 45 4e 54 
             45 52 20 33 
             20 4e 55 4d 
             42 45 52 53 
             0a 0d 00    PUSHPOPHELP: DB "Push Pop enter 3 numbers",0ah,0dh,0
- 1784 fe1a: 4f 52 20 54 
+ 1784 fe04: 4f 52 20 54 
             4d 50 20 52 
             45 47 49 53 
             54 45 52 20 
             54 45 53 54 
             53 0a 0d 00 ORTHELP: DB "OR Tmp register tests",0ah,0dh,0
- 1785 fe32: 41 44 44 20 
+ 1785 fe1c: 41 44 44 20 
             49 4d 4d 45 
             44 49 41 54 
             45 20 30 32 
@@ -2129,7 +2129,7 @@ yacc1 -> Native
             55 54 20 4e 
             55 4d 42 45 
             52 0a 0d 00 ADDIHELP: DB "Add immediate 02h to input number",0ah,0dh,0
- 1786 fe56: 41 44 44 20 
+ 1786 fe40: 41 44 44 20 
             49 4d 4d 45 
             44 49 41 54 
             45 20 57 49 
@@ -2141,180 +2141,180 @@ yacc1 -> Native
             54 20 4e 55 
             4d 42 45 52 
             0a 0d 00    ADDICHELP: DB "Add immediate with carry 02h to input number",0ah,0dh,0
- 1787 fe85: 4d 4f 56 45 
+ 1787 fe6f: 4d 4f 56 45 
             52 52 20 54 
             45 53 54 0a 
             0d 00       MOVRRHELP: DB "MOVERR TEST",0ah,0dh,0
- 1788 fe93: 52 55 4e 20 
+ 1788 fe7d: 52 55 4e 20 
             54 45 53 54 
             20 43 4f 44 
             45 0a 0d 00 TESTMSG: DB "Run test code",0ah,0dh,0
- 1789 fea3:             
- 1790 fea3:             
- 1791 fea3:             ;
- 1792 fea3:             ; TEST MENU
- 1793 fea3:             ;
- 1794 fea3:             testmenu:
- 1795 fea3: f2 9f fe f7       DW ortest,ormenu
- 1796 fea7: f2 e4 fe fa       DW orttest,ortmenu
- 1797 feab: f3 01 fe fe       DW pushpoptest,pushpopmenu
- 1798 feaf: f3 24 ff 07       DW accumtest,accummenu
- 1799 feb3: f3 6f ff 20       DW shltest,shlmenu
- 1800 feb7: f3 af ff 24       DW shrtest,shrmenu
- 1801 febb: f3 c5 ff 28       DW rshltest,rshlmenu
- 1802 febf: f3 db ff 2d       DW rshrtest,rshrmenu
- 1803 fec3: f4 07 ff 32       DW cshltest,cshlmenu
- 1804 fec7: f4 1d ff 37       DW cshrtest,cshrmenu
- 1805 fecb: f3 f1 ff 3c       DW pshrtest,pshrmenu
- 1806 fecf: f4 33 ff 41       DW subtest,submenu
- 1807 fed3: f4 4a ff 45       DW cmptest,cmpmenu
- 1808 fed7: f2 b6 ff 54       DW additest,addimenu
- 1809 fedb: f2 cd ff 59       DW addictest,addicmenu
- 1810 fedf: f1 e0 ff 5e       DW movrrtest,movrrmenu
- 1811 fee3: f0 e6 ff 64       DW add16tests,add16menu
- 1812 fee7: f0 66 ff 6a       DW mem_indirect_tests,mem_indirect_menu
- 1813 feeb: f0 60 ff 77       DW mul16,mul16menu
- 1814 feef: f1 71 ff 7d       DW pushr_popr_tests,pushr_popr_menu
- 1815 fef3: ff 88 ff 88       DW endmenu,endmenu
- 1816 fef7:             
- 1817 fef7:             ;
- 1818 fef7:             ; TEST MENU STRINGS
- 1819 fef7:             ;
- 1820 fef7:             testmenustrings:
- 1821 fef7: 4f 52 00    ormenu: DB "OR",0
- 1822 fefa: 4f 52 54 00 ortmenu: DB "ORT",0
- 1823 fefe: 50 55 53 48 
+ 1789 fe8d:             
+ 1790 fe8d:             
+ 1791 fe8d:             ;
+ 1792 fe8d:             ; TEST MENU
+ 1793 fe8d:             ;
+ 1794 fe8d:             testmenu:
+ 1795 fe8d: f2 89 fe e1       DW ortest,ormenu
+ 1796 fe91: f2 ce fe e4       DW orttest,ortmenu
+ 1797 fe95: f2 eb fe e8       DW pushpoptest,pushpopmenu
+ 1798 fe99: f3 0e fe f1       DW accumtest,accummenu
+ 1799 fe9d: f3 59 ff 0a       DW shltest,shlmenu
+ 1800 fea1: f3 99 ff 0e       DW shrtest,shrmenu
+ 1801 fea5: f3 af ff 12       DW rshltest,rshlmenu
+ 1802 fea9: f3 c5 ff 17       DW rshrtest,rshrmenu
+ 1803 fead: f3 f1 ff 1c       DW cshltest,cshlmenu
+ 1804 feb1: f4 07 ff 21       DW cshrtest,cshrmenu
+ 1805 feb5: f3 db ff 26       DW pshrtest,pshrmenu
+ 1806 feb9: f4 1d ff 2b       DW subtest,submenu
+ 1807 febd: f4 34 ff 2f       DW cmptest,cmpmenu
+ 1808 fec1: f2 a0 ff 3e       DW additest,addimenu
+ 1809 fec5: f2 b7 ff 43       DW addictest,addicmenu
+ 1810 fec9: f1 ca ff 48       DW movrrtest,movrrmenu
+ 1811 fecd: f0 e6 ff 4e       DW add16tests,add16menu
+ 1812 fed1: f0 66 ff 54       DW mem_indirect_tests,mem_indirect_menu
+ 1813 fed5: f0 60 ff 61       DW mul16,mul16menu
+ 1814 fed9: f1 71 ff 67       DW pushr_popr_tests,pushr_popr_menu
+ 1815 fedd: ff 72 ff 72       DW endmenu,endmenu
+ 1816 fee1:             
+ 1817 fee1:             ;
+ 1818 fee1:             ; TEST MENU STRINGS
+ 1819 fee1:             ;
+ 1820 fee1:             testmenustrings:
+ 1821 fee1: 4f 52 00    ormenu: DB "OR",0
+ 1822 fee4: 4f 52 54 00 ortmenu: DB "ORT",0
+ 1823 fee8: 50 55 53 48 
             2f 50 4f 50 
             00          pushpopmenu: DB "PUSH/POP",0
- 1824 ff07: 41 43 43 55 
+ 1824 fef1: 41 43 43 55 
             4d 55 4c 41 
             54 4f 52 20 
             3c 2d 3e 20 
             52 45 47 49 
             53 54 45 52 
             00          accummenu: DB "Accumulator <-> Register",0
- 1825 ff20: 53 48 4c 00 shlmenu: DB "SHL",0
- 1826 ff24: 53 48 52 00 shrmenu: DB "SHR",0
- 1827 ff28: 52 53 48 4c 
+ 1825 ff0a: 53 48 4c 00 shlmenu: DB "SHL",0
+ 1826 ff0e: 53 48 52 00 shrmenu: DB "SHR",0
+ 1827 ff12: 52 53 48 4c 
             00          rshlmenu: DB "RSHL",0
- 1828 ff2d: 52 53 48 52 
+ 1828 ff17: 52 53 48 52 
             00          rshrmenu: DB "RSHR",0
- 1829 ff32: 43 53 48 4c 
+ 1829 ff1c: 43 53 48 4c 
             00          cshlmenu: DB "CSHL",0
- 1830 ff37: 43 53 48 52 
+ 1830 ff21: 43 53 48 52 
             00          cshrmenu: DB "CSHR",0
- 1831 ff3c: 50 53 48 52 
+ 1831 ff26: 50 53 48 52 
             00          pshrmenu: DB "PSHR",0
- 1832 ff41: 53 55 42 00 submenu: DB "SUB",0
- 1833 ff45: 43 4f 4d 50 
+ 1832 ff2b: 53 55 42 00 submenu: DB "SUB",0
+ 1833 ff2f: 43 4f 4d 50 
             41 52 45 20 
             42 52 41 4e 
             43 48 00    cmpmenu: DB "Compare Branch",0
- 1834 ff54: 41 44 44 49 
+ 1834 ff3e: 41 44 44 49 
             00          addimenu: DB "ADDI",0
- 1835 ff59: 41 44 44 49 
+ 1835 ff43: 41 44 44 49 
             00          addicmenu: DB "ADDI",0
- 1836 ff5e: 4d 4f 56 52 
+ 1836 ff48: 4d 4f 56 52 
             52 00       movrrmenu: DB "MOVRR",0
- 1837 ff64: 41 44 44 31 
+ 1837 ff4e: 41 44 44 31 
             36 00       add16menu: DB "add16",0
- 1838 ff6a: 4d 45 4d 20 
+ 1838 ff54: 4d 45 4d 20 
             49 4e 44 49 
             52 45 43 54 
             00          mem_indirect_menu: DB "mem indirect",0
- 1839 ff77: 4d 55 4c 31 
+ 1839 ff61: 4d 55 4c 31 
             36 00       mul16menu: DB "mul16",0
- 1840 ff7d: 50 55 53 48 
+ 1840 ff67: 50 55 53 48 
             52 20 50 4f 
             50 52 00    pushr_popr_menu: DB "pushr popr",0
- 1841 ff88: 2d 00       endmenu: DB "-",0
- 1842 ff8a:             
- 1843 ff8a:             ;
- 1844 ff8a:             ; OLD
- 1845 ff8a:             ;
- 1846 ff8a:             ;
- 1847 ff8a:             ;LCD
- 1848 ff8a:             ;
- 1849 ff8a:             ;xlcdtest:
- 1850 ff8a:             ;        OUTI P0,(LCDENABLE)
- 1851 ff8a:             
- 1852 ff8a:             ;        MVIW R3,1fFFh
- 1853 ff8a:             ;xdelay0:
- 1854 ff8a:             ;        DECR R3
- 1855 ff8a:             ;        MVRHA R3
- 1856 ff8a:             ;        BRNZ xdelay0
- 1857 ff8a:             
- 1858 ff8a:             ;        OUTI P1,3CH
- 1859 ff8a:             
- 1860 ff8a:             ;        MVIW R3,1fFFh
- 1861 ff8a:             ;xdelay1:
- 1862 ff8a:             ;        DECR R3
- 1863 ff8a:             ;        MVRHA R3
- 1864 ff8a:             ;        BRNZ xdelay1
- 1865 ff8a:             
- 1866 ff8a:             ;        OUTI P1,01H
- 1867 ff8a:             
- 1868 ff8a:             ;        MVIW R3,1fFFh
- 1869 ff8a:             ;xdelay2:
- 1870 ff8a:             ;        DECR R3
- 1871 ff8a:             ;        MVRHA R3
- 1872 ff8a:             ;        BRNZ xdelay2
- 1873 ff8a:             
- 1874 ff8a:             ;        OUTI P1,0FH
- 1875 ff8a:             
- 1876 ff8a:             ;        MVIW R3,1fFFh
- 1877 ff8a:             ;xdelay3:
- 1878 ff8a:             ;        DECR R3
- 1879 ff8a:             ;        MVRHA R3
- 1880 ff8a:             ;        BRNZ xdelay3
- 1881 ff8a:             
- 1882 ff8a:             ;        OUTI P0,(LCDENABLE!LCDREGISTER)
- 1883 ff8a:             
- 1884 ff8a:             ;        MVIW R3,1fFFh
- 1885 ff8a:             ;xdelay4:
- 1886 ff8a:             ;        DECR R3
- 1887 ff8a:             ;        MVRHA R3
- 1888 ff8a:             ;        BRNZ xdelay4
- 1889 ff8a:             
- 1890 ff8a:             ;        OUTI P1,'A'
- 1891 ff8a:             
- 1892 ff8a:             ;xdelay5:
- 1893 ff8a:             ;        DECR R3
- 1894 ff8a:             ;        MVRHA R3
- 1895 ff8a:             ;        BRNZ xdelay5
- 1896 ff8a:             
- 1897 ff8a:             ;        OUTI P1,'B'
- 1898 ff8a:             
- 1899 ff8a:             ;xaddtest:
- 1900 ff8a:             ;      OUTI  P0,(SWITCHLED)
- 1901 ff8a:             ;      INP   P1
- 1902 ff8a:             ;      ADDI  001H
- 1903 ff8a:             ;      OUTA  P1
- 1904 ff8a:             
- 1905 ff8a:             ;xandtest:
- 1906 ff8a:             ;      OUTI  P0,(SWITCHLED)
- 1907 ff8a:             ;      INP   P1
- 1908 ff8a:             ;      ANDI  055H
- 1909 ff8a:             ;      OUTA  P1
- 1910 ff8a:             
- 1911 ff8a:             ;xxortest:
- 1912 ff8a:             ;     OUTI  P0,(SWITCHLED)
- 1913 ff8a:             ;     INP   P1
- 1914 ff8a:             ;     XORI  055H
- 1915 ff8a:             ;     OUTA  P1
- 1916 ff8a:             ;      JSRUR R2
- 1917 ff8a:             
- 1918 ff8a:             ;
- 1919 ff8a:             ; Interupt sevice routine
- 1920 ff8a:             ;
- 1921 ff8a:               org 0ff90h
+ 1841 ff72: 2d 00       endmenu: DB "-",0
+ 1842 ff74:             
+ 1843 ff74:             ;
+ 1844 ff74:             ; OLD
+ 1845 ff74:             ;
+ 1846 ff74:             ;
+ 1847 ff74:             ;LCD
+ 1848 ff74:             ;
+ 1849 ff74:             ;xlcdtest:
+ 1850 ff74:             ;        OUTI P0,(LCDENABLE)
+ 1851 ff74:             
+ 1852 ff74:             ;        MVIW R3,1fFFh
+ 1853 ff74:             ;xdelay0:
+ 1854 ff74:             ;        DECR R3
+ 1855 ff74:             ;        MVRHA R3
+ 1856 ff74:             ;        BRNZ xdelay0
+ 1857 ff74:             
+ 1858 ff74:             ;        OUTI P1,3CH
+ 1859 ff74:             
+ 1860 ff74:             ;        MVIW R3,1fFFh
+ 1861 ff74:             ;xdelay1:
+ 1862 ff74:             ;        DECR R3
+ 1863 ff74:             ;        MVRHA R3
+ 1864 ff74:             ;        BRNZ xdelay1
+ 1865 ff74:             
+ 1866 ff74:             ;        OUTI P1,01H
+ 1867 ff74:             
+ 1868 ff74:             ;        MVIW R3,1fFFh
+ 1869 ff74:             ;xdelay2:
+ 1870 ff74:             ;        DECR R3
+ 1871 ff74:             ;        MVRHA R3
+ 1872 ff74:             ;        BRNZ xdelay2
+ 1873 ff74:             
+ 1874 ff74:             ;        OUTI P1,0FH
+ 1875 ff74:             
+ 1876 ff74:             ;        MVIW R3,1fFFh
+ 1877 ff74:             ;xdelay3:
+ 1878 ff74:             ;        DECR R3
+ 1879 ff74:             ;        MVRHA R3
+ 1880 ff74:             ;        BRNZ xdelay3
+ 1881 ff74:             
+ 1882 ff74:             ;        OUTI P0,(LCDENABLE!LCDREGISTER)
+ 1883 ff74:             
+ 1884 ff74:             ;        MVIW R3,1fFFh
+ 1885 ff74:             ;xdelay4:
+ 1886 ff74:             ;        DECR R3
+ 1887 ff74:             ;        MVRHA R3
+ 1888 ff74:             ;        BRNZ xdelay4
+ 1889 ff74:             
+ 1890 ff74:             ;        OUTI P1,'A'
+ 1891 ff74:             
+ 1892 ff74:             ;xdelay5:
+ 1893 ff74:             ;        DECR R3
+ 1894 ff74:             ;        MVRHA R3
+ 1895 ff74:             ;        BRNZ xdelay5
+ 1896 ff74:             
+ 1897 ff74:             ;        OUTI P1,'B'
+ 1898 ff74:             
+ 1899 ff74:             ;xaddtest:
+ 1900 ff74:             ;      OUTI  P0,(SWITCHLED)
+ 1901 ff74:             ;      INP   P1
+ 1902 ff74:             ;      ADDI  001H
+ 1903 ff74:             ;      OUTA  P1
+ 1904 ff74:             
+ 1905 ff74:             ;xandtest:
+ 1906 ff74:             ;      OUTI  P0,(SWITCHLED)
+ 1907 ff74:             ;      INP   P1
+ 1908 ff74:             ;      ANDI  055H
+ 1909 ff74:             ;      OUTA  P1
+ 1910 ff74:             
+ 1911 ff74:             ;xxortest:
+ 1912 ff74:             ;     OUTI  P0,(SWITCHLED)
+ 1913 ff74:             ;     INP   P1
+ 1914 ff74:             ;     XORI  055H
+ 1915 ff74:             ;     OUTA  P1
+ 1916 ff74:             ;      JSRUR R2
+ 1917 ff74:             
+ 1918 ff74:             ;
+ 1919 ff74:             ; Interupt sevice routine
+ 1920 ff74:             ;
+ 1921 ff74:               org 0ff90h
  1922 ff90:             isrcode:
  1923 ff90:             ;  halt
  1924 ff90: 09            push
  1925 ff91: 07 07         pushr r7
  1926 ff93: e4 0f 04      lda interupt_cnt
  1927 ff96:             isrloop:
- 1928 ff96: 04 f8 d1      jsr BLINK
+ 1928 ff96: 04 f8 bb      jsr BLINK
  1929 ff99: b1 01         subi 1
  1930 ff9b: a2 ff 96      brnz isrloop
  1931 ff9e: 08 70         popr r7
@@ -2329,40 +2329,40 @@ yacc1 -> Native
  1940 ffa2:                 org 0ffc0h
  1941 ffc0:             
  1942 ffc0:             e_stringout:
- 1943 ffc0: 04 f8 59        jsr stringout
+ 1943 ffc0: 04 f8 43        jsr stringout
  1944 ffc3: 05              ret
  1945 ffc4:             e_charout:
- 1946 ffc4: 04 f8 67        jsr charout
+ 1946 ffc4: 04 f8 51        jsr charout
  1947 ffc7: 05              ret
  1948 ffc8:             e_uartout:
- 1949 ffc8: 04 f8 67        jsr uartout
+ 1949 ffc8: 04 f8 51        jsr uartout
  1950 ffcb: 05              ret
  1951 ffcc:             e_showaddr:
- 1952 ffcc: 04 f7 45        jsr showaddr
+ 1952 ffcc: 04 f7 2f        jsr showaddr
  1953 ffcf: 05              ret
  1954 ffd0:             e_toupper:
- 1955 ffd0: 04 f7 3c        jsr toupper
+ 1955 ffd0: 04 f7 26        jsr toupper
  1956 ffd3: 05              ret
  1957 ffd4:             e_showr7:
- 1958 ffd4: 04 f7 6e        jsr showr7
+ 1958 ffd4: 04 f7 58        jsr showr7
  1959 ffd7: 05              ret
  1960 ffd8:             e_showbyte:
- 1961 ffd8: 04 f8 03        jsr showbyte
+ 1961 ffd8: 04 f7 ed        jsr showbyte
  1962 ffdb: 05              ret
  1963 ffdc:             e_ showregs:
- 1964 ffdc: 04 f7 8d        jsr SHOWREGS
+ 1964 ffdc: 04 f7 77        jsr SHOWREGS
  1965 ffdf: 05              ret
  1966 ffe0:             e_showbytea:
- 1967 ffe0: 04 f8 14        jsr showbytea
+ 1967 ffe0: 04 f7 fe        jsr showbytea
  1968 ffe3: 05              ret
  1969 ffe4:             e_showcarry:
- 1970 ffe4: 04 f8 25        jsr showcarry
+ 1970 ffe4: 04 f8 0f        jsr showcarry
  1971 ffe7: 05              ret
  1972 ffe8:             e_uartin:
- 1973 ffe8: 04 f8 7c        jsr uartin
+ 1973 ffe8: 04 f8 66        jsr uartin
  1974 ffeb: 05              ret
  1975 ffec:             e_uarttest:
- 1976 ffec: 04 f8 9a        jsr uarttest
+ 1976 ffec: 04 f8 84        jsr uarttest
  1977 ffef: 05              ret
  1978 fff0:             ;
  1979 fff0:             ; The End
@@ -2371,21 +2371,21 @@ yacc1 -> Native
  1982 fff0:             ZZZZ:
  1983 fff0: 00            DB   0
 
-f32ch: ACCLOOP          - <   646>    664 
-fdech: ACCUMHELP        - <  1782>    643 
-ff07h: ACCUMMENU        - <  1824>   1798 
-f324h: ACCUMTEST        - <   642>   1798   1798 
-ff64h: ADD16MENU        - <  1837>   1811 
+f316h: ACCLOOP          - <   646>    664 
+fdd6h: ACCUMHELP        - <  1782>    643 
+fef1h: ACCUMMENU        - <  1824>   1798 
+f30eh: ACCUMTEST        - <   642>   1798   1798 
+ff4eh: ADD16MENU        - <  1837>   1811 
 f0e6h: ADD16TESTS       - <   297>   1811   1811 
-fe56h: ADDICHELP        - <  1786>    572 
-f2d5h: ADDICLOOP        - <   575>    584 
-ff59h: ADDICMENU        - <  1835>   1809 
-f2cdh: ADDICTEST        - <   571>   1809   1809 
-fe32h: ADDIHELP         - <  1785>    553 
-f2beh: ADDILOOP         - <   556>    565 
-ff54h: ADDIMENU         - <  1834>   1808 
-f2b6h: ADDITEST         - <   552>   1808   1808 
-f844h: AF               - <  1490>   1484 
+fe40h: ADDICHELP        - <  1786>    572 
+f2bfh: ADDICLOOP        - <   575>    584 
+ff43h: ADDICMENU        - <  1835>   1809 
+f2b7h: ADDICTEST        - <   571>   1809   1809 
+fe1ch: ADDIHELP         - <  1785>    553 
+f2a8h: ADDILOOP         - <   556>    565 
+ff3eh: ADDIMENU         - <  1834>   1808 
+f2a0h: ADDITEST         - <   552>   1808   1808 
+f82eh: AF               - <  1490>   1484 
 f05ah: ALLTESTS         - <   139> 
 f05ah: ALLTESTSDONE     - <   169>    171 
 e020h: BASIC_COLD       - <     6>     96 
@@ -2393,74 +2393,74 @@ e060h: BASIC_COPY       - <    10>   1029
 e040h: BASIC_INTERPRTER - <     8>   1017 
 e000h: BASIC_LIST       - <     4>   1023 
 e050h: BASIC_PARSE      - <     9>   1008   1013 
-f9d0h: BASIC_PARSEMSG   - <  1747>    994 
+f9bah: BASIC_PARSEMSG   - <  1747>    994 
 e010h: BASIC_RUN        - <     5>    984 
 e030h: BASIC_TEST       - <     7>   1035 
-f8d1h: BLINK            - <  1666>   1724   1928 
+f8bbh: BLINK            - <  1666>   1724   1928 
 0003h: BLOCKMODE        - <    38>    956   1040 
-f867h: CHAROUT          - <  1539>   1946 
+f851h: CHAROUT          - <  1539>   1946 
 f069h: CLEARMEM         - <   190>    196 
-f481h: CMDLOOP          - <   871>    121    135    898    949    967    973 
+f46bh: CMDLOOP          - <   871>    121    135    898    949    967    973 
           985   1011   1014   1018   1024   1030   1036   1054   1074   1128 
          1160   1175   1250 
-f533h: CMD_BASIC        - <   981>    928 
-f570h: CMD_BASICLIST    - <  1020>    918 
-f53fh: CMD_BASICPARSE   - <   987>    920 
-f57ch: CMD_BASIC_COPY   - <  1026>    906 
-f588h: CMD_BASIC_TEST   - <  1032>    926 
-f52fh: CMD_EXIT         - <   977>    902 
-f454h: CMPLOOP          - <   822>    846 
-ff45h: CMPMENU          - <  1833>   1807 
-f477h: CMPRES           - <   842>    831    834    837    840 
-f44ah: CMPTEST          - <   817>   1807   1807 
+f51dh: CMD_BASIC        - <   981>    928 
+f55ah: CMD_BASICLIST    - <  1020>    918 
+f529h: CMD_BASICPARSE   - <   987>    920 
+f566h: CMD_BASIC_COPY   - <  1026>    906 
+f572h: CMD_BASIC_TEST   - <  1032>    926 
+f519h: CMD_EXIT         - <   977>    902 
+f43eh: CMPLOOP          - <   822>    846 
+ff2fh: CMPMENU          - <  1833>   1807 
+f461h: CMPRES           - <   842>    831    834    837    840 
+f434h: CMPTEST          - <   817>   1807   1807 
 0050h: CNTL-PORT        - <    29> 
-fd72h: COMPAREHELP      - <  1775>    818 
-f509h: CONTINUE         - <   951>    930    938 
-f946h: CONTINUEERROR    - <  1739>    971 
+fd5ch: COMPAREHELP      - <  1775>    818 
+f4f3h: CONTINUE         - <   951>    930    938 
+f930h: CONTINUEERROR    - <  1739>    971 
 0f02h: CONTINUE_ADDR    - <    45>   1046   1051   1053   1065   1070   1073 
          1083   1088   1118   1138   1143   1147   1155 
-f9afh: CONTMSG          - <  1745> 
-f92bh: CRLF             - <  1737>    107    114    291    405    414    423 
-          432    441    894    940    982   1021   1027   1033   1047   1066 
-         1084   1126   1139   1145   1181   1204   1367   1391 
-fdbah: CSHIFT_LEFTHELP  - <  1779>    764 
-fdcdh: CSHIFT_RIGHTHELP - <  1780>    782 
-f40fh: CSHLLOOP         - <   767>    776 
-ff32h: CSHLMENU         - <  1829>   1803 
-f407h: CSHLTEST         - <   763>   1803   1803 
-f425h: CSHRLOOP         - <   785>    794 
-ff37h: CSHRMENU         - <  1830>   1804 
-f41dh: CSHRTEST         - <   781>   1804   1804 
+f999h: CONTMSG          - <  1745> 
+f915h: CRLF             - <  1737>    107    114    291    405    414    423 
+          432    894    940    982   1021   1027   1033   1047   1066   1084 
+         1126   1139   1145   1181   1204   1367   1391 
+fda4h: CSHIFT_LEFTHELP  - <  1779>    764 
+fdb7h: CSHIFT_RIGHTHELP - <  1780>    782 
+f3f9h: CSHLLOOP         - <   767>    776 
+ff1ch: CSHLMENU         - <  1829>   1803 
+f3f1h: CSHLTEST         - <   763>   1803   1803 
+f40fh: CSHRLOOP         - <   785>    794 
+ff21h: CSHRMENU         - <  1830>   1804 
+f407h: CSHRTEST         - <   781>   1804   1804 
 0050h: DATAPORT         - <    30> 
-f8bdh: DELAYA           - <  1648>   1651 
-f8c9h: DELAYB           - <  1656>   1659 
-f6f6h: DOTEST           - <  1243>   1238 
+f8a7h: DELAYA           - <  1648>   1651 
+f8b3h: DELAYB           - <  1656>   1659 
+f6e0h: DOTEST           - <  1243>   1238 
 f11eh: DO_ADD16         - <   329>    325    393 
 f114h: DO_ADD16_UTIL    - <   323>    304    308    312    316    320 
-f564h: DO_PARSE         - <  1012> 
+f54eh: DO_PARSE         - <  1012> 
 f164h: DO_SUB16         - <   384>    378 
 f15ah: DO_SUB16_UTIL    - <   376>    355    359    363    368    372 
-f5b7h: DUMP             - <  1058>    908 
-f594h: DUMPBLOCK        - <  1038>    904 
-f5abh: DUMPBLOCKCONT    - <  1050>    957 
-f968h: DUMPBLOCKMSG     - <  1741>   1043 
-f5ceh: DUMPCONT         - <  1069>    960 
+f5a1h: DUMP             - <  1058>    908 
+f57eh: DUMPBLOCK        - <  1038>    904 
+f595h: DUMPBLOCKCONT    - <  1050>    957 
+f952h: DUMPBLOCKMSG     - <  1741>   1043 
+f5b8h: DUMPCONT         - <  1069>    960 
 0002h: DUMPMODE         - <    37>    959   1060 
-f95bh: DUMPMSG          - <  1740>   1062 
-f68ch: DUMPREG          - <  1169>    922 
-f480h: EAT_NL           - <   860>    891 
-f480h: EAT_NL_DONE      - <   865> 
-f86ch: EMULATOR2        - <  1548>   1544 
-f881h: EMULATOR3        - <  1584>   1580 
-ff88h: ENDMENU          - <  1841>   1815   1815   1815 
+f945h: DUMPMSG          - <  1740>   1062 
+f676h: DUMPREG          - <  1169>    922 
+f46ah: EAT_NL           - <   860>    891 
+f46ah: EAT_NL_DONE      - <   865> 
+f856h: EMULATOR2        - <  1548>   1544 
+f86bh: EMULATOR3        - <  1584>   1580 
+ff72h: ENDMENU          - <  1841>   1815   1815   1815 
 f003h: EPROM            - <    61>     59 
-f92eh: ERROR            - <  1738>    944 
-f639h: EXAMDONE         - <  1125>   1097   1099 
-f5ddh: EXAMINE          - <  1076>    910 
-f5f4h: EXAMINECONT      - <  1087>    963   1123 
+f918h: ERROR            - <  1738>    944 
+f623h: EXAMDONE         - <  1125>   1097   1099 
+f5c7h: EXAMINE          - <  1076>    910 
+f5deh: EXAMINECONT      - <  1087>    963   1123 
 0001h: EXAMINEMODE      - <    36>    962   1078 
-f99ch: EXAMINEMSG       - <  1744>   1080 
-f628h: EXAMNEXT         - <  1116>   1101   1103 
+f986h: EXAMINEMSG       - <  1744>   1080 
+f612h: EXAMNEXT         - <  1116>   1101   1103 
 ffdch: E_ SHOWREGS      - <  1963> 
 ffc4h: E_CHAROUT        - <  1945> 
 ffcch: E_SHOWADDR       - <  1951> 
@@ -2473,150 +2473,150 @@ ffd0h: E_TOUPPER        - <  1954>
 ffe8h: E_UARTIN         - <  1972> 
 ffc8h: E_UARTOUT        - <  1948> 
 ffech: E_UARTTEST       - <  1975> 
-f642h: FILLBLOCK        - <  1130>    912 
-f659h: FILLCONT         - <  1142>    966 
+f62ch: FILLBLOCK        - <  1130>    912 
+f643h: FILLCONT         - <  1142>    966 
 0004h: FILLMODE         - <    39>    965   1132 
-f97bh: FILLMSG          - <  1742>   1135 
-f700h: GETADDRESS       - <  1252>   1045   1064   1082   1137   1166 
-f729h: GETNIBBLE        - <  1289>   1110   1217   1223   1257   1264   1271 
+f965h: FILLMSG          - <  1742>   1135 
+f6eah: GETADDRESS       - <  1252>   1045   1064   1082   1137   1166 
+f713h: GETNIBBLE        - <  1289>   1110   1217   1223   1257   1264   1271 
          1278 
-f72ch: GETNIBBLEC       - <  1291>   1104 
-f9bdh: GETTESTPROMOPT   - <  1746>   1214 
-f682h: GO               - <  1163>    914 
-f98eh: GOMSG            - <  1743>   1164 
-f90ch: HELLO            - <  1735>     94 
-f9deh: HELPMENU         - <  1749>    896    947 
-f734h: INAF             - <  1296>   1293 
-f56ah: INTERPRETER      - <  1016>    916 
+f716h: GETNIBBLEC       - <  1291>   1104 
+f9a7h: GETTESTPROMOPT   - <  1746>   1214 
+f66ch: GO               - <  1163>    914 
+f978h: GOMSG            - <  1743>   1164 
+f8f6h: HELLO            - <  1735>     94 
+f9c8h: HELPMENU         - <  1749>    896    947 
+f71eh: INAF             - <  1296>   1293 
+f554h: INTERPRETER      - <  1016>    916 
 0f04h: INTERUPT_CNT     - <    46>     89   1926 
 ff90h: ISRCODE          - <  1922>    119 
 ff96h: ISRLOOP          - <  1927>   1930 
-f8e6h: LBLINK           - <  1691>     93    170 
+f8d0h: LBLINK           - <  1691>     93    170 
 0002h: LCDENABLE        - <    24> 
 0004h: LCDREGISTER      - <    25> 
-f851h: LEDOUT           - <  1506>    485    490    495    500    508    513 
+f83bh: LEDOUT           - <  1506>    485    490    495    500    508    513 
           518    523   1598 
 0f80h: LINE_BUFFER      - <    47>    997   1005   1007 
-f8f4h: LOFFLOOP         - <  1707>   1710 
-f8a0h: LONGDELAY        - <  1617> 
-f8a4h: LONGDELAYLOOP    - <  1620>   1623 
-f8ebh: LONLOOP          - <  1700>   1703 
-f742h: LOWER            - <  1306>   1304 
-ff6ah: MEM_INDIRECT_MENU - <  1838>   1812 
+f8deh: LOFFLOOP         - <  1707>   1710 
+f88ah: LONGDELAY        - <  1617> 
+f88eh: LONGDELAYLOOP    - <  1620>   1623 
+f8d5h: LONLOOP          - <  1700>   1703 
+f72ch: LOWER            - <  1306>   1304 
+ff54h: MEM_INDIRECT_MENU - <  1838>   1812 
 f066h: MEM_INDIRECT_TESTS - <   187>   1812   1812 
 f0ceh: MEM_INDIRECT_UTIL - <   283>    204    218    229    238    248    262 
           271    280 
-f6f5h: MENUCARRY        - <  1240>   1237 
+f6dfh: MENUCARRY        - <  1240>   1237 
 0f00h: MONMODE          - <    44>     87    954   1041   1061   1079   1133 
          1173   1180 
-f668h: MOREFILL         - <  1148>   1154 
-fe85h: MOVRRHELP        - <  1787>    449 
-ff5eh: MOVRRMENU        - <  1836>   1810 
-f1e0h: MOVRRTEST        - <   448>   1810   1810 
+f652h: MOREFILL         - <  1148>   1154 
+fe6fh: MOVRRHELP        - <  1787>    449 
+ff48h: MOVRRMENU        - <  1836>   1810 
+f1cah: MOVRRTEST        - <   448>   1810   1810 
 f060h: MUL16            - <   180>   1813   1813 
-ff77h: MUL16MENU        - <  1839>   1813 
-f8fbh: NBLINK           - <  1719> 
-f90ah: NBLINKDONE       - <  1727>   1723 
-f8fch: NBLINKLOOP       - <  1721>   1726 
+ff61h: MUL16MENU        - <  1839>   1813 
+f8e5h: NBLINK           - <  1719> 
+f8f4h: NBLINKDONE       - <  1727>   1723 
+f8e6h: NBLINKLOOP       - <  1721>   1726 
 0000h: NOMODE           - <    35>     86   1172   1179 
-f8dfh: OFFLOOP          - <  1682>   1685 
-f8b7h: OFFW             - <  1646>   1646 
-f8d6h: ONLOOP           - <  1675>   1678 
-f8c3h: ONW              - <  1654>   1654 
-f271h: ORHELP           - <   532>    534 
-f2a7h: ORLOOP           - <   537>    546 
-fef7h: ORMENU           - <  1821>   1795 
-f29fh: ORTEST           - <   533>   1795   1795 
-fe1ah: ORTHELP          - <  1784>    591 
-f2ech: ORTLOOP          - <   594>    607 
-fefah: ORTMENU          - <  1822>   1796 
-f2e4h: ORTTEST          - <   590>   1796   1796 
-f46dh: OUTEQ            - <   835>    827 
-f468h: OUTGT            - <   832>    826 
-f472h: OUTLT            - <   838>    828 
-f548h: PARSE_INPUTLOOP  - <   998>   1004 
-f317h: PPDISLOOP        - <   628>    635 
-f309h: PPENTERLOOP      - <   617>    625 
-f929h: PROMPT           - <  1736>    872 
-fda7h: PSHIFT_RIGHTHELP - <  1778>    746 
-f3f9h: PSHRLOOP         - <   749>    758 
-ff3ch: PSHRMENU         - <  1831>   1805 
-f3f1h: PSHRTEST         - <   745>   1805   1805 
-fdffh: PUSHPOPHELP      - <  1783>    613 
-fefeh: PUSHPOPMENU      - <  1823>   1797 
-f301h: PUSHPOPTEST      - <   612>   1797   1797 
-ff7dh: PUSHR_POPR_MENU  - <  1840>   1814 
+f8c9h: OFFLOOP          - <  1682>   1685 
+f8a1h: OFFW             - <  1646>   1646 
+f8c0h: ONLOOP           - <  1675>   1678 
+f8adh: ONW              - <  1654>   1654 
+f25bh: ORHELP           - <   532>    534 
+f291h: ORLOOP           - <   537>    546 
+fee1h: ORMENU           - <  1821>   1795 
+f289h: ORTEST           - <   533>   1795   1795 
+fe04h: ORTHELP          - <  1784>    591 
+f2d6h: ORTLOOP          - <   594>    607 
+fee4h: ORTMENU          - <  1822>   1796 
+f2ceh: ORTTEST          - <   590>   1796   1796 
+f457h: OUTEQ            - <   835>    827 
+f452h: OUTGT            - <   832>    826 
+f45ch: OUTLT            - <   838>    828 
+f532h: PARSE_INPUTLOOP  - <   998>   1004 
+f301h: PPDISLOOP        - <   628>    635 
+f2f3h: PPENTERLOOP      - <   617>    625 
+f913h: PROMPT           - <  1736>    872 
+fd91h: PSHIFT_RIGHTHELP - <  1778>    746 
+f3e3h: PSHRLOOP         - <   749>    758 
+ff26h: PSHRMENU         - <  1831>   1805 
+f3dbh: PSHRTEST         - <   745>   1805   1805 
+fde9h: PUSHPOPHELP      - <  1783>    613 
+fee8h: PUSHPOPMENU      - <  1823>   1797 
+f2ebh: PUSHPOPTEST      - <   612>   1797   1797 
+ff67h: PUSHR_POPR_MENU  - <  1840>   1814 
 f171h: PUSHR_POPR_TESTS - <   399>   1814   1814 
-fd82h: RSHIFT_LEFTHELP  - <  1776>    710 
-fd94h: RSHIFT_RIGHTHELP - <  1777>    728 
-f3cdh: RSHLLOOP         - <   713>    722 
-ff28h: RSHLMENU         - <  1827>   1801 
-f3c5h: RSHLTEST         - <   709>   1801   1801 
-f3e3h: RSHRLOOP         - <   731>    740 
-ff2dh: RSHRMENU         - <  1828>   1802 
-f3dbh: RSHRTEST         - <   727>   1802   1802 
-f346h: SHIFT_LEFTHELP   - <   671>    673 
-f385h: SHIFT_RIGHTHELP  - <   690>    692 
-f377h: SHLLOOP          - <   676>    685 
-ff20h: SHLMENU          - <  1825>   1799 
-f36fh: SHLTEST          - <   672>   1799   1799 
-f8abh: SHORTDELAY       - <  1630> 
-f8afh: SHORTDELAYLOOP   - <  1633>   1636 
-f7d2h: SHOW16           - <  1399>    105    287    403    412    421    430 
-          439   1006   1072   1405   1419 
-f7ech: SHOW256          - <  1415>   1052 
-f7edh: SHOW256LOOP      - <  1417>   1426 
-f745h: SHOWADDR         - <  1313>    104    113    286    402    411    420 
-          429    438   1071   1089   1144   1370   1372   1374   1376   1378 
-         1380   1382   1384   1418   1952 
-f803h: SHOWBYTE         - <  1437>   1093   1399   1961 
-f814h: SHOWBYTEA        - <  1450>    290   1200   1967 
-f825h: SHOWCARRY        - <  1465>   1389   1970 
-f837h: SHOWNIBBLE       - <  1482>   1319   1322   1328   1331   1346   1349 
+fd6ch: RSHIFT_LEFTHELP  - <  1776>    710 
+fd7eh: RSHIFT_RIGHTHELP - <  1777>    728 
+f3b7h: RSHLLOOP         - <   713>    722 
+ff12h: RSHLMENU         - <  1827>   1801 
+f3afh: RSHLTEST         - <   709>   1801   1801 
+f3cdh: RSHRLOOP         - <   731>    740 
+ff17h: RSHRMENU         - <  1828>   1802 
+f3c5h: RSHRTEST         - <   727>   1802   1802 
+f330h: SHIFT_LEFTHELP   - <   671>    673 
+f36fh: SHIFT_RIGHTHELP  - <   690>    692 
+f361h: SHLLOOP          - <   676>    685 
+ff0ah: SHLMENU          - <  1825>   1799 
+f359h: SHLTEST          - <   672>   1799   1799 
+f895h: SHORTDELAY       - <  1630> 
+f899h: SHORTDELAYLOOP   - <  1633>   1636 
+f7bch: SHOW16           - <  1399>    105    287    403    412    421    430 
+         1006   1072   1405   1419 
+f7d6h: SHOW256          - <  1415>   1052 
+f7d7h: SHOW256LOOP      - <  1417>   1426 
+f72fh: SHOWADDR         - <  1313>    104    113    286    402    411    420 
+          429   1071   1089   1144   1370   1372   1374   1376   1378   1380 
+         1382   1384   1418   1952 
+f7edh: SHOWBYTE         - <  1437>   1093   1399   1961 
+f7feh: SHOWBYTEA        - <  1450>    290   1200   1967 
+f80fh: SHOWCARRY        - <  1465>   1389   1970 
+f821h: SHOWNIBBLE       - <  1482>   1319   1322   1328   1331   1346   1349 
          1355   1358   1443   1446   1456   1459 
-f76eh: SHOWNUM          - <  1339> 
-f76eh: SHOWR7           - <  1340>   1958 
-f20fh: SHOWREG34        - <   483>    455    459    463 
-f240h: SHOWREG45        - <   506>    468    472    476 
-f78dh: SHOWREGS         - <  1364>    106    288    324    326    377    379 
-          392    404    413    422    431    440   1170   1964 
-f830h: SHOW_YESCARRY    - <  1472>   1467 
-f3b7h: SHRLOOP          - <   695>    704 
-ff24h: SHRMENU          - <  1826>   1800 
-f3afh: SHRTEST          - <   691>   1800   1800 
-f85ah: SLOOP            - <  1524>   1529 
-f865h: SLOOPDONE        - <  1533>   1526 
+f758h: SHOWNUM          - <  1339> 
+f758h: SHOWR7           - <  1340>   1958 
+f1f9h: SHOWREG34        - <   483>    455    459    463 
+f22ah: SHOWREG45        - <   506>    468    472    476 
+f777h: SHOWREGS         - <  1364>    106    288    324    326    377    379 
+          392    404    413    422    431   1170   1964 
+f81ah: SHOW_YESCARRY    - <  1472>   1467 
+f3a1h: SHRLOOP          - <   695>    704 
+ff0eh: SHRMENU          - <  1826>   1800 
+f399h: SHRTEST          - <   691>   1800   1800 
+f844h: SLOOP            - <  1524>   1529 
+f84fh: SLOOPDONE        - <  1533>   1526 
 0effh: STACK            - <    53>     65 
-f52ch: STOP             - <   975>    975    978 
-f859h: STRINGOUT        - <  1522>     95    108    115    127    292    406 
-          415    424    433    442    450    535    554    573    592    614 
-          644    674    693    711    729    747    765    783    801    819 
-          873    895    897    942    945    948    972    983    995   1022 
-         1028   1034   1044   1048   1063   1067   1081   1085   1127   1136 
-         1140   1146   1165   1182   1203   1205   1215   1368   1392   1943 
+f516h: STOP             - <   975>    975    978 
+f843h: STRINGOUT        - <  1522>     95    108    115    127    292    406 
+          415    424    433    450    535    554    573    592    614    644 
+          674    693    711    729    747    765    783    801    819    873 
+          895    897    942    945    948    972    983    995   1022   1028 
+         1034   1044   1048   1063   1067   1081   1085   1127   1136   1140 
+         1146   1165   1182   1203   1205   1215   1368   1392   1943 
 f12ch: SUB16TESTS       - <   348> 
-fde1h: SUBHELP          - <  1781>    800 
-f43bh: SUBLOOP          - <   803>    812 
-ff41h: SUBMENU          - <  1832>   1806 
-f433h: SUBTEST          - <   799>   1806   1806 
-f84dh: SWITCHIN         - <  1498> 
+fdcbh: SUBHELP          - <  1781>    800 
+f425h: SUBLOOP          - <   803>    812 
+ff2bh: SUBMENU          - <  1832>   1806 
+f41dh: SUBTEST          - <   799>   1806   1806 
+f837h: SWITCHIN         - <  1498> 
 0001h: SWITCHLED        - <    23>    539    558    577    596    600    619 
           630    648    655    678    697    715    733    751    769    787 
           805    824   1499   1507 
-f8b6h: SWITCHTOGGLE     - <  1644>    488    493    498    503    511    516 
+f8a0h: SWITCHTOGGLE     - <  1644>    488    493    498    503    511    516 
           521    526    538    557    576    595    599    618    629    647 
           654    677    696    714    732    750    768    786    804    823 
-f4a4h: TESTEXAMINE      - <   900>    893 
-fea3h: TESTMENU         - <  1794>   1183   1232 
-fef7h: TESTMENUSTRINGS  - <  1820> 
-fe93h: TESTMSG          - <  1788>    126 
-f697h: TESTS            - <  1177>    924 
-f6a8h: TESTSLOOP        - <  1186>   1207 
-f6cch: TESTSLOOPDONE    - <  1209>   1198 
+f48eh: TESTEXAMINE      - <   900>    893 
+fe8dh: TESTMENU         - <  1794>   1183   1232 
+fee1h: TESTMENUSTRINGS  - <  1820> 
+fe7dh: TESTMSG          - <  1788>    126 
+f681h: TESTS            - <  1177>    924 
+f692h: TESTSLOOP        - <  1186>   1207 
+f6b6h: TESTSLOOPDONE    - <  1209>   1198 
 0080h: TIL311           - <    27>   1512 
-f855h: TIL311OUT        - <  1511>    487    492    497    502    510    515 
+f83fh: TIL311OUT        - <  1511>    487    492    497    502    510    515 
           520    525   1230   1236   1722 
-f73ch: TOUPPER          - <  1303>    886   1296   1955 
+f726h: TOUPPER          - <  1303>    886   1296   1955 
 f051h: TTTT             - <   125>    112 
 0000h: UARTA0           - <    14>     72 
 0008h: UARTA1           - <    15>     76 
@@ -2628,17 +2628,17 @@ f051h: TTTT             - <   125>    112
 0038h: UARTA7           - <    21> 
 0040h: UARTCS           - <    26>     69     72     76     79   1558   1563 
          1588   1592   1608 
-f87ch: UARTIN           - <  1576>    885    999   1095   1290   1591   1973 
-f893h: UARTINC          - <  1597>   1595 
-f867h: UARTOUT          - <  1540>    843   1091   1120   1122   1157   1159 
+f866h: UARTIN           - <  1576>    885    999   1095   1290   1591   1973 
+f87dh: UARTINC          - <  1597>   1595 
+f851h: UARTOUT          - <  1540>    843   1091   1120   1122   1157   1159 
          1202   1333   1335   1387   1402   1407   1409   1427   1429   1469 
          1474   1486   1492   1527   1604   1949 
-f86eh: UARTOUTW         - <  1554>   1561 
-f89ah: UARTTEST         - <  1607>   1976   1976 
+f858h: UARTOUTW         - <  1554>   1561 
+f884h: UARTTEST         - <  1607>   1976   1976 
 fff0h: ZZZZ             - <  1982> 
 
 1983 Lines assembled
 0 Errors
 238 Labels
-Object Code:4045 bytes
+Object Code:4023 bytes
 

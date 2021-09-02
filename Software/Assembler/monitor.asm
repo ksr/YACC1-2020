@@ -431,15 +431,15 @@ pushr_popr_tests:
          JSR showregs
          MVIW R7,CRLF
          JSR stringout
-
-         popr r4
-         movrr r1,r5
-         MVIW R3,0ff0h
-         JSR showaddr
-         JSR show16
-         JSR showregs
-         MVIW R7,CRLF
-         JSR stringout
+; Hack to remove code to check if core blew when uarttest code added
+;         popr r4
+;         movrr r1,r5
+;         MVIW R3,0ff0h
+;         JSR showaddr
+;         JSR show16
+;         JSR showregs
+;         MVIW R7,CRLF
+;         JSR stringout
          ret
 
 ;

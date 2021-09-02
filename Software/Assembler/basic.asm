@@ -204,21 +204,21 @@ bas_tok_buf_end: EQU 2000h
 ;
 ; Copy test program into token Buffer, copies 0x0400 bytes
 ;
-;      mviw R7,bas_tok_buf_start
-;     mviw R6,BASIC_TEST
-;      mviw R5,0400h
+      mviw R7,bas_tok_buf_start
+      mviw R6,BASIC_TEST
+      mviw R5,0400h
 ;
-;bas_copyloop:
-;      ldavr R6
-;      stavr r7
-;      incr r6
-;      incr r7
-;      decr r5
-;      mvrha r5
-;      brnz bas_copyloop
-;      mvrla r5
-;      brnz bas_copyloop
-;      ret
+bas_copyloop:
+      ldavr R6
+      stavr r7
+      incr r6
+      incr r7
+      decr r5
+      mvrha r5
+      brnz bas_copyloop
+      mvrla r5
+      brnz bas_copyloop
+      ret
 
 bigtest:
     mviw r5,0105
@@ -3158,6 +3158,7 @@ CRLF: DB 0ah,0dh,0
 ;
 
   ORG 0EF00h
+BASIC_TEST:
 ;
 ; The End
 ;
